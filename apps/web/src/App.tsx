@@ -5,7 +5,6 @@ import { Privacy, Terms } from "./pages/Legal.tsx";
 import { Library } from "./pages/Library.tsx";
 import { MyStories } from "./pages/MyStories.tsx";
 import { SignIn } from "./pages/SignIn.tsx";
-import { session, useSession } from "./lib/session.ts";
 import { Play } from "./pages/Play.tsx";
 import { Tv } from "./pages/Tv.tsx";
 import { ViewGallery } from "./pages/ViewGallery.tsx";
@@ -51,6 +50,7 @@ export function App() {
             <span className="tv-wordmark-bar" aria-hidden />
           </span>
         </Link>
+        {/* No account button here: signing in happens inside the Alexa+ device (its Profile). */}
         <div className="topbar-right">
           <nav>
             {NAV.map((item) => (
@@ -59,10 +59,8 @@ export function App() {
               </Link>
             ))}
           </nav>
-          <Account path={path} />
         </div>
       </header>
-      <SessionNotice path={path} />
       {/* Keyed by page so each page fades in when you arrive. */}
       <main key={path} className="page-enter">
         <Page />
@@ -72,45 +70,6 @@ export function App() {
         by Amazon. Stories are AI-generated fiction.{" "}
         <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link>
       </footer>
-    </div>
-  );
-}
-
-const signInHref = (path: string) => `/sign-in?next=${encodeURIComponent(path)}`;
-
-function Account({ path }: { path: string }) {
-  const state = useSession();
-  if (!state.available) return null;
-  if (state.status !== "signed-in") {
-    return state.status === "guest" ? (
-      <Link href={signInHref(path)} className="button small">
-        Sign in
-      </Link>
-    ) : null;
-  }
-  return (
-    <div className="account">
-      {state.user?.email && <span className="account-email" title={state.user.email}>{state.user.email}</span>}
-      <button type="button" className="ghost small" onClick={() => void session.signOut()}>
-        Sign out
-      </button>
-    </div>
-  );
-}
-
-/** Shown once when a signed-in session ends by itself; the current page keeps working as a guest. */
-function SessionNotice({ path }: { path: string }) {
-  const state = useSession();
-  if (!state.expired) return null;
-  return (
-    <div className="session-notice" role="status">
-      Your session ended, so you're playing as a guest.
-      <Link href={signInHref(path)} className="button small" onClick={() => session.dismissExpired()}>
-        Sign in again
-      </Link>
-      <button type="button" className="ghost small" onClick={() => session.dismissExpired()}>
-        Dismiss
-      </button>
     </div>
   );
 }

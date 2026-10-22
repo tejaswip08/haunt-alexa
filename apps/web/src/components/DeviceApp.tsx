@@ -228,9 +228,13 @@ export function DeviceApp({
           ))}
         </nav>
         <span className="da-clock">{clock}</span>
-        <button type="button" className={`da-profile${tab === "profile" ? " is-on" : ""}`} onClick={() => setTab("profile")} aria-label="Profile">
+        <button
+          type="button"
+          className={`da-profile${tab === "profile" || tab === "signin" ? " is-on" : ""}`}
+          onClick={() => setTab("profile")}
+          aria-label={account.status === "signed-in" ? `Profile, signed in as ${account.user?.email ?? "you"}` : "Profile, guest"}
+        >
           <span className="da-avatar">{initial(account)}</span>
-          <span className="da-profile-name">{account.status === "signed-in" ? (account.user?.email ?? "Signed in") : "Guest"}</span>
         </button>
       </header>
 
@@ -241,7 +245,7 @@ export function DeviceApp({
         {tab === "create" && (
           <CreateTab form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} heard={heard} onGenerate={() => start(form)} needsSignIn={mustSignIn(account)} />
         )}
-        {tab === "profile" && <ProfileTab account={account} onCreate={() => setTab("create")} onSignIn={signIn} />}
+        {tab === "profile" && <ProfileTab account={account} onSignIn={signIn} />}
         {tab === "signin" && <SignInTab account={account} onDone={() => setTab("profile")} onCode={(fill) => (spokenCode.current = fill)} />}
       </div>
       {notice && (
@@ -519,58 +523,35 @@ function CreateTab({
   );
 }
 
-function ProfileTab({ account, onCreate, onSignIn }: { account: SessionState; onCreate: () => void; onSignIn: () => void }) {
+function ProfileTab({ account, onSignIn }: { account: SessionState; onSignIn: () => void }) {
   const signedIn = account.status === "signed-in";
   return (
     <section className="da-page da-profile-page">
-      <div className="da-profile-card">
-        <span className="da-avatar large">{initial(account)}</span>
-        <div>
-          <h2 className="da-page-title">{signedIn ? (account.user?.email ?? "Signed in") : "Guest"}</h2>
-          <p className="da-page-text">
-            {signedIn
-              ? "Signed in on this Echo Show. Create stories and keep listening where you left off."
-              : account.available
-                ? "Sign in to create stories. Playing community stories needs no account."
-                : "Listening on this Echo Show. No account needed to play."}
-          </p>
-        </div>
+      <div className={`da-profile-hero${signedIn ? " is-signed-in" : ""}`}>
+        <span className="da-avatar huge" aria-hidden>
+          {initial(account)}
+        </span>
+        <span className="da-profile-status">{account.status === "loading" ? "Checking…" : signedIn ? "Signed in" : "Guest"}</span>
+        <h2 className="da-profile-title">{signedIn ? (account.user?.email ?? "Your account") : "Welcome to Haunt"}</h2>
+        <p className="da-profile-text">
+          {signedIn
+            ? "You can create your own stories now."
+            : account.available
+              ? "Sign in to create your own stories."
+              : "Sign-in isn’t set up here. Everything works as a guest."}
+        </p>
+        {account.available && account.status !== "loading" && (
+          signedIn ? (
+            <button type="button" className="da-button" onClick={() => void session.signOut()}>
+              Sign out
+            </button>
+          ) : (
+            <button type="button" className="da-button primary" onClick={onSignIn}>
+              Sign in
+            </button>
+          )
+        )}
       </div>
-      {account.status === "loading" ? (
-        <p className="da-page-text">Checking your account…</p>
-      ) : (
-        account.available && (
-          <div className="da-account">
-            {signedIn ? (
-              <button type="button" className="da-button" onClick={() => void session.signOut()}>
-                Sign out
-              </button>
-            ) : (
-              <button type="button" className="da-button primary" onClick={onSignIn}>
-                Sign in
-              </button>
-            )}
-            <span className="da-account-hint">{signedIn ? "Or say “sign out”." : "Or say “sign in”. We’ll email you a code."}</span>
-          </div>
-        )
-      )}
-      <div className="da-stats">
-        <div>
-          <strong>Voice</strong>
-          <span>Say “one”, “two” or your own answer</span>
-        </div>
-        <div>
-          <strong>Narration</strong>
-          <span>Read aloud, word for word</span>
-        </div>
-        <div>
-          <strong>Screen</strong>
-          <span>Scenes and choices appear here</span>
-        </div>
-      </div>
-      <button type="button" className="da-button primary" onClick={onCreate}>
-        + Create a story
-      </button>
     </section>
   );
 }

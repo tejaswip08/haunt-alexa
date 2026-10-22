@@ -2525,10 +2525,9 @@ main {
 .da-profile {
   display: inline-flex;
   align-items: center;
-  gap: 0.8cqw;
-  padding: 0.4cqw 1.4cqw 0.4cqw 0.4cqw;
+  padding: 0.3cqw;
   border: 2px solid transparent;
-  border-radius: 99px;
+  border-radius: 50%;
   background: rgb(236 230 218 / 0.08);
   font: 500 1.45cqw/1 var(--font-ui) !important;
   transition: background-color 0.18s ease, border-color 0.18s ease;
@@ -2895,35 +2894,63 @@ main {
   font: italic 400 1.2cqw/1.35 var(--font-display);
 }
 
-/* Profile */
-.da-profile-card {
-  display: flex;
-  align-items: center;
-  gap: 2cqw;
-}
-.da-stats {
+/* Profile: one centred card with the account and a sign-in or sign-out button. */
+.da-profile-page {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.4cqw;
+  place-items: center;
 }
-.da-stats div {
+.da-profile-hero {
   display: flex;
   flex-direction: column;
-  gap: 0.4cqw;
-  padding: 1.6cqw;
+  align-items: center;
+  gap: 1.1cqw;
+  width: min(46cqw, 100%);
+  padding: 3.2cqw 3cqw 3cqw;
   border: 1px solid var(--line);
-  border-radius: 1.2cqw;
-  background: var(--bg-raised);
+  border-radius: 2cqw;
+  background: radial-gradient(120% 80% at 50% 0%, rgb(193 39 45 / 0.16), transparent 60%), rgb(17 19 24 / 0.86);
+  box-shadow: 0 2cqw 5cqw rgb(0 0 0 / 0.45);
+  text-align: center;
+  animation: da-profile-in 0.35s ease both;
 }
-.da-stats strong {
-  font: 600 1.6cqw/1.1 var(--font-ui);
+.da-avatar.huge {
+  width: 10cqw;
+  height: 10cqw;
+  font: 600 4.4cqw/1 var(--font-display);
+  box-shadow: 0 0 0 0.5cqw rgb(193 39 45 / 0.22), 0 0 4cqw rgb(193 39 45 / 0.35);
 }
-.da-stats span {
+.da-profile-status {
+  padding: 0.5cqw 1.2cqw;
+  border: 1px solid var(--line);
+  border-radius: 99px;
   color: var(--ink-dim);
-  font: 400 1.25cqw/1.35 var(--font-ui);
+  font: 600 1.1cqw/1 var(--font-ui);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
-.da-profile-page .da-button {
-  align-self: flex-start;
+.da-profile-hero.is-signed-in .da-profile-status {
+  border-color: rgb(94 196 128 / 0.5);
+  color: #8fe0a8;
+}
+.da-profile-title {
+  max-width: 100%;
+  margin: 0.4cqw 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 500 2.6cqw/1.2 var(--font-display);
+}
+.da-profile-text {
+  margin: 0 0 0.8cqw;
+  color: var(--ink-dim);
+  font: 400 1.4cqw/1.4 var(--font-ui);
+}
+.da-profile-hero .da-button {
+  min-width: 18cqw;
+}
+@keyframes da-profile-in {
+  from { opacity: 0; transform: translateY(1cqw) scale(0.98); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3046,19 +3073,6 @@ main {
 }
 
 /* Sign-in on the Alexa+ device (Profile tab, header and Create). */
-.da-profile-name {
-  max-width: 14cqw;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.da-account {
-  display: flex;
-  align-items: center;
-  gap: 1.6cqw;
-  flex-wrap: wrap;
-}
-.da-account-hint,
 .da-signin-note {
   color: var(--muted, #a79c9c);
   font-size: 1.5cqw;
