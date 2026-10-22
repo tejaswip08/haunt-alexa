@@ -4,6 +4,7 @@ import { clearEvents, record } from "./inspector.ts";
 import { countPlayStart } from "./engagement.ts";
 import { isGoHome } from "./device-voice.ts";
 import { rememberStory } from "./my-stories.ts";
+import { session } from "./session.ts";
 import { connectHaunt, type HauntConnection, type ToolCall } from "./mcp.ts";
 import { soundscape } from "./soundscape.ts";
 import { describeListenFailure } from "./recognition.ts";
@@ -371,7 +372,8 @@ class SimulatedDevice {
         input_schema: tool.inputSchema,
       }));
       record({ kind: "agent", direction: "out", label: `assistant ← ${this.#messages.length} messages`, payload: this.#messages.at(-1) });
-      const response = await fetch("/api/agent", {
+      // With the listener's sign-in, so the deployed server (which needs an account for the assistant) accepts it.
+      const response = await session.fetch("/api/agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: this.#messages, tools }),

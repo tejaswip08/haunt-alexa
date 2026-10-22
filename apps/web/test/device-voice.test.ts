@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { isGoHome, parseNavigation, pickStory } from "../src/lib/device-voice.ts";
+import { isGoHome, parseAccount, parseNavigation, pickStory } from "../src/lib/device-voice.ts";
 
 describe("Voice navigation on the Echo Show", () => {
   it("opens every tab", () => {
@@ -38,5 +38,15 @@ describe("Voice navigation on the Echo Show", () => {
     assert.equal(pickStory(list, { title: "lighthouse" })?.title, "The Lighthouse That Lights Itself");
     assert.equal(pickStory(list, { title: "story" })?.title, "The Story");
     assert.equal(pickStory(list, { title: "nothing like this" }), undefined);
+  });
+
+  it("hears sign in and sign out, and nothing longer", () => {
+    assert.equal(parseAccount("sign in"), "in");
+    assert.equal(parseAccount("Alexa, log me in"), "in");
+    assert.equal(parseAccount("signin to haunt"), "in");
+    assert.equal(parseAccount("sign out please"), "out");
+    assert.equal(parseAccount("log out"), "out");
+    assert.equal(parseAccount("I sign in the guest book"), null);
+    assert.equal(parseAccount("open community"), null);
   });
 });

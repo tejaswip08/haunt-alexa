@@ -42,6 +42,14 @@ export function isGoHome(spoken: string): boolean {
   return HOME.test(clean(spoken));
 }
 
+/** "sign in", "log me in", "sign in to haunt" → "in"; "sign out", "log out" → "out". */
+export function parseAccount(spoken: string): "in" | "out" | null {
+  const text = clean(spoken);
+  if (/^(?:sign|log) ?(?:me )?in(?: to haunt| please)?$/.test(text)) return "in";
+  if (/^(?:sign|log) ?(?:me )?out$/.test(text)) return "out";
+  return null;
+}
+
 const TABS: { tab: DeviceTab; pattern: RegExp }[] = [
   { tab: "home", pattern: HOME },
   { tab: "community", pattern: /^(go to |open |show( me)? |browse )?(the )?(community|library|community stories|shared stories)( tab| page)?$/ },

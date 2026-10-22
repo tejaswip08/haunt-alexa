@@ -19,6 +19,7 @@ import {
 } from "./recognition.ts";
 import { canRecord, recordAnswer, type RecorderHandle } from "./recorder.ts";
 import { transcribeOnServer } from "./server-stt.ts";
+import { session } from "./session.ts";
 
 export { ListenError } from "./recognition.ts";
 
@@ -182,7 +183,8 @@ async function pollyNarration(
   useVoice(voice);
   let response: Response;
   try {
-    response = await fetch("/api/tts", {
+    // Signed in, so the deployed server narrates with Polly; a guest there falls back to the browser voice.
+    response = await session.fetch("/api/tts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text }),

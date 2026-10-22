@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   DEFAULT_FORM,
   describeFields,
@@ -11,9 +11,10 @@ import {
   type CreateForm,
 } from "../lib/create-voice.ts";
 import type { StartStoryInput } from "../lib/device.ts";
-import { parseNavigation, pickStory } from "../lib/device-voice.ts";
+import { parseAccount, parseNavigation, pickStory } from "../lib/device-voice.ts";
 import { useMyStories, type SavedStory } from "../lib/my-stories.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
+import { session, useSession, type SessionState } from "../lib/session.ts";
 import { artForStoryId } from "../lib/story-art.ts";
 
 /**
@@ -23,7 +24,16 @@ import { artForStoryId } from "../lib/story-art.ts";
  * by tapping or by voice (lib/create-voice.ts).
  */
 
-type Tab = "home" | "community" | "mine" | "create" | "profile";
+type Tab = "home" | "community" | "mine" | "create" | "profile" | "signin";
+
+/** Cognito's sign-in code has eight digits; an account-confirmation code is six to eight (null). */
+const SIGN_IN_CODE_DIGITS = 8;
+
+/** Where sign-in exists (a user pool on the server), creating a story needs an account, as on the deployed server. */
+const mustSignIn = (account: SessionState) => account.available && account.status !== "signed-in";
+
+/** "tejaswi@mobil80.com" → "T"; a guest is "G". */
+const initial = (account: SessionState) => (account.user?.email?.[0] ?? "G").toUpperCase();
 
 interface CommunityStory {
   storyId: string;
@@ -96,6 +106,7 @@ export function DeviceApp({
   const community = useCommunityStories(connection);
   const mine = useMyStories();
   const clock = useClock();
+  const account = useSession();
   /** A short line at the bottom of the screen after a voice command that couldn't be done ("No story called …"). */
   const [notice, setNotice] = useState<string | null>(null);
   useEffect(() => {
@@ -104,16 +115,49 @@ export function DeviceApp({
     return () => clearTimeout(timer);
   }, [notice]);
 
-  const start = (next: CreateForm) => onStart({ premise: premiseFor(next), subgenre: next.subgenre, length: next.length, intensity: next.intensity, language: next.language });
+  const signIn = () => setTab("signin");
+
+  const start = (next: CreateForm) => {
+    if (mustSignIn(state.current.account)) {
+      setTab("signin");
+      setNotice("Sign in to create a story.");
+      return;
+    }
+    onStart({ premise: premiseFor(next), subgenre: next.subgenre, length: next.length, intensity: next.intensity, language: next.language });
+  };
 
   // Voice: on the Create screen everything said edits the form ("make it terrifying", "in Hindi", "generate").
   // Anywhere else, "create a story …" opens Create with what was said filled in; other speech goes to the assistant.
-  const state = useRef({ tab, form, community, mine });
-  state.current = { tab, form, community, mine };
+  /** The sign-in screen's code box, filled by voice. */
+  const spokenCode = useRef<((code: string) => void) | null>(null);
+  const state = useRef({ tab, form, community, mine, account });
+  state.current = { tab, form, community, mine, account };
   useEffect(() => {
     if (!onVoice) return;
     return onVoice((text) => {
       const { tab: current, form: currentForm, community: shared, mine: own } = state.current;
+
+      // On the sign-in screen, a spoken code ("my code is 1 2 3 4 5 6 7 8") goes into the code box.
+      if (current === "signin") {
+        const digits = text.replace(/\D/g, "");
+        if (digits.length >= 6 && digits.length <= 8) {
+          spokenCode.current?.(digits);
+          return true;
+        }
+      }
+
+      // "Sign in" / "sign out".
+      const accountCommand = parseAccount(text);
+      if (accountCommand) {
+        const now = state.current.account;
+        if (!now.available) setNotice("Sign-in isn’t set up on this server. Everything works as a guest.");
+        else if (accountCommand === "in") now.status === "signed-in" ? setNotice(`Already signed in as ${now.user?.email ?? "you"}.`) : signIn();
+        else if (now.status === "signed-in") {
+          void session.signOut();
+          setNotice("Signed out. You’re a guest now.");
+        }
+        return true;
+      }
 
       // Navigation: "open community", "play the first one", "continue my lighthouse story".
       const nav = parseNavigation(text);
@@ -185,8 +229,8 @@ export function DeviceApp({
         </nav>
         <span className="da-clock">{clock}</span>
         <button type="button" className={`da-profile${tab === "profile" ? " is-on" : ""}`} onClick={() => setTab("profile")} aria-label="Profile">
-          <span className="da-avatar">G</span>
-          <span>Guest</span>
+          <span className="da-avatar">{initial(account)}</span>
+          <span className="da-profile-name">{account.status === "signed-in" ? (account.user?.email ?? "Signed in") : "Guest"}</span>
         </button>
       </header>
 
@@ -194,8 +238,11 @@ export function DeviceApp({
         {tab === "home" && <HomeTab community={community} onSay={onSay} onPlay={onPlay} onBrowse={() => setTab("community")} />}
         {tab === "community" && <CommunityTab community={community} onPlay={onPlay} />}
         {tab === "mine" && <MyStoriesTab stories={mine} onResume={onResume} />}
-        {tab === "create" && <CreateTab form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} heard={heard} onGenerate={() => start(form)} />}
-        {tab === "profile" && <ProfileTab onCreate={() => setTab("create")} />}
+        {tab === "create" && (
+          <CreateTab form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} heard={heard} onGenerate={() => start(form)} needsSignIn={mustSignIn(account)} />
+        )}
+        {tab === "profile" && <ProfileTab account={account} onCreate={() => setTab("create")} onSignIn={signIn} />}
+        {tab === "signin" && <SignInTab account={account} onDone={() => setTab("profile")} onCode={(fill) => (spokenCode.current = fill)} />}
       </div>
       {notice && (
         <div className="da-notice" role="status">
@@ -353,11 +400,14 @@ function CreateTab({
   onChange,
   heard,
   onGenerate,
+  needsSignIn,
 }: {
   form: CreateForm;
   onChange: (patch: Partial<CreateForm>) => void;
   heard: { text: string; changes: string[] } | null;
   onGenerate: () => void;
+  /** A guest where sign-in exists: Generate asks them to sign in first. */
+  needsSignIn: boolean;
 }) {
   const chosen = SUBGENRES.find((s) => s.id === form.subgenre)!;
 
@@ -442,8 +492,9 @@ function CreateTab({
           <dd>{LANGUAGES.find((l) => l.code === form.language)!.label.split(" · ").pop()}</dd>
         </dl>
         <button type="button" className="da-button primary wide" onClick={onGenerate}>
-          Generate My Story
+          {needsSignIn ? "Sign in to Generate" : "Generate My Story"}
         </button>
+        {needsSignIn && <p className="da-signin-note">Creating a story needs an account. After signing in you come straight back here.</p>}
 
         {heard ? (
           <div className="da-heard" aria-live="polite">
@@ -468,16 +519,41 @@ function CreateTab({
   );
 }
 
-function ProfileTab({ onCreate }: { onCreate: () => void }) {
+function ProfileTab({ account, onCreate, onSignIn }: { account: SessionState; onCreate: () => void; onSignIn: () => void }) {
+  const signedIn = account.status === "signed-in";
   return (
     <section className="da-page da-profile-page">
       <div className="da-profile-card">
-        <span className="da-avatar large">G</span>
+        <span className="da-avatar large">{initial(account)}</span>
         <div>
-          <h2 className="da-page-title">Guest</h2>
-          <p className="da-page-text">Listening on this Echo Show. No account needed to play.</p>
+          <h2 className="da-page-title">{signedIn ? (account.user?.email ?? "Signed in") : "Guest"}</h2>
+          <p className="da-page-text">
+            {signedIn
+              ? "Signed in on this Echo Show. Create stories and keep listening where you left off."
+              : account.available
+                ? "Sign in to create stories. Playing community stories needs no account."
+                : "Listening on this Echo Show. No account needed to play."}
+          </p>
         </div>
       </div>
+      {account.status === "loading" ? (
+        <p className="da-page-text">Checking your account…</p>
+      ) : (
+        account.available && (
+          <div className="da-account">
+            {signedIn ? (
+              <button type="button" className="da-button" onClick={() => void session.signOut()}>
+                Sign out
+              </button>
+            ) : (
+              <button type="button" className="da-button primary" onClick={onSignIn}>
+                Sign in
+              </button>
+            )}
+            <span className="da-account-hint">{signedIn ? "Or say “sign out”." : "Or say “sign in”. We’ll email you a code."}</span>
+          </div>
+        )
+      )}
       <div className="da-stats">
         <div>
           <strong>Voice</strong>
@@ -495,6 +571,166 @@ function ProfileTab({ onCreate }: { onCreate: () => void }) {
       <button type="button" className="da-button primary" onClick={onCreate}>
         + Create a story
       </button>
+    </section>
+  );
+}
+
+/**
+ * Sign-in on the Echo Show screen: email, then the emailed code (lib/session.ts, the same Cognito flow as the website).
+ * The code can be typed or spoken. Signing in returns to Profile.
+ */
+function SignInTab({
+  account,
+  onDone,
+  onCode,
+}: {
+  account: SessionState;
+  onDone: () => void;
+  /** Hands the parent a way to fill the code box by voice. */
+  onCode: (fill: ((code: string) => void) | null) => void;
+}) {
+  const [step, setStep] = useState<"email" | "code">("email");
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [codeLength, setCodeLength] = useState<number | null>(SIGN_IN_CODE_DIGITS);
+  const [working, setWorking] = useState(false);
+  const [error, setError] = useState<string>();
+  const [note, setNote] = useState<string>();
+
+  useEffect(() => {
+    if (account.status === "signed-in") onDone();
+  }, [account.status, onDone]);
+  useEffect(() => {
+    onCode(step === "code" ? (spoken) => setCode(spoken) : null);
+    return () => onCode(null);
+  }, [step, onCode]);
+
+  const complete = codeLength === null ? code.length >= 6 && code.length <= 8 : code.length === codeLength;
+
+  const sendCode = async (event?: FormEvent) => {
+    event?.preventDefault();
+    setWorking(true);
+    setError(undefined);
+    const result = await session.start(email.trim(), mode);
+    setWorking(false);
+    if (!result.ok) return setError(result.error);
+    setNote(step === "code" ? "A new code is on its way." : undefined);
+    setCode("");
+    setCodeLength(result.codeLength === undefined ? SIGN_IN_CODE_DIGITS : result.codeLength);
+    setStep("code");
+  };
+
+  const verify = async (event: FormEvent) => {
+    event.preventDefault();
+    setWorking(true);
+    setError(undefined);
+    const result = await session.verify(code);
+    setWorking(false);
+    if (!result.ok) {
+      setError(result.error);
+      if (result.restart) setCode("");
+      return;
+    }
+    if (!result.signedIn) {
+      // A new account was confirmed, and Cognito sends a sign-in code as well.
+      setCode("");
+      setCodeLength(SIGN_IN_CODE_DIGITS);
+      setNote("Your account is ready. We’ve emailed you a sign-in code.");
+    }
+  };
+
+  if (!account.available) {
+    return (
+      <section className="da-page da-signin">
+        <h2 className="da-page-title">Sign-in isn’t set up here</h2>
+        <p className="da-page-text">This server has no sign-in, so everything works as a guest.</p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="da-page da-signin">
+      <span className="eyebrow">Your Haunt account</span>
+      <h2 className="da-page-title">{step === "email" ? (mode === "signin" ? "Sign in" : "Create an account") : "Enter your code"}</h2>
+
+      {step === "email" ? (
+        <form className="da-signin-form" onSubmit={sendCode}>
+          <div className="da-lengths da-signin-modes" role="tablist" aria-label="Account">
+            {(
+              [
+                ["signin", "Sign in"],
+                ["signup", "Create account"],
+              ] as const
+            ).map(([id, label]) => (
+              <button key={id} type="button" role="tab" aria-selected={mode === id} className={`da-length${mode === id ? " is-on" : ""}`} onClick={() => setMode(id)}>
+                <strong>{label}</strong>
+              </button>
+            ))}
+          </div>
+          <label className="da-label" htmlFor="da-email">
+            Email
+          </label>
+          <input
+            id="da-email"
+            className="da-input"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@example.com"
+          />
+          <button type="submit" className="da-button primary wide" disabled={working || !email.trim()}>
+            {working ? "Sending…" : "Email me a code"}
+          </button>
+        </form>
+      ) : (
+        <form className="da-signin-form" onSubmit={verify}>
+          <p className="da-page-text">
+            We sent a code to <strong>{email.trim()}</strong>. Type it, or say it: “my code is 1 2 3 4…”.
+          </p>
+          <label className="da-label" htmlFor="da-code">
+            Code
+          </label>
+          <input
+            id="da-code"
+            className="da-input da-code-input"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            autoFocus
+            maxLength={8}
+            value={code}
+            onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 8))}
+            placeholder={codeLength ? "•".repeat(codeLength) : "••••••"}
+          />
+          <button type="submit" className="da-button primary wide" disabled={working || !complete}>
+            {working ? "Checking…" : "Sign in"}
+          </button>
+          <div className="da-signin-links">
+            <button type="button" className="da-link" disabled={working} onClick={() => void sendCode()}>
+              New code
+            </button>
+            <button
+              type="button"
+              className="da-link"
+              onClick={() => {
+                setStep("email");
+                setError(undefined);
+                setNote(undefined);
+              }}
+            >
+              Use a different email
+            </button>
+          </div>
+        </form>
+      )}
+      {note && <p className="da-signin-note">{note}</p>}
+      {error && (
+        <p className="da-signin-error" role="alert">
+          {error}
+        </p>
+      )}
     </section>
   );
 }
