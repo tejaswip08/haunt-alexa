@@ -5,7 +5,7 @@ import { StoryEngagement } from "../components/StoryEngagement.tsx";
 import { Inspector } from "../components/Inspector.tsx";
 import { SceneStack } from "../components/SceneStack.tsx";
 import { StoryForge } from "../components/StoryForge.tsx";
-import { EpisodeScreen, PlayModeScreen } from "../components/DevicePlay.tsx";
+import { EpisodeScreen, ListenScreen, PlayModeScreen } from "../components/DevicePlay.tsx";
 import { device, useDevice, type DeviceState } from "../lib/device.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
 import { soundscape } from "../lib/soundscape.ts";
@@ -75,7 +75,7 @@ export function Play() {
     } else if (pending) void device.say(pending);
   }, []);
 
-  const { state, heard, view, error, pick, episode: playing } = snapshot;
+  const { state, heard, view, error, pick, episode: playing, listen } = snapshot;
   useEffect(() => {
     if (view?.tool.name !== "start_story") return;
     let live = true;
@@ -86,7 +86,7 @@ export function Play() {
       live = false;
     };
   }, [view]);
-  const creating = view?.tool.name === "start_story" && (shownId !== view.id || writtenId !== view.id) && !error;
+  const creating = view?.tool.name === "start_story" && (shownId !== view.id || writtenId !== view.id) && !error && !snapshot.listen;
   const live = mode && mode.story === "live" && mode.agent === "live";
 
   return (
@@ -124,7 +124,16 @@ export function Play() {
           <SpeakerDevice state={state} heard={heard} spoken={snapshot.spoken} />
         ) : (
           <DeviceFrame state={state}>
-            {playing ? (
+            {listen ? (
+              <ListenScreen
+                playback={listen}
+                onTogglePause={() => device.togglePauseListen()}
+                onPrevious={() => device.previousPart()}
+                onNext={() => device.nextPart()}
+                onJump={(part) => device.jumpTo(part)}
+                onHome={() => device.reset()}
+              />
+            ) : playing ? (
               <EpisodeScreen
                 playback={playing}
                 onChoose={(option) => device.chooseOption(option)}

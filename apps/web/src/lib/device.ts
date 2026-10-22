@@ -4,13 +4,13 @@ import { clearEvents, record } from "./inspector.ts";
 import { countPlayStart } from "./engagement.ts";
 import { SUBGENRES } from "./create-voice.ts";
 import { isGoHome } from "./device-voice.ts";
-import { isCancel, nextSegment, parsePlayMode, pickOption, type PlayMode } from "./play-mode.ts";
+import { isCancel, nextSegment, parseListenControl, parsePlayMode, pickOption, type PlayMode } from "./play-mode.ts";
 import { rememberStory } from "./my-stories.ts";
 import { session } from "./session.ts";
 import { connectHaunt, type HauntConnection, type ToolCall } from "./mcp.ts";
 import { soundscape } from "./soundscape.ts";
 import { describeListenFailure } from "./recognition.ts";
-import { browserBrands, canListen, currentEngine, listen, ListenError, speak, stopListening, stopSpeaking } from "./speech.ts";
+import { browserBrands, canListen, currentEngine, listen, ListenError, narrate, speak, stopListening, stopSpeaking, type Narration } from "./speech.ts";
 
 /**
  * A simulated Alexa+ device. The browser is the MCP host: it holds the conversation,
@@ -34,6 +34,33 @@ export interface DeviceSnapshot {
   pick: PlayModeRequest | null;
   /** A library episode playing on the device, segment by segment. */
   episode: EpisodePlayback | null;
+  /** "Just listen": the story plays like a film, with a timeline, and never stops to ask. */
+  listen: ListenPlayback | null;
+}
+
+export interface ListenPart {
+  narration: string;
+  mood: string;
+}
+
+export interface ListenPlayback {
+  storyId: string;
+  title: string;
+  creator?: string;
+  parts: ListenPart[];
+  /** Parts the story is expected to have. A story being written grows toward it. */
+  total: number;
+  /** Parts heard before this session (a continued story starts partway); the timeline shows them as done. */
+  offset: number;
+  /** The part playing (or about to). Equal to parts.length while the next part is being written. */
+  at: number;
+  paused: boolean;
+  /** Waiting for the next part to be written. */
+  writing: boolean;
+  ended: boolean;
+  /** For the timeline: when the current part last started or resumed playing (null while not playing), and how long it had played before that. */
+  playingSince: number | null;
+  playedMs: number;
 }
 
 export type { PlayMode };
@@ -118,11 +145,15 @@ const STORY_STARTS = new Set(["start_story", "resume_story", "play_episode"]);
 const MAX_STEPS = 5;
 
 class SimulatedDevice {
-  #snapshot: DeviceSnapshot = { state: "connecting", heard: "", spoken: "", view: null, storyId: null, error: null, pick: null, episode: null };
+  #snapshot: DeviceSnapshot = { state: "connecting", heard: "", spoken: "", view: null, storyId: null, error: null, pick: null, episode: null, listen: null };
   /** How the current story plays. Chosen before each story. */
   #mode: PlayMode = "choices";
   #answerPick?: (mode: PlayMode | null) => void;
   #answerChoice?: (option: number | null) => void;
+  /** The "just listen" player: bumped to stop a running narration loop; the narration speaking now; where parts come from. */
+  #listenGen = 0;
+  #listenNarration?: Narration;
+  #listenSource?: { kind: "episode" } | { kind: "story"; scene: SceneResult; writing?: Promise<boolean> };
   #listeners = new Set<() => void>();
   #connection?: HauntConnection;
   #messages: Message[] = [];
@@ -159,7 +190,9 @@ class SimulatedDevice {
       stopListening();
       return;
     }
-    stopSpeaking();
+    // The mic during "just listen" pauses the story (it holds its place) rather than cutting it off.
+    if (this.#snapshot.listen && !this.#snapshot.listen.paused && !this.#snapshot.listen.ended) this.pauseListen();
+    else stopSpeaking();
     soundscape.unlock();
     this.#flags.listening = true;
     this.#update({ heard: "", error: null });
@@ -208,6 +241,25 @@ class SimulatedDevice {
       else this.#update({ heard: utterance, error: "Say “with choices” or “just listen”." });
       return;
     }
+    // The "just listen" player: "pause", "resume", "next", "previous", "start over"; "go home" leaves it.
+    if (this.#snapshot.listen) {
+      const control = parseListenControl(utterance);
+      if (control) {
+        record({ kind: "speech", who: "listener", label: utterance });
+        this.#update({ heard: utterance, error: null });
+        if (control === "pause") this.pauseListen();
+        else if (control === "resume") this.resumeListen();
+        else if (control === "next") this.nextPart();
+        else if (control === "previous") this.previousPart();
+        else this.jumpTo(0);
+        return;
+      }
+      if (isGoHome(utterance)) {
+        record({ kind: "speech", who: "listener", label: utterance });
+        this.reset();
+        return;
+      }
+    }
     // An episode is waiting at a choice point: "two", "follow the sound".
     const waiting = this.#snapshot.episode?.choices;
     if (waiting) {
@@ -237,6 +289,7 @@ class SimulatedDevice {
   async say(text: string) {
     const utterance = text.trim();
     if (!utterance || this.#busy) return;
+    this.#endListen();
     this.#busy = true;
     const turn = ++this.#turn;
     stopSpeaking();
@@ -248,6 +301,7 @@ class SimulatedDevice {
     let narration: Promise<boolean> | undefined;
     let awaitingAnswer = false;
     let lastScene: SceneResult | undefined;
+    let listening = false;
     try {
       const connection = await this.connect();
       this.#messages.push({ role: "user", content: utterance });
@@ -295,18 +349,29 @@ class SimulatedDevice {
           if (scene) {
             this.#update({ storyId: scene.storyId });
             rememberStory(scene);
-            awaitingAnswer = scene.status === "active" && Boolean(scene.question);
-            lastScene = scene;
-            soundscape.setScene(scene.mood, scene.soundCues);
-            narration = this.#narrate(scene);
+            if (this.#mode === "listen" && STORY_STARTS.has(String(use.name))) {
+              // Just listening: the player takes over and the question is never asked.
+              listening = true;
+              this.#listenToStory(scene);
+            } else {
+              awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+              lastScene = scene;
+              soundscape.setScene(scene.mood, scene.soundCues);
+              narration = this.#narrate(scene);
+            }
           }
           const episode = episodeOf(result);
           if (episode) {
-            countPlayStart(episode.storyId ?? String((use.input as { storyId?: unknown })?.storyId ?? ""));
-            narration = this.#narrateEpisode(episode, String((use.input as { storyId?: unknown })?.storyId ?? episode.storyId ?? ""));
+            const episodeId = String((use.input as { storyId?: unknown })?.storyId ?? episode.storyId ?? "");
+            countPlayStart(episodeId);
+            if (this.#mode === "listen") {
+              listening = true;
+              this.#listenToEpisode(episode, episodeId);
+            } else narration = this.#narrateEpisode(episode, episodeId);
           }
         }
         this.#messages.push({ role: "user", content: results });
+        if (listening) break;
         if (cancelled) {
           narration ??= this.#speak("Okay. Maybe later.");
           break;
@@ -326,49 +391,9 @@ class SimulatedDevice {
     if (finished && awaitingAnswer && turn === this.#turn) this.#afterScene(lastScene);
   }
 
-  /** After a scene's question: listen for the answer, or with "just listen", take the first suggested answer. */
-  #afterScene(scene: SceneResult | undefined) {
-    if (this.#mode === "listen" && scene) void this.#autoContinue(scene);
-    else if (canListen) void this.talk();
-  }
-
-  /** "Just listen" for a story being written: answer each question with the first suggestion and keep going. */
-  async #autoContinue(scene: SceneResult) {
-    if (this.#busy) return;
-    this.#busy = true;
-    const turn = this.#turn;
-    const answer = scene.suggestions?.[0] ?? "Keep going";
-    let narration: Promise<boolean> | undefined;
-    let next: SceneResult | undefined;
-    try {
-      const connection = await this.connect();
-      record({ kind: "speech", who: "listener", label: `${answer} (just listening)` });
-      const call = connection.call("answer_story", { storyId: scene.storyId, answer });
-      this.#update({ view: call, error: null });
-      const result = await call.result;
-      next = sceneOf(result);
-      if (!next) throw new Error(textOf(result) || "The story couldn't continue.");
-      // The assistant sees this as its own call, so speaking up later continues the same story.
-      const id = `listen_${call.id}`;
-      if (this.#messages.at(-1)?.role === "user") this.#messages.push({ role: "assistant", content: [{ type: "text", text: scene.question ?? "" }] });
-      this.#messages.push(
-        { role: "user", content: answer },
-        { role: "assistant", content: [{ type: "tool_use", id, name: "answer_story", input: { storyId: scene.storyId, answer } }] },
-        { role: "user", content: [{ type: "tool_result", tool_use_id: id, content: textOf(result) }] },
-        { role: "assistant", content: [{ type: "text", text: next.question ?? "The end." }] },
-      );
-      this.#update({ storyId: next.storyId });
-      rememberStory(next);
-      soundscape.setScene(next.mood, next.soundCues);
-      narration = this.#narrate(next);
-    } catch (error) {
-      this.#update({ error: (error as Error).message });
-    } finally {
-      this.#busy = false;
-      this.#update({});
-    }
-    const finished = await narration;
-    if (finished && next && next.status === "active" && next.question && turn === this.#turn) this.#afterScene(next);
+  /** After a scene's question: open the mic for the answer. */
+  #afterScene(_scene: SceneResult | undefined) {
+    if (canListen) void this.talk();
   }
 
   /**
@@ -433,7 +458,8 @@ class SimulatedDevice {
       if (!episode) throw new Error(textOf(result) || "That episode isn't available.");
       // A library episode's narration is starting: this is one play (engagement.ts).
       countPlayStart(storyId);
-      narration = this.#narrateEpisode(episode, storyId);
+      if (mode === "listen") this.#listenToEpisode(episode, storyId);
+      else narration = this.#narrateEpisode(episode, storyId);
     } catch (error) {
       this.#update({ error: (error as Error).message });
     } finally {
@@ -477,10 +503,13 @@ class SimulatedDevice {
       );
       this.#update({ storyId: scene.storyId });
       rememberStory(scene);
-      awaitingAnswer = scene.status === "active" && Boolean(scene.question);
-      lastScene = scene;
-      soundscape.setScene(scene.mood, scene.soundCues);
-      narration = this.#narrate(scene);
+      if (mode === "listen") this.#listenToStory(scene);
+      else {
+        awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+        lastScene = scene;
+        soundscape.setScene(scene.mood, scene.soundCues);
+        narration = this.#narrate(scene);
+      }
     } catch (error) {
       this.#update({ error: (error as Error).message });
     } finally {
@@ -525,10 +554,13 @@ class SimulatedDevice {
       );
       this.#update({ storyId: scene.storyId });
       rememberStory(scene);
-      awaitingAnswer = scene.status === "active" && Boolean(scene.question);
-      lastScene = scene;
-      soundscape.setScene(scene.mood, scene.soundCues);
-      narration = this.#narrate(scene);
+      if (mode === "listen") this.#listenToStory(scene);
+      else {
+        awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+        lastScene = scene;
+        soundscape.setScene(scene.mood, scene.soundCues);
+        narration = this.#narrate(scene);
+      }
     } catch (error) {
       this.#update({ error: (error as Error).message });
     } finally {
@@ -551,9 +583,10 @@ class SimulatedDevice {
     this.#answerPick = undefined;
     this.#answerChoice?.(null);
     this.#answerChoice = undefined;
+    this.#endListen();
     soundscape.stop();
     clearEvents();
-    this.#update({ heard: "", spoken: "", view: null, storyId: null, error: null, pick: null, episode: null });
+    this.#update({ heard: "", spoken: "", view: null, storyId: null, error: null, pick: null, episode: null, listen: null });
   }
 
   async #think(connection: HauntConnection): Promise<AgentTurn> {
@@ -592,6 +625,211 @@ class SimulatedDevice {
     if (!(await this.#speak(scene.narration))) return false;
     if (turn !== this.#turn) return false;
     return this.#speak(scene.question ?? "The end.");
+  }
+
+  // ---- "Just listen": a film-like player with a timeline, pause and skip. It never asks the story's questions. ----
+
+  /** A story being written (start_story / resume_story): plays its parts and writes the next one in the background. */
+  #listenToStory(scene: SceneResult) {
+    this.#listenSource = { kind: "story", scene };
+    this.#startListen({
+      storyId: scene.storyId,
+      title: scene.title || "Your story",
+      parts: [{ narration: scene.narration, mood: scene.mood }],
+      total: Math.max(scene.totalScenes ?? 1, scene.sceneNumber ?? 1),
+      offset: Math.max(0, (scene.sceneNumber ?? 1) - 1),
+      ended: false,
+    });
+  }
+
+  /** A library episode: its main storyline, every part already written. */
+  #listenToEpisode(episode: EpisodeResult, storyId: string) {
+    this.#listenSource = { kind: "episode" };
+    const path = episode.path ?? episode.segments.map((_, i) => i);
+    const parts = path.map((i) => episode.segments[i]).filter((s): s is EpisodeSegment => s !== undefined);
+    this.#startListen({
+      storyId,
+      title: episode.title,
+      creator: episode.creator,
+      parts: parts.map((s) => ({ narration: s.narration, mood: s.mood })),
+      total: parts.length,
+      offset: 0,
+      ended: false,
+    });
+  }
+
+  #startListen(base: Pick<ListenPlayback, "storyId" | "title" | "creator" | "parts" | "total" | "offset" | "ended">) {
+    this.#flags.speaking = false;
+    this.#update({ view: null, episode: null, listen: { ...base, at: 0, paused: false, writing: false, playingSince: null, playedMs: 0 } });
+    void this.#runListen(++this.#listenGen);
+  }
+
+  #setListen(patch: Partial<ListenPlayback>) {
+    const current = this.#snapshot.listen;
+    if (current) this.#update({ listen: { ...current, ...patch } });
+  }
+
+  /** Narrates parts in order until paused, jumped, or finished. A newer run (higher generation) replaces this one. */
+  async #runListen(gen: number) {
+    while (gen === this.#listenGen) {
+      const playback = this.#snapshot.listen;
+      if (!playback || playback.ended || playback.paused) return;
+      const source = this.#listenSource;
+
+      if (playback.at >= playback.parts.length) {
+        // Past the written parts: wait for the next one, or the story is over.
+        const more = source?.kind === "story" && source.scene.status === "active";
+        if (more) {
+          this.#setListen({ writing: true });
+          const written = await this.#writeNextPart();
+          if (gen !== this.#listenGen) return;
+          this.#setListen({ writing: false });
+          if (written) continue;
+        }
+        this.#setListen({ ended: true, writing: false, playingSince: null, at: Math.max(0, playback.parts.length - 1) });
+        record({ kind: "speech", who: "device", label: "The end." });
+        this.#listenNarration = narrate("The end.");
+        return;
+      }
+
+      const part = playback.parts[playback.at]!;
+      soundscape.setScene(part.mood);
+      soundscape.duck(true);
+      // While the last written part plays, the next one is written, so there's no wait between them.
+      if (source?.kind === "story" && playback.at === playback.parts.length - 1) void this.#writeNextPart();
+      record({ kind: "speech", who: "device", label: part.narration });
+      const narration = narrate(part.narration);
+      this.#listenNarration = narration;
+      this.#setListen({ playingSince: Date.now(), playedMs: 0 });
+      const end = await narration.done;
+      if (gen !== this.#listenGen) return;
+      soundscape.duck(false);
+      // Cancelled by something else (the mic, another narration): hold here, the play button continues.
+      if (end === "cancelled") {
+        this.#setListen({ paused: true, playingSince: null, playedMs: 0 });
+        return;
+      }
+      const now = this.#snapshot.listen;
+      if (!now) return;
+      this.#setListen({ at: now.at + 1, playingSince: null, playedMs: 0 });
+    }
+  }
+
+  /** Writes the story's next part by answering its question with the first suggestion. One at a time. */
+  #writeNextPart(): Promise<boolean> {
+    const source = this.#listenSource;
+    if (source?.kind !== "story") return Promise.resolve(false);
+    if (source.writing) return source.writing;
+    const scene = source.scene;
+    if (scene.status !== "active" || !scene.question) return Promise.resolve(false);
+    const answer = scene.suggestions?.[0] ?? "Keep going";
+    source.writing = (async () => {
+      const connection = await this.connect();
+      record({ kind: "speech", who: "listener", label: `${answer} (just listening)` });
+      const call = connection.call("answer_story", { storyId: scene.storyId, answer });
+      const result = await call.result;
+      const next = sceneOf(result);
+      if (!next) throw new Error(textOf(result) || "The story couldn't continue.");
+      if (this.#listenSource !== source) return false;
+      // The assistant sees this as its own call, so speaking up later continues the same story.
+      const id = `listen_${call.id}`;
+      if (this.#messages.at(-1)?.role === "user") this.#messages.push({ role: "assistant", content: [{ type: "text", text: scene.question ?? "" }] });
+      this.#messages.push(
+        { role: "user", content: answer },
+        { role: "assistant", content: [{ type: "tool_use", id, name: "answer_story", input: { storyId: scene.storyId, answer } }] },
+        { role: "user", content: [{ type: "tool_result", tool_use_id: id, content: textOf(result) }] },
+        { role: "assistant", content: [{ type: "text", text: next.question ?? "The end." }] },
+      );
+      source.scene = next;
+      rememberStory(next);
+      const playback = this.#snapshot.listen;
+      if (playback) {
+        const parts = [...playback.parts, { narration: next.narration, mood: next.mood }];
+        this.#setListen({ parts, total: Math.max(next.totalScenes ?? playback.total, playback.offset + parts.length) });
+      }
+      return true;
+    })()
+      .catch((error: Error) => {
+        this.#update({ error: error.message });
+        return false;
+      })
+      .finally(() => {
+        source.writing = undefined;
+      });
+    return source.writing;
+  }
+
+  /** Pause: the voice holds its place where it can; otherwise the part starts again on resume. */
+  pauseListen() {
+    const playback = this.#snapshot.listen;
+    if (!playback || playback.paused || playback.ended) return;
+    const played = playback.playedMs + (playback.playingSince ? Date.now() - playback.playingSince : 0);
+    if (this.#listenNarration?.pause()) {
+      this.#setListen({ paused: true, playingSince: null, playedMs: played });
+    } else {
+      this.#listenGen++;
+      this.#listenNarration?.cancel();
+      this.#setListen({ paused: true, playingSince: null, playedMs: 0 });
+    }
+    soundscape.duck(false);
+  }
+
+  resumeListen() {
+    const playback = this.#snapshot.listen;
+    if (!playback || !playback.paused) return;
+    if (this.#listenNarration?.resume()) {
+      this.#setListen({ paused: false, playingSince: Date.now() });
+      soundscape.duck(true);
+    } else {
+      this.#setListen({ paused: false, playedMs: 0 });
+      void this.#runListen(++this.#listenGen);
+    }
+  }
+
+  togglePauseListen() {
+    if (this.#snapshot.listen?.paused) this.resumeListen();
+    else this.pauseListen();
+  }
+
+  /** Jump to a part on the timeline (one already written, or the next one being written). */
+  jumpTo(index: number) {
+    const playback = this.#snapshot.listen;
+    if (!playback) return;
+    const canWrite = this.#listenSource?.kind === "story" && this.#listenSource.scene.status === "active";
+    const last = canWrite ? playback.parts.length : playback.parts.length - 1;
+    this.#listenGen++;
+    this.#listenNarration?.cancel();
+    // Past the last part of a finished story: that's the end.
+    if (index > last) {
+      this.#setListen({ ended: true, paused: false, writing: false, playingSince: null, playedMs: 0, at: Math.max(0, playback.parts.length - 1) });
+      soundscape.duck(false);
+      return;
+    }
+    const at = Math.max(0, index);
+    this.#setListen({ at, paused: false, ended: false, writing: false, playingSince: null, playedMs: 0 });
+    void this.#runListen(this.#listenGen);
+  }
+
+  nextPart() {
+    const playback = this.#snapshot.listen;
+    if (playback) this.jumpTo(playback.at + 1);
+  }
+
+  /** Back to the start of this part, or to the part before when it has only just begun. */
+  previousPart() {
+    const playback = this.#snapshot.listen;
+    if (!playback) return;
+    const played = playback.playedMs + (playback.playingSince ? Date.now() - playback.playingSince : 0);
+    this.jumpTo(played > 3000 || playback.ended ? playback.at : playback.at - 1);
+  }
+
+  #endListen() {
+    if (!this.#snapshot.listen && !this.#listenSource) return;
+    this.#listenGen++;
+    this.#listenNarration?.cancel();
+    this.#listenNarration = undefined;
+    this.#listenSource = undefined;
+    if (this.#snapshot.listen) this.#update({ listen: null });
   }
 
   /**
@@ -675,8 +913,10 @@ class SimulatedDevice {
   }
 
   #update(patch: Partial<DeviceSnapshot>) {
-    const { listening, thinking, speaking } = this.#flags;
+    const { listening, thinking } = this.#flags;
     const next = { ...this.#snapshot, ...patch };
+    const playing = next.listen && !next.listen.paused && !next.listen.ended && !next.listen.writing;
+    const speaking = this.#flags.speaking || Boolean(playing);
     next.state = !this.#connection && !next.error
       ? "connecting"
       : listening

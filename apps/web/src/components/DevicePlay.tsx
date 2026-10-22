@@ -1,4 +1,6 @@
-import type { EpisodePlayback, PlayMode, PlayModeRequest } from "../lib/device.ts";
+import { useEffect, useState } from "react";
+import type { EpisodePlayback, ListenPlayback, PlayMode, PlayModeRequest } from "../lib/device.ts";
+import { LISTEN_MS_PER_CHAR } from "../lib/play-mode.ts";
 import { artForStoryId } from "../lib/story-art.ts";
 
 /**
@@ -109,6 +111,160 @@ export function EpisodeScreen({
           </div>
         </footer>
       )}
+    </div>
+  );
+}
+
+function formatTime(ms: number) {
+  const seconds = Math.max(0, Math.round(ms / 1000));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+/**
+ * "Just listen": the story plays like a film. The text lights up as it's read, and the timeline has one chapter per
+ * part (parts still being written are dashed). Tap a chapter to jump, pause and resume in place, or skip parts.
+ */
+export function ListenScreen({
+  playback,
+  onTogglePause,
+  onPrevious,
+  onNext,
+  onJump,
+  onHome,
+}: {
+  playback: ListenPlayback;
+  onTogglePause: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+  onJump: (part: number) => void;
+  onHome: () => void;
+}) {
+  // Re-render while playing so the text and timeline move.
+  const [, tick] = useState(0);
+  const playing = playback.playingSince !== null && !playback.paused;
+  useEffect(() => {
+    if (!playing) return;
+    const timer = setInterval(() => tick((n) => n + 1), 200);
+    return () => clearInterval(timer);
+  }, [playing]);
+
+  const { parts, at, offset } = playback;
+  const part = parts[Math.min(at, parts.length - 1)];
+  const partMs = (text: string) => text.length * LISTEN_MS_PER_CHAR;
+  const playedInPart = playback.playedMs + (playback.playingSince ? Date.now() - playback.playingSince : 0);
+  const currentMs = part ? partMs(part.narration) : 1;
+  // Never shows a part as finished before the voice actually finishes it.
+  const partProgress = playback.ended ? 1 : at >= parts.length ? 0 : Math.min(0.98, playedInPart / currentMs);
+  const revealed = part ? Math.floor(part.narration.length * (playback.ended ? 1 : partProgress)) : 0;
+
+  const writtenMs = parts.reduce((sum, p) => sum + partMs(p.narration), 0);
+  const average = parts.length ? writtenMs / parts.length : 0;
+  // Timeline positions count the parts heard before this session (offset), so a continued story shows where it is.
+  const totalParts = Math.max(playback.total, offset + parts.length);
+  const totalMs = writtenMs + Math.max(0, totalParts - parts.length) * average;
+  const elapsedMs =
+    offset * average +
+    parts.slice(0, Math.min(at, parts.length)).reduce((sum, p) => sum + partMs(p.narration), 0) +
+    partProgress * (at < parts.length ? currentMs : 0);
+  const position = offset + at;
+
+  const status = playback.ended
+    ? "The end"
+    : playback.writing
+      ? "Writing the next part…"
+      : playback.paused
+        ? "Paused"
+        : `Part ${Math.min(position + 1, totalParts)} of ${totalParts}`;
+
+  return (
+    <div className={`ls${playback.paused ? " is-paused" : ""}`}>
+      <img className="ep-art ls-art" src={artForStoryId(playback.storyId)} alt="" />
+      <div className="ep-shade" aria-hidden />
+      <header className="ep-head">
+        <div>
+          <h2 className="ep-title">{playback.title}</h2>
+          <span className="ep-meta">
+            {playback.creator ? `by ${playback.creator} · ` : ""}Just listening
+          </span>
+        </div>
+        <button type="button" className="ep-home" onClick={onHome}>
+          Home
+        </button>
+      </header>
+
+      <div className="ep-body ls-body">
+        {playback.writing && !playback.ended ? (
+          <div className="ls-writing" role="status">
+            <span className="forge-flame" aria-hidden />
+            <span>Writing what happens next…</span>
+          </div>
+        ) : (
+          part && (
+            <p className="ep-narration ls-narration" key={at}>
+              <span className="ls-read">{part.narration.slice(0, revealed)}</span>
+              <span className="ls-unread">{part.narration.slice(revealed)}</span>
+            </p>
+          )
+        )}
+      </div>
+
+      <footer className="ls-controls">
+        <div className="ls-timeline" role="group" aria-label="Story timeline">
+          {Array.from({ length: totalParts }, (_, i) => {
+            const fill = i < position || playback.ended ? 1 : i === position ? partProgress : 0;
+            const part = i - offset;
+            const heardBefore = part < 0;
+            const written = heardBefore || part < parts.length;
+            const canJump = !heardBefore && (part < parts.length || (part === parts.length && !playback.ended));
+            return (
+              <button
+                key={i}
+                type="button"
+                className={`ls-chapter${written ? "" : " is-unwritten"}${i === position && !playback.ended ? " is-current" : ""}`}
+                onClick={() => canJump && onJump(part)}
+                disabled={!canJump}
+                aria-label={`Part ${i + 1}${written ? "" : " (not written yet)"}`}
+              >
+                <span className="ls-fill" style={{ width: `${fill * 100}%` }} />
+              </button>
+            );
+          })}
+        </div>
+        <div className="ls-row">
+          <span className="ls-time">
+            {formatTime(elapsedMs)} / {totalParts > parts.length ? "~" : ""}
+            {formatTime(totalMs)}
+          </span>
+          <div className="ls-buttons">
+            <button type="button" className="ls-btn" onClick={onPrevious} aria-label="Previous part">
+              <svg viewBox="0 0 24 24" aria-hidden><path d="M6 5h2v14H6zM20 5v14L9 12z" fill="currentColor" /></svg>
+            </button>
+            <button type="button" className="ls-btn ls-play" onClick={onTogglePause} aria-label={playback.paused || playback.ended ? "Play" : "Pause"} disabled={playback.ended}>
+              {playback.paused ? (
+                <svg viewBox="0 0 24 24" aria-hidden><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" /></svg>
+              )}
+            </button>
+            <button type="button" className="ls-btn" onClick={onNext} aria-label="Next part" disabled={playback.ended}>
+              <svg viewBox="0 0 24 24" aria-hidden><path d="M16 5h2v14h-2zM4 5v14l11-7z" fill="currentColor" /></svg>
+            </button>
+          </div>
+          <span className="ls-status">{status}</span>
+        </div>
+        {playback.ended ? (
+          <div className="ls-end">
+            <button type="button" className="ep-option" onClick={() => onJump(0)} autoFocus>
+              Play again
+            </button>
+            <button type="button" className="ep-option" onClick={onHome}>
+              Back to Home
+            </button>
+          </div>
+        ) : (
+          <span className="ls-hint">Say “pause”, “resume”, “next” or “start over”</span>
+        )}
+      </footer>
     </div>
   );
 }

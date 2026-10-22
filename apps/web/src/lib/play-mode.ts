@@ -72,3 +72,19 @@ export function nextSegment(segments: readonly EpisodeSegmentLike[], at: number,
   const next = segment.choices ? segment.choices.options[option]?.next : (segment.next ?? at + 1);
   return next !== undefined && next < segments.length ? next : undefined;
 }
+
+export type ListenControl = "pause" | "resume" | "next" | "previous" | "restart";
+
+/** Spoken controls for the "just listen" player: "pause", "resume", "next part", "previous", "start over". */
+export function parseListenControl(spoken: string): ListenControl | null {
+  const text = clean(spoken).replace(/ (?:the )?story$/, "").replace(/ it$/, "");
+  if (/^(?:pause|hold on|wait|hold|freeze)$/.test(text)) return "pause";
+  if (/^(?:resume|play|continue|keep going|go on|carry on|unpause|keep playing)$/.test(text)) return "resume";
+  if (/^(?:next|skip|next part|skip ahead|skip this part|forward|fast forward|next chapter)$/.test(text)) return "next";
+  if (/^(?:previous|previous part|rewind|back a part|go back a part|last part|previous chapter|replay this part)$/.test(text)) return "previous";
+  if (/^(?:start over|from the beginning|restart|play again|again from the start)$/.test(text)) return "restart";
+  return null;
+}
+
+/** Reading speed the timeline assumes, as on the Fire TV listen player (apps/tv story/engine.ts). */
+export const LISTEN_MS_PER_CHAR = 60;

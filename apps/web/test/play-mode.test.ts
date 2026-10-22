@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { isCancel, nextSegment, parsePlayMode, pickOption } from "../src/lib/play-mode.ts";
+import { isCancel, nextSegment, parseListenControl, parsePlayMode, pickOption } from "../src/lib/play-mode.ts";
 
 describe("Choosing how a story plays", () => {
   it("hears with choices and just listen, including the buttons' order", () => {
@@ -40,5 +40,18 @@ describe("Choosing how a story plays", () => {
     assert.equal(nextSegment(segments, 1), 2);
     assert.equal(nextSegment(segments, 2), undefined);
     assert.equal(nextSegment(segments, 3), undefined);
+  });
+
+  it("hears the listen player's controls, and only whole commands", () => {
+    assert.equal(parseListenControl("Pause"), "pause");
+    assert.equal(parseListenControl("Alexa, pause the story"), "pause");
+    assert.equal(parseListenControl("resume"), "resume");
+    assert.equal(parseListenControl("keep going"), "resume");
+    assert.equal(parseListenControl("next part"), "next");
+    assert.equal(parseListenControl("skip it"), "next");
+    assert.equal(parseListenControl("previous"), "previous");
+    assert.equal(parseListenControl("start over"), "restart");
+    assert.equal(parseListenControl("I pause at the door"), null);
+    assert.equal(parseListenControl("go home"), null);
   });
 });
