@@ -11,11 +11,14 @@ export function SceneStack({
   connection,
   onUserMessage,
   theme,
+  onShown,
 }: {
   call: ToolCall;
   connection: HauntConnection;
   onUserMessage: (text: string) => void;
   theme: "light" | "dark";
+  /** Called with a call's id once its view has loaded on screen. */
+  onShown?: (callId: string) => void;
 }) {
   const [frames, setFrames] = useState<ToolCall[]>([call]);
 
@@ -33,6 +36,7 @@ export function SceneStack({
           onUserMessage={onUserMessage}
           theme={theme}
           onReady={() => {
+            onShown?.(frame.id);
             // Let the fade-in finish before removing the scene underneath.
             setTimeout(() => setFrames((current) => current.filter((f) => f === frame || current.indexOf(f) > current.indexOf(frame))), 900);
           }}

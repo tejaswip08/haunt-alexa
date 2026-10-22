@@ -3127,3 +3127,180 @@ main {
   color: #ff6b6b;
   font-size: 1.5cqw;
 }
+
+/* Creating a story: the screen while start_story writes the first scene (components/StoryForge.tsx). */
+.forge {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(90% 70% at 50% 40%, #1a0c10 0%, #07080a 70%);
+  color: var(--ink);
+  container-type: inline-size;
+  animation: forge-in 0.5s ease both;
+}
+.forge-art {
+  position: absolute;
+  inset: -6%;
+  background: center / cover no-repeat;
+  opacity: 0.22;
+  filter: saturate(0.6) blur(1px);
+  animation: forge-drift 18s ease-in-out infinite alternate;
+}
+.forge-fog {
+  position: absolute;
+  inset: -20% -40%;
+  background:
+    radial-gradient(40% 30% at 30% 60%, rgb(236 230 218 / 0.07), transparent 70%),
+    radial-gradient(35% 25% at 70% 40%, rgb(236 230 218 / 0.05), transparent 70%);
+  animation: forge-fog 14s linear infinite;
+}
+.forge-fog-2 {
+  animation-duration: 22s;
+  animation-direction: reverse;
+  opacity: 0.7;
+}
+.forge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 50%, transparent 45%, rgb(0 0 0 / 0.75));
+  pointer-events: none;
+}
+.forge-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1cqw;
+  max-width: 70cqw;
+  text-align: center;
+}
+.forge-sigil {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 11cqw;
+  height: 11cqw;
+  margin-bottom: 1cqw;
+}
+.forge-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgb(193 39 45 / 0.55);
+  border-radius: 50%;
+  animation: forge-ring 2.6s ease-out infinite;
+}
+.forge-ring-2 {
+  animation-delay: 1.3s;
+}
+.forge-flame {
+  width: 3.4cqw;
+  height: 3.4cqw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #ffd9a0, #e0453a 45%, #7a0f1c 75%, transparent 76%);
+  box-shadow: 0 0 3cqw 1cqw rgb(224 69 58 / 0.45);
+  animation: forge-flicker 1.8s ease-in-out infinite;
+}
+.forge-eyebrow {
+  color: #e0453a;
+  font: 600 1.15cqw/1 var(--font-ui);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+.forge-title {
+  margin: 0;
+  font: 500 3.6cqw/1.12 var(--font-display);
+  text-shadow: 0 0.4cqw 2cqw rgb(0 0 0 / 0.6);
+}
+.forge-premise {
+  margin: 0;
+  max-width: 56cqw;
+  color: var(--ink-dim);
+  font: italic 400 1.9cqw/1.35 var(--font-display);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.forge-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8cqw;
+  margin: 0.4cqw 0 0;
+  padding: 0;
+  list-style: none;
+}
+.forge-details li {
+  padding: 0.55cqw 1.3cqw;
+  border: 1px solid rgb(236 230 218 / 0.16);
+  border-radius: 99px;
+  background: rgb(17 19 24 / 0.6);
+  backdrop-filter: blur(4px);
+  font: 500 1.2cqw/1 var(--font-ui);
+}
+.forge-step {
+  min-height: 1.6cqw;
+  margin: 1.2cqw 0 0;
+  color: var(--ink);
+  font: 500 1.5cqw/1.2 var(--font-ui);
+  animation: forge-step 0.6s ease both;
+}
+.forge-bar {
+  position: relative;
+  width: 26cqw;
+  height: 0.3cqw;
+  border-radius: 99px;
+  background: rgb(236 230 218 / 0.1);
+  overflow: hidden;
+}
+.forge-bar span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 35%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, #e0453a, transparent);
+  animation: forge-bar 1.6s ease-in-out infinite;
+}
+@keyframes forge-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes forge-drift {
+  from { transform: scale(1.04) translate(-1%, 0); }
+  to { transform: scale(1.12) translate(1.5%, -1%); }
+}
+@keyframes forge-fog {
+  from { transform: translateX(-12%); }
+  to { transform: translateX(12%); }
+}
+@keyframes forge-ring {
+  from { transform: scale(0.45); opacity: 0.9; }
+  to { transform: scale(1.25); opacity: 0; }
+}
+@keyframes forge-flicker {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  45% { transform: scale(0.9) translateY(0.1cqw); opacity: 0.82; }
+  70% { transform: scale(1.06); opacity: 0.95; }
+}
+@keyframes forge-step {
+  from { opacity: 0; transform: translateY(0.6cqw); filter: blur(2px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes forge-bar {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(290%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .forge-art,
+  .forge-fog,
+  .forge-ring,
+  .forge-flame,
+  .forge-bar span {
+    animation: none;
+  }
+}

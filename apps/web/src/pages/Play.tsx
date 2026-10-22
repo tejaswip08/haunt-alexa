@@ -4,6 +4,7 @@ import { DeviceFrame } from "../components/DeviceFrame.tsx";
 import { StoryEngagement } from "../components/StoryEngagement.tsx";
 import { Inspector } from "../components/Inspector.tsx";
 import { SceneStack } from "../components/SceneStack.tsx";
+import { StoryForge } from "../components/StoryForge.tsx";
 import { device, useDevice, type DeviceState } from "../lib/device.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
 import { soundscape } from "../lib/soundscape.ts";
@@ -26,6 +27,10 @@ export function Play() {
   const [speakerOnly, setSpeakerOnly] = useState(false);
   const [ambience, setAmbience] = useState(soundscape.enabled);
   const [lightScreen, setLightScreen] = useState(false);
+  /** The last scene view that finished loading on screen; until a new story's view does, the "creating" screen shows. */
+  const [shownId, setShownId] = useState<string | null>(null);
+  /** The last start_story call whose result arrived (the view loads before the scene is written). */
+  const [writtenId, setWrittenId] = useState<string | null>(null);
   const mode = useServerMode();
   // The story opened from the library (?episode=…&from=library). Read once: the address is tidied on mount below.
   const [episodeId] = useState(() => new URLSearchParams(window.location.search).get("episode"));
@@ -70,6 +75,17 @@ export function Play() {
   }, []);
 
   const { state, heard, view, error } = snapshot;
+  useEffect(() => {
+    if (view?.tool.name !== "start_story") return;
+    let live = true;
+    // A moment after the scene arrives, so the view has drawn it before the creating screen fades away.
+    const done = () => setTimeout(() => live && setWrittenId(view.id), 450);
+    view.result.then(done, done);
+    return () => {
+      live = false;
+    };
+  }, [view]);
+  const creating = view?.tool.name === "start_story" && (shownId !== view.id || writtenId !== view.id) && !error;
   const live = mode && mode.story === "live" && mode.agent === "live";
 
   return (
@@ -113,6 +129,7 @@ export function Play() {
                 connection={connection}
                 theme={lightScreen ? "light" : "dark"}
                 onUserMessage={(text) => device.say(text)}
+                onShown={setShownId}
               />
             ) : (
               <DeviceApp
@@ -124,6 +141,7 @@ export function Play() {
                 onResume={(storyId) => void device.resumeStory(storyId)}
               />
             )}
+            {creating && <StoryForge key={view.id} input={view.input} />}
             {(state === "listening" || (heard && state === "thinking")) && (
               <div className="heard" aria-live="polite">
                 {heard || "…"}
