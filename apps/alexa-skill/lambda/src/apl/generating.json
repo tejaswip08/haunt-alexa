@@ -1,0 +1,55 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Generating, error state. Port of apps/tv/src/screens/GeneratingScreen.tsx ('The story didn't start'). Shown until the skill can reach the Haunt story server.",
+  "theme": "dark",
+  "mainTemplate": {
+    "parameters": ["payload"],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [{ "name": "u", "type": "number", "value": "${Math.min(viewport.width / 1920, viewport.height / 1080)}" }],
+        "items": [
+          { "type": "Frame", "position": "absolute", "width": "100%", "height": "100%", "backgroundColor": "@background" },
+          { "type": "SceneArt", "art": "${payload.generating.art}" },
+          { "type": "Frame", "position": "absolute", "width": "100%", "height": "100%", "backgroundColor": "#040507D9" },
+          {
+            "type": "Container",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "paddingLeft": "10vw",
+            "paddingRight": "10vw",
+            "items": [
+              { "type": "Text", "text": "HORROR · ${payload.generating.subgenreName} · ${payload.generating.place}", "textAlign": "center", "fontFamily": "Amazon Ember Display", "fontWeight": "bold", "fontSize": "${Math.max(12, 20 * u)}", "letterSpacing": "${5 * u}", "color": "@accentBright" },
+              { "type": "Text", "text": "The story didn't start", "spacing": "${10 * u}", "textAlign": "center", "fontFamily": "Bookerly", "fontWeight": "bold", "fontSize": "${Math.max(30, 88 * u)}", "color": "@text" },
+              { "type": "Text", "text": "${payload.generating.message}", "spacing": "${16 * u}", "textAlign": "center", "fontFamily": "Bookerly", "fontStyle": "italic", "fontSize": "${Math.max(16, 32 * u)}", "lineHeight": 1.35, "color": "@textMuted" },
+              {
+                "type": "Container",
+                "direction": "row",
+                "wrap": "wrap",
+                "justifyContent": "center",
+                "spacing": "${28 * u}",
+                "data": "${payload.generating.pills}",
+                "items": [{ "type": "MetaPill", "text": "${data}", "spacing": "${10 * u}" }]
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "spacing": "${48 * u}",
+                "items": [
+                  { "type": "HButton", "label": "Play The Ashford House", "action": "playAshford", "variant": "primary" },
+                  { "type": "HButton", "label": "Change Settings", "action": "changeSettings", "spacing": "${20 * u}" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

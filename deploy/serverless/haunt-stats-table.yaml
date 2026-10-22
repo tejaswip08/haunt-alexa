@@ -1,0 +1,34 @@
+# The existing production table haunt-stats, brought under CloudFormation by an IMPORT change set.
+# The definition below matches the live table exactly (read-only describe-table) so the import shows no property changes.
+# Stage 2 (this template): adds the trend-by-day index. Applied as an UPDATE change set on the imported stack; not executed until approved.
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Haunt play, like and Featured Tonight counters (haunt-stats), managed by CloudFormation.
+
+Resources:
+  HauntStatsTable:
+    Type: AWS::DynamoDB::Table
+    # A stack delete or replacement must never remove the table or its data.
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: haunt-stats
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: trendDay
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: trend-by-day
+          KeySchema:
+            - AttributeName: trendDay
+              KeyType: HASH
+          Projection:
+            ProjectionType: INCLUDE
+            NonKeyAttributes:
+              - storyId
+              - playedAt
+      DeletionProtectionEnabled: false

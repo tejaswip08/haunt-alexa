@@ -1,0 +1,346 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Haunt sign-in screen. Matches the Fire TV LoginScreen: scene art + brand on the left, QR panel on the right.",
+  "theme": "dark",
+  "settings": {
+    "idleTimeout": 120000
+  },
+  "styles": {
+    "hauntButtonPrimary": {
+      "values": [
+        { "backgroundColor": "#B3122E" },
+        { "when": "${state.pressed || state.focused}", "backgroundColor": "#F2EBDD" }
+      ]
+    },
+    "hauntButtonSecondary": {
+      "values": [
+        { "backgroundColor": "#ECE6DA1A" },
+        { "when": "${state.pressed || state.focused}", "backgroundColor": "#F2EBDD" }
+      ]
+    },
+    "hauntButtonLabel": {
+      "values": [
+        { "color": "#ECE6DA" },
+        { "when": "${state.pressed || state.focused}", "color": "#07080A" }
+      ]
+    }
+  },
+  "layouts": {
+    "HauntLogo": {
+      "parameters": ["size", { "name": "centered", "type": "boolean", "default": false }],
+      "item": {
+        "type": "Container",
+        "alignItems": "${centered ? 'center' : 'start'}",
+        "items": [
+          {
+            "type": "Text",
+            "text": "HAUNT",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${size}",
+            "letterSpacing": "${size * 0.28}",
+            "paddingLeft": "${centered ? size * 0.28 : 0}",
+            "color": "#ECE6DA"
+          },
+          {
+            "type": "Frame",
+            "spacing": 4,
+            "width": "${size * 0.9}",
+            "height": "${Math.max(3, size * 0.06)}",
+            "backgroundColor": "#B3122E"
+          }
+        ]
+      }
+    },
+    "HauntButton": {
+      "parameters": ["label", "action", { "name": "primary", "type": "boolean", "default": false }],
+      "item": {
+        "type": "TouchWrapper",
+        "width": "${btnColumn ? '100%' : 'auto'}",
+        "onPress": [{ "type": "SendEvent", "arguments": ["${action}"] }],
+        "item": {
+          "type": "Frame",
+          "inheritParentState": true,
+          "style": "${primary ? 'hauntButtonPrimary' : 'hauntButtonSecondary'}",
+          "borderRadius": "${10 * s}",
+          "height": "${btnHeight}",
+          "paddingLeft": "${btnPadX}",
+          "paddingRight": "${btnPadX}",
+          "item": {
+            "type": "Text",
+            "inheritParentState": true,
+            "style": "hauntButtonLabel",
+            "text": "${label}",
+            "width": "${btnColumn ? '100%' : 'auto'}",
+            "height": "100%",
+            "textAlign": "center",
+            "textAlignVertical": "center",
+            "fontFamily": "Amazon Ember Display",
+            "fontWeight": "500",
+            "fontSize": "${btnFont}",
+            "maxLines": 1
+          }
+        }
+      }
+    },
+    "SignInPanel": {
+      "item": {
+        "type": "Container",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "Text",
+            "text": "${payload.login.prompt}",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${promptSize}",
+            "textAlign": "center",
+            "color": "#ECE6DA"
+          },
+          {
+            "type": "Frame",
+            "spacing": "${promptSize * 0.7}",
+            "backgroundColor": "#FFFFFF",
+            "borderRadius": "${12 * s}",
+            "padding": "${round ? 6 : 10 * s}",
+            "item": {
+              "type": "VectorGraphic",
+              "source": "signInQr",
+              "width": "${qrSize}",
+              "height": "${qrSize}",
+              "scale": "best-fit"
+            }
+          },
+          {
+            "type": "Text",
+            "spacing": "${captionSize * 0.8}",
+            "text": "${round ? 'Code ' + payload.login.userCode : 'Or go to ' + payload.login.verificationDisplay + ' and enter ' + payload.login.userCode}",
+            "fontFamily": "Amazon Ember Display",
+            "fontSize": "${captionSize}",
+            "textAlign": "center",
+            "color": "#A39D90"
+          },
+          {
+            "type": "Text",
+            "when": "${round}",
+            "spacing": 6,
+            "text": "Say “continue as guest” to skip.",
+            "fontFamily": "Amazon Ember Display",
+            "fontSize": "${captionSize}",
+            "textAlign": "center",
+            "color": "#6E6A62"
+          },
+          {
+            "type": "Container",
+            "when": "${!round}",
+            "spacing": "${promptSize}",
+            "direction": "${btnColumn ? 'column' : 'row'}",
+            "alignItems": "center",
+            "width": "${btnColumn ? '100%' : 'auto'}",
+            "items": [
+              { "type": "HauntButton", "label": "Continue as Guest", "action": "guest", "primary": true },
+              { "type": "HauntButton", "label": "New Code", "action": "newCode", "spacing": "${btnColumn ? btnGap * 0.6 : btnGap}" }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "graphics": {
+    "ashfordHouse": {
+      "type": "AVG",
+      "version": "1.2",
+      "description": "Port of the Fire TV art public/art/ashford-house.svg (blur filters replaced with soft radial gradients).",
+      "width": 1600,
+      "height": 900,
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M0,0h1600v900h-1600z",
+          "fill": { "type": "linear", "colorRange": ["#04060a", "#151c27", "#262b33"], "inputRange": [0, 0.6, 1], "x1": 0, "y1": 0, "x2": 0, "y2": 1 }
+        },
+        {
+          "type": "path",
+          "description": "Moon halo",
+          "pathData": "M860,200 a320,320 0 1,0 640,0 a320,320 0 1,0 -640,0",
+          "fill": { "type": "radial", "colorRange": ["#e8e2cf80", "#8f99a629", "#00000000"], "inputRange": [0, 0.25, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 }
+        },
+        { "type": "path", "description": "Moon", "pathData": "M1114,200 a66,66 0 1,0 132,0 a66,66 0 1,0 -132,0", "fill": "#dcd6c4" },
+        { "type": "path", "pathData": "M1150,185 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0", "fill": "#c9c2ae", "fillOpacity": 0.6 },
+        { "type": "path", "pathData": "M1186,225 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0", "fill": "#c9c2ae", "fillOpacity": 0.5 },
+        {
+          "type": "group",
+          "description": "Clouds",
+          "items": [
+            { "type": "path", "pathData": "M732,250 a308,55 0 1,0 616,0 a308,55 0 1,0 -616,0", "fill": { "type": "radial", "colorRange": ["#0a0d12D9", "#0a0d1200"], "inputRange": [0.2, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } },
+            { "type": "path", "pathData": "M1100,175 a220,40 0 1,0 440,0 a220,40 0 1,0 -440,0", "fill": { "type": "radial", "colorRange": ["#0a0d12D9", "#0a0d1200"], "inputRange": [0.2, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } },
+            { "type": "path", "pathData": "M24,140 a396,65 0 1,0 792,0 a396,65 0 1,0 -792,0", "fill": { "type": "radial", "colorRange": ["#0a0d12D9", "#0a0d1200"], "inputRange": [0.2, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } }
+          ]
+        },
+        { "type": "path", "description": "Ground", "pathData": "M0,770 Q380,700 780,735 Q1180,770 1600,705 L1600,900 L0,900 Z", "fill": "#06080b" },
+        {
+          "type": "path",
+          "description": "Ashford House",
+          "pathData": "M520,440h460v320h-460z M495,450L750,300L1005,450z M600,330h38v90h-38z M940,300h120v460h-120z M925,308L1000,160L1075,308z M997,120h6v44h-6z M620,650h300v16h-300z M630,666h12v94h-12z M898,666h12v94h-12z",
+          "fill": "#05070a"
+        },
+        {
+          "type": "path",
+          "description": "Dark windows",
+          "pathData": "M575,490h56v80h-56z M690,490h56v80h-56z M860,490h56v80h-56z M575,680h56v70h-56z M735,380h30v44h-30z",
+          "fill": "#10151c"
+        },
+        { "type": "path", "description": "Tower window glow", "pathData": "M890,380 a110,110 0 1,0 220,0 a110,110 0 1,0 -220,0", "fill": { "type": "radial", "colorRange": ["#e09a3cB3", "#e09a3c00"], "inputRange": [0, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } },
+        { "type": "path", "pathData": "M980,350h40v64h-40z", "fill": "#d08a34" },
+        { "type": "path", "description": "Red window glow", "pathData": "M715,530 a90,90 0 1,0 180,0 a90,90 0 1,0 -180,0", "fill": { "type": "radial", "colorRange": ["#c0182f99", "#c0182f00"], "inputRange": [0, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } },
+        { "type": "path", "pathData": "M780,490h50v80h-50z", "fill": "#7d1525" },
+        { "type": "path", "description": "Door", "pathData": "M760,660h38v100h-38z", "fill": "#0d1116" },
+        {
+          "type": "group",
+          "description": "Dead tree",
+          "items": [
+            { "type": "path", "pathData": "M230,800 C240,680 225,600 250,470", "fill": "transparent", "stroke": "#030405", "strokeWidth": 26, "strokeLineCap": "round" },
+            { "type": "path", "pathData": "M245,560 C200,520 160,500 100,470", "fill": "transparent", "stroke": "#030405", "strokeWidth": 12, "strokeLineCap": "round" },
+            { "type": "path", "pathData": "M248,520 C300,470 340,455 390,420", "fill": "transparent", "stroke": "#030405", "strokeWidth": 10, "strokeLineCap": "round" },
+            { "type": "path", "pathData": "M250,480 C230,410 250,360 230,300", "fill": "transparent", "stroke": "#030405", "strokeWidth": 9, "strokeLineCap": "round" },
+            { "type": "path", "pathData": "M120,478 C90,450 80,430 60,400", "fill": "transparent", "stroke": "#030405", "strokeWidth": 5, "strokeLineCap": "round" },
+            { "type": "path", "pathData": "M350,440 C370,400 400,390 430,360", "fill": "transparent", "stroke": "#030405", "strokeWidth": 5, "strokeLineCap": "round" },
+            { "type": "path", "pathData": "M235,330 C205,300 200,280 180,250", "fill": "transparent", "stroke": "#030405", "strokeWidth": 4, "strokeLineCap": "round" }
+          ]
+        },
+        {
+          "type": "group",
+          "description": "Ground fog",
+          "items": [
+            { "type": "path", "pathData": "M-183,790 a483,110 0 1,0 966,0 a483,110 0 1,0 -966,0", "fill": { "type": "radial", "colorRange": ["#c9ccd226", "#c9ccd200"], "inputRange": [0, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } },
+            { "type": "path", "pathData": "M302,770 a598,101 0 1,0 1196,0 a598,101 0 1,0 -1196,0", "fill": { "type": "radial", "colorRange": ["#c9ccd226", "#c9ccd200"], "inputRange": [0, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } },
+            { "type": "path", "pathData": "M983,800 a437,119 0 1,0 874,0 a437,119 0 1,0 -874,0", "fill": { "type": "radial", "colorRange": ["#c9ccd226", "#c9ccd200"], "inputRange": [0, 1], "centerX": 0.5, "centerY": 0.5, "radius": 0.5 } }
+          ]
+        }
+      ]
+    }
+  },
+  "mainTemplate": {
+    "parameters": ["payload"],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [
+          { "name": "round", "type": "boolean", "value": "${viewport.shape == 'round'}" },
+          { "name": "stacked", "type": "boolean", "value": "${round || viewport.width <= viewport.height}" },
+          { "name": "s", "type": "number", "value": "${stacked ? Math.min(viewport.width / 800, viewport.height / 1300) : Math.min(viewport.width / 1280, viewport.height / 800)}" },
+          { "name": "qrSize", "type": "number", "value": "${round ? viewport.height * 0.4 : 280 * s}" },
+          { "name": "promptSize", "type": "number", "value": "${round ? 22 : Math.max(22, 32 * s)}" },
+          { "name": "captionSize", "type": "number", "value": "${round ? 15 : Math.max(16, 18 * s)}" },
+          { "name": "btnFont", "type": "number", "value": "${Math.max(18, 22 * s)}" },
+          { "name": "btnHeight", "type": "number", "value": "${Math.max(44, 60 * s)}" },
+          { "name": "btnPadX", "type": "number", "value": "${Math.max(16, 28 * s)}" },
+          { "name": "btnGap", "type": "number", "value": "${Math.max(12, 18 * s)}" },
+          { "name": "btnColumn", "type": "boolean", "value": "${!stacked && viewport.width < 1500}" },
+          { "name": "logoSize", "type": "number", "value": "${Math.max(32, 60 * s)}" },
+          { "name": "taglineSize", "type": "number", "value": "${Math.max(22, 44 * s)}" },
+          { "name": "subSize", "type": "number", "value": "${Math.max(16, 20 * s)}" }
+        ],
+        "items": [
+          {
+            "type": "VectorGraphic",
+            "source": "ashfordHouse",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "scale": "best-fill",
+            "align": "center"
+          },
+          {
+            "type": "Frame",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "backgroundColor": "${stacked ? '#040507C7' : '#04050759'}"
+          },
+          {
+            "type": "Container",
+            "when": "${!stacked}",
+            "position": "absolute",
+            "left": "5vw",
+            "bottom": "11vh",
+            "width": "50vw",
+            "items": [
+              { "type": "HauntLogo", "size": "${logoSize}" },
+              {
+                "type": "Text",
+                "spacing": "${taglineSize * 0.55}",
+                "text": "${payload.login.tagline}",
+                "fontFamily": "Bookerly",
+                "fontWeight": "bold",
+                "fontStyle": "italic",
+                "fontSize": "${taglineSize}",
+                "color": "#ECE6DA"
+              },
+              {
+                "type": "Text",
+                "spacing": "${subSize * 0.6}",
+                "text": "${payload.login.description}",
+                "fontFamily": "Amazon Ember Display",
+                "fontSize": "${subSize}",
+                "lineHeight": 1.4,
+                "color": "#A39D90"
+              }
+            ]
+          },
+          {
+            "type": "Frame",
+            "when": "${!stacked}",
+            "position": "absolute",
+            "left": "60vw",
+            "width": "40vw",
+            "height": "100%",
+            "backgroundColor": "#0A0B0EE6"
+          },
+          {
+            "type": "Frame",
+            "when": "${!stacked}",
+            "position": "absolute",
+            "left": "60vw",
+            "width": 1,
+            "height": "100%",
+            "backgroundColor": "#2A2E37"
+          },
+          {
+            "type": "Container",
+            "when": "${!stacked}",
+            "position": "absolute",
+            "left": "60vw",
+            "width": "40vw",
+            "height": "100%",
+            "paddingLeft": "4vw",
+            "paddingRight": "4vw",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "items": [
+              { "type": "SignInPanel", "width": "100%" }
+            ]
+          },
+          {
+            "type": "Container",
+            "when": "${stacked}",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "paddingLeft": "${round ? '14vw' : '8vw'}",
+            "paddingRight": "${round ? '14vw' : '8vw'}",
+            "items": [
+              { "type": "HauntLogo", "when": "${!round}", "size": "${logoSize}", "centered": true },
+              { "type": "SignInPanel", "spacing": "${round ? 0 : logoSize}", "width": "100%" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

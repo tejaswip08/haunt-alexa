@@ -1,0 +1,808 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Create your own story. Port of apps/tv/src/screens/CreateStoryScreen.tsx. Selections live in bound variables on createRoot; Generate sends them all.",
+  "theme": "dark",
+  "layouts": {
+    "Tile": {
+      "parameters": [
+        "s",
+        "index"
+      ],
+      "item": {
+        "type": "TouchWrapper",
+        "onPress": [
+          {
+            "type": "SetValue",
+            "componentId": "createRoot",
+            "property": "sub",
+            "value": "${index}"
+          }
+        ],
+        "item": {
+          "type": "Frame",
+          "width": "${tileW}",
+          "height": "${tileW * 0.5725}",
+          "borderRadius": "${12 * u}",
+          "borderWidth": "${Math.max(2, 4 * u)}",
+          "borderColor": "${sub == index ? '@accentBright' : 'transparent'}",
+          "backgroundColor": "@surface",
+          "item": {
+            "type": "Container",
+            "width": "100%",
+            "height": "100%",
+            "justifyContent": "end",
+            "items": [
+              {
+                "type": "VectorGraphic",
+                "source": "${s.art}",
+                "position": "absolute",
+                "width": "100%",
+                "height": "100%",
+                "scale": "best-fill",
+                "align": "center"
+              },
+              {
+                "type": "Frame",
+                "position": "absolute",
+                "width": "100%",
+                "height": "100%",
+                "backgroundColor": "#04050773"
+              },
+              {
+                "type": "Text",
+                "text": "${s.name}",
+                "maxLines": 1,
+                "fontFamily": "Bookerly",
+                "fontWeight": "bold",
+                "fontSize": "${Math.max(13, 26 * u)}",
+                "color": "@text",
+                "paddingLeft": "${14 * u}",
+                "paddingRight": "${14 * u}",
+                "paddingBottom": "${10 * u}"
+              },
+              {
+                "type": "Frame",
+                "display": "${sub == index ? 'normal' : 'none'}",
+                "position": "absolute",
+                "top": "${10 * u}",
+                "right": "${10 * u}",
+                "width": "${Math.max(20, 36 * u)}",
+                "height": "${Math.max(20, 36 * u)}",
+                "borderRadius": "${Math.max(10, 18 * u)}",
+                "backgroundColor": "@accentBright",
+                "item": {
+                  "type": "Container",
+                  "width": "100%",
+                  "height": "100%",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "items": [
+                    {
+                      "type": "Icon",
+                      "name": "iconCheck",
+                      "size": "${Math.max(12, 22 * u)}"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "OptionCard": {
+      "description": "Radio-style option: selected = crimson outline + filled dot.",
+      "parameters": [
+        "label",
+        {
+          "name": "detail",
+          "default": ""
+        },
+        "selected",
+        "prop",
+        "index",
+        {
+          "name": "grow",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "item": {
+        "type": "TouchWrapper",
+        "grow": "${grow ? 1 : 0}",
+        "shrink": "${grow ? 1 : 0}",
+        "onPress": [
+          {
+            "type": "SetValue",
+            "componentId": "createRoot",
+            "property": "${prop}",
+            "value": "${index}"
+          }
+        ],
+        "item": {
+          "type": "Frame",
+          "borderRadius": "${12 * u}",
+          "borderWidth": "${Math.max(2, 3 * u)}",
+          "borderColor": "${selected ? '@accentBright' : '@border'}",
+          "backgroundColor": "${selected ? '#B3122E24' : '#111318D9'}",
+          "paddingTop": "${Math.max(10, 18 * u)}",
+          "paddingBottom": "${Math.max(10, 18 * u)}",
+          "paddingLeft": "${Math.max(12, 22 * u)}",
+          "paddingRight": "${Math.max(12, 22 * u)}",
+          "item": {
+            "type": "Container",
+            "items": [
+              {
+                "type": "Container",
+                "direction": "row",
+                "alignItems": "center",
+                "items": [
+                  {
+                    "type": "Frame",
+                    "width": "${Math.max(16, 26 * u)}",
+                    "height": "${Math.max(16, 26 * u)}",
+                    "borderRadius": "${Math.max(8, 13 * u)}",
+                    "borderWidth": 2,
+                    "borderColor": "${selected ? '@accentBright' : '@textDim'}",
+                    "item": {
+                      "type": "Container",
+                      "width": "100%",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "items": [
+                        {
+                          "type": "Frame",
+                          "display": "${selected ? 'normal' : 'none'}",
+                          "width": "${Math.max(8, 12 * u)}",
+                          "height": "${Math.max(8, 12 * u)}",
+                          "borderRadius": "${Math.max(4, 6 * u)}",
+                          "backgroundColor": "@accentBright"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "text": "${label}",
+                    "spacing": "${14 * u}",
+                    "maxLines": 1,
+                    "fontFamily": "Amazon Ember Display",
+                    "fontWeight": "600",
+                    "fontSize": "${Math.max(14, 24 * u)}",
+                    "color": "@text"
+                  }
+                ]
+              },
+              {
+                "type": "Text",
+                "when": "${detail != ''}",
+                "text": "${detail}",
+                "spacing": "${8 * u}",
+                "fontFamily": "Amazon Ember Display",
+                "fontSize": "${Math.max(12, 19 * u)}",
+                "color": "@textMuted"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "SummaryRow": {
+      "parameters": [
+        "key",
+        "value"
+      ],
+      "item": {
+        "type": "Container",
+        "direction": "row",
+        "justifyContent": "spaceBetween",
+        "paddingTop": "${12 * u}",
+        "paddingBottom": "${12 * u}",
+        "items": [
+          {
+            "type": "Text",
+            "text": "${key}",
+            "fontFamily": "Amazon Ember Display",
+            "fontSize": "${Math.max(13, 21 * u)}",
+            "color": "@textMuted"
+          },
+          {
+            "type": "Text",
+            "text": "${value}",
+            "maxLines": 1,
+            "shrink": 1,
+            "spacing": "${16 * u}",
+            "textAlign": "right",
+            "fontFamily": "Amazon Ember Display",
+            "fontWeight": "600",
+            "fontSize": "${Math.max(13, 21 * u)}",
+            "color": "@text"
+          }
+        ]
+      }
+    },
+    "SectionHeader": {
+      "parameters": [
+        "number",
+        "title"
+      ],
+      "item": {
+        "type": "Container",
+        "direction": "row",
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "Frame",
+            "width": "${Math.max(26, 44 * u)}",
+            "height": "${Math.max(26, 44 * u)}",
+            "borderRadius": "${Math.max(13, 22 * u)}",
+            "backgroundColor": "@accent",
+            "item": {
+              "type": "Text",
+              "text": "${number}",
+              "width": "100%",
+              "height": "100%",
+              "textAlign": "center",
+              "textAlignVertical": "center",
+              "fontFamily": "Amazon Ember Display",
+              "fontWeight": "bold",
+              "fontSize": "${Math.max(13, 20 * u)}",
+              "color": "@text"
+            }
+          },
+          {
+            "type": "Text",
+            "text": "${title}",
+            "spacing": "${16 * u}",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${Math.max(18, 36 * u)}",
+            "color": "@text"
+          }
+        ],
+        "spacing": "${Math.max(18, 44 * u)}"
+      }
+    }
+  },
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "items": [
+      {
+        "type": "Container",
+        "id": "createRoot",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [
+          {
+            "name": "u",
+            "type": "number",
+            "value": "${Math.min(viewport.width / 1920, viewport.height / 1080)}"
+          },
+          {
+            "name": "stacked",
+            "type": "boolean",
+            "value": "${viewport.width < viewport.height}"
+          },
+          {
+            "name": "sub",
+            "type": "number",
+            "value": "${payload.create.initialSub}"
+          },
+          {
+            "name": "setting",
+            "type": "number",
+            "value": 0
+          },
+          {
+            "name": "len",
+            "type": "number",
+            "value": 1
+          },
+          {
+            "name": "fear",
+            "type": "number",
+            "value": 1
+          },
+          {
+            "name": "lang",
+            "type": "number",
+            "value": 0
+          },
+          {
+            "name": "idea",
+            "type": "string",
+            "value": ""
+          },
+          {
+            "name": "formW",
+            "type": "number",
+            "value": "${stacked ? viewport.width * 0.9 : viewport.width * 0.58}"
+          },
+          {
+            "name": "tileW",
+            "type": "number",
+            "value": "${(formW - 3 * 16 * u) / 4}"
+          }
+        ],
+        "items": [
+          {
+            "type": "Frame",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "backgroundColor": "@background"
+          },
+          {
+            "type": "SceneArt",
+            "art": "${payload.create.subgenres[sub].art}"
+          },
+          {
+            "type": "Frame",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "backgroundColor": "#040507CC"
+          },
+          {
+            "type": "ScrollView",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": "${stacked ? viewport.width : viewport.width * 0.66}",
+            "item": {
+              "type": "Container",
+              "paddingLeft": "5vw",
+              "paddingTop": "5vh",
+              "paddingBottom": "12vh",
+              "width": "${formW + viewport.width * 0.05}",
+              "items": [
+                {
+                  "type": "Container",
+                  "direction": "row",
+                  "items": [
+                    {
+                      "type": "HButton",
+                      "label": "‹  Back",
+                      "action": "back",
+                      "variant": "ghost",
+                      "compact": true
+                    }
+                  ]
+                },
+                {
+                  "type": "Text",
+                  "text": "CREATE YOUR OWN STORY",
+                  "spacing": "${24 * u}",
+                  "fontFamily": "Amazon Ember Display",
+                  "fontWeight": "bold",
+                  "fontSize": "${Math.max(12, 20 * u)}",
+                  "letterSpacing": "${5 * u}",
+                  "color": "@accentBright"
+                },
+                {
+                  "type": "Text",
+                  "text": "Design your nightmare",
+                  "spacing": "${6 * u}",
+                  "fontFamily": "Bookerly",
+                  "fontWeight": "bold",
+                  "fontSize": "${Math.max(30, 80 * u)}",
+                  "color": "@text"
+                },
+                {
+                  "type": "Container",
+                  "direction": "row",
+                  "alignItems": "center",
+                  "wrap": "wrap",
+                  "spacing": "${16 * u}",
+                  "items": [
+                    {
+                      "type": "Frame",
+                      "borderRadius": "${8 * u}",
+                      "backgroundColor": "#ECE6DA1A",
+                      "paddingLeft": "${14 * u}",
+                      "paddingRight": "${14 * u}",
+                      "paddingTop": "${6 * u}",
+                      "paddingBottom": "${6 * u}",
+                      "item": {
+                        "type": "Container",
+                        "direction": "row",
+                        "alignItems": "center",
+                        "items": [
+                          {
+                            "type": "Icon",
+                            "name": "iconLock",
+                            "size": "${Math.max(12, 18 * u)}"
+                          },
+                          {
+                            "type": "Text",
+                            "text": "Genre: Horror",
+                            "spacing": "${8 * u}",
+                            "fontFamily": "Amazon Ember Display",
+                            "fontWeight": "600",
+                            "fontSize": "${Math.max(13, 20 * u)}",
+                            "color": "@text"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "text": "Haunt only tells horror stories. Pick the kind of horror below.",
+                      "spacing": "${16 * u}",
+                      "shrink": 1,
+                      "fontFamily": "Amazon Ember Display",
+                      "fontSize": "${Math.max(13, 20 * u)}",
+                      "color": "@textMuted"
+                    }
+                  ]
+                },
+                {
+                  "type": "SectionHeader",
+                  "number": 1,
+                  "title": "Choose a sub-genre"
+                },
+                {
+                  "type": "Container",
+                  "direction": "row",
+                  "wrap": "wrap",
+                  "width": "${formW}",
+                  "data": "${payload.create.subgenres}",
+                  "items": [
+                    {
+                      "type": "Tile",
+                      "s": "${data}",
+                      "index": "${index}",
+                      "paddingRight": "${index % 4 == 3 ? 0 : 16 * u}",
+                      "paddingBottom": "${16 * u}"
+                    }
+                  ],
+                  "spacing": "${20 * u}"
+                },
+                {
+                  "type": "SectionHeader",
+                  "number": 2,
+                  "title": "Your own idea (optional)"
+                },
+                {
+                  "type": "Container",
+                  "width": "${formW}",
+                  "items": [
+                    {
+                      "type": "Frame",
+                      "borderRadius": "${12 * u}",
+                      "borderWidth": "${Math.max(2, 3 * u)}",
+                      "borderColor": "@border",
+                      "backgroundColor": "#111318D9",
+                      "paddingLeft": "${20 * u}",
+                      "paddingRight": "${20 * u}",
+                      "paddingTop": "${14 * u}",
+                      "paddingBottom": "${14 * u}",
+                      "item": {
+                        "type": "EditText",
+                        "width": "100%",
+                        "hint": "e.g. a ghost who rides the last train home",
+                        "hintColor": "@textDim",
+                        "color": "@text",
+                        "fontSize": "${Math.max(15, 26 * u)}",
+                        "maxLength": "${payload.create.ideaMaxLength}",
+                        "submitKeyType": "done",
+                        "onTextChange": [
+                          {
+                            "type": "SetValue",
+                            "componentId": "createRoot",
+                            "property": "idea",
+                            "value": "${event.source.value}"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "text": "Leave it empty and the story is built from your sub-genre and setting.",
+                      "spacing": "${10 * u}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontSize": "${Math.max(12, 19 * u)}",
+                      "color": "@textMuted"
+                    }
+                  ],
+                  "spacing": "${20 * u}"
+                },
+                {
+                  "type": "SectionHeader",
+                  "number": 3,
+                  "title": "Where does it begin?"
+                },
+                {
+                  "type": "Container",
+                  "direction": "row",
+                  "wrap": "wrap",
+                  "width": "${formW}",
+                  "data": "${payload.create.settings}",
+                  "items": [
+                    {
+                      "type": "OptionCard",
+                      "label": "${data}",
+                      "selected": "${setting == index}",
+                      "prop": "setting",
+                      "index": "${index}",
+                      "paddingRight": "${14 * u}",
+                      "paddingBottom": "${14 * u}"
+                    }
+                  ],
+                  "spacing": "${20 * u}"
+                },
+                {
+                  "type": "SectionHeader",
+                  "number": 4,
+                  "title": "How long?"
+                },
+                {
+                  "type": "Container",
+                  "direction": "row",
+                  "width": "${formW}",
+                  "data": "${payload.create.lengths}",
+                  "items": [
+                    {
+                      "type": "OptionCard",
+                      "label": "${data.label}",
+                      "detail": "${data.detail}",
+                      "selected": "${len == index}",
+                      "prop": "len",
+                      "index": "${index}",
+                      "grow": true,
+                      "spacing": "${14 * u}"
+                    }
+                  ],
+                  "spacing": "${20 * u}"
+                },
+                {
+                  "type": "SectionHeader",
+                  "number": 5,
+                  "title": "How scared do you want to be?"
+                },
+                {
+                  "type": "Container",
+                  "direction": "row",
+                  "width": "${formW}",
+                  "data": "${payload.create.fears}",
+                  "items": [
+                    {
+                      "type": "OptionCard",
+                      "label": "${data.label}",
+                      "detail": "${data.detail}",
+                      "selected": "${fear == index}",
+                      "prop": "fear",
+                      "index": "${index}",
+                      "grow": true,
+                      "spacing": "${14 * u}"
+                    }
+                  ],
+                  "spacing": "${20 * u}"
+                },
+                {
+                  "type": "SectionHeader",
+                  "number": 6,
+                  "title": "Which language?"
+                },
+                {
+                  "type": "Container",
+                  "width": "${formW}",
+                  "items": [
+                    {
+                      "type": "Container",
+                      "direction": "row",
+                      "wrap": "wrap",
+                      "data": "${payload.create.languages}",
+                      "items": [
+                        {
+                          "type": "OptionCard",
+                          "label": "${data.label}",
+                          "selected": "${lang == index}",
+                          "prop": "lang",
+                          "index": "${index}",
+                          "paddingRight": "${14 * u}",
+                          "paddingBottom": "${14 * u}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Text",
+                      "text": "The story is written in this language. Narration audio is English for now.",
+                      "spacing": "${4 * u}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontSize": "${Math.max(12, 19 * u)}",
+                      "color": "@textMuted"
+                    }
+                  ],
+                  "spacing": "${20 * u}"
+                },
+                {
+                  "type": "Container",
+                  "when": "${stacked}",
+                  "items": [
+                    {
+                      "type": "TouchWrapper",
+                      "spacing": "${40 * u}",
+                      "onPress": [
+                        {
+                          "type": "SendEvent",
+                          "arguments": [
+                            "generate",
+                            "${sub}",
+                            "${setting}",
+                            "${len}",
+                            "${fear}",
+                            "${lang}",
+                            "${idea}"
+                          ]
+                        }
+                      ],
+                      "item": {
+                        "type": "Frame",
+                        "inheritParentState": true,
+                        "style": "hButtonPrimary",
+                        "borderWidth": "${Math.max(2, 3 * u)}",
+                        "borderRadius": "${10 * u}",
+                        "height": "${Math.max(48, 84 * u)}",
+                        "item": {
+                          "type": "Text",
+                          "inheritParentState": true,
+                          "style": "hButtonLabel",
+                          "text": "Generate My Story",
+                          "width": "100%",
+                          "height": "100%",
+                          "textAlign": "center",
+                          "textAlignVertical": "center",
+                          "fontFamily": "Amazon Ember Display",
+                          "fontWeight": "600",
+                          "fontSize": "${Math.max(16, 30 * u)}"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "height": "100vh"
+          },
+          {
+            "type": "Container",
+            "when": "${!stacked}",
+            "position": "absolute",
+            "right": "4vw",
+            "top": "8vh",
+            "bottom": "8vh",
+            "width": "28vw",
+            "justifyContent": "center",
+            "items": [
+              {
+                "type": "Frame",
+                "backgroundColor": "#0A0B0EEB",
+                "borderColor": "@border",
+                "borderWidth": 1,
+                "borderRadius": "${18 * u}",
+                "padding": "${Math.max(16, 36 * u)}",
+                "item": {
+                  "type": "Container",
+                  "items": [
+                    {
+                      "type": "Text",
+                      "text": "HORROR · ${payload.create.subgenres[sub].upper}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontWeight": "bold",
+                      "fontSize": "${Math.max(11, 18 * u)}",
+                      "letterSpacing": "${4 * u}",
+                      "color": "@accentBright"
+                    },
+                    {
+                      "type": "Text",
+                      "text": "Your story",
+                      "spacing": "${6 * u}",
+                      "fontFamily": "Bookerly",
+                      "fontWeight": "bold",
+                      "fontSize": "${Math.max(22, 52 * u)}",
+                      "color": "@text"
+                    },
+                    {
+                      "type": "Text",
+                      "text": "${payload.create.subgenres[sub].description}",
+                      "spacing": "${8 * u}",
+                      "fontFamily": "Bookerly",
+                      "fontStyle": "italic",
+                      "fontSize": "${Math.max(14, 24 * u)}",
+                      "color": "@textMuted"
+                    },
+                    {
+                      "type": "Container",
+                      "spacing": "${18 * u}",
+                      "items": [
+                        {
+                          "type": "SummaryRow",
+                          "display": "${idea != '' ? 'normal' : 'none'}",
+                          "key": "Your idea",
+                          "value": "${idea}"
+                        },
+                        {
+                          "type": "SummaryRow",
+                          "key": "Setting",
+                          "value": "${payload.create.settings[setting]}"
+                        },
+                        {
+                          "type": "SummaryRow",
+                          "key": "Length",
+                          "value": "${payload.create.lengths[len].detail}"
+                        },
+                        {
+                          "type": "SummaryRow",
+                          "key": "Fear level",
+                          "value": "${payload.create.fears[fear].label}"
+                        },
+                        {
+                          "type": "SummaryRow",
+                          "key": "Language",
+                          "value": "${payload.create.languages[lang].short}"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TouchWrapper",
+                      "spacing": "${28 * u}",
+                      "onPress": [
+                        {
+                          "type": "SendEvent",
+                          "arguments": [
+                            "generate",
+                            "${sub}",
+                            "${setting}",
+                            "${len}",
+                            "${fear}",
+                            "${lang}",
+                            "${idea}"
+                          ]
+                        }
+                      ],
+                      "item": {
+                        "type": "Frame",
+                        "inheritParentState": true,
+                        "style": "hButtonPrimary",
+                        "borderWidth": "${Math.max(2, 3 * u)}",
+                        "borderRadius": "${10 * u}",
+                        "height": "${Math.max(48, 84 * u)}",
+                        "item": {
+                          "type": "Text",
+                          "inheritParentState": true,
+                          "style": "hButtonLabel",
+                          "text": "Generate My Story",
+                          "width": "100%",
+                          "height": "100%",
+                          "textAlign": "center",
+                          "textAlignVertical": "center",
+                          "fontFamily": "Amazon Ember Display",
+                          "fontWeight": "600",
+                          "fontSize": "${Math.max(16, 30 * u)}"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "text": "Every scene is written as you play. Finished stories can be shared from the ending screen.",
+                      "spacing": "${16 * u}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontSize": "${Math.max(12, 18 * u)}",
+                      "color": "@textDim"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

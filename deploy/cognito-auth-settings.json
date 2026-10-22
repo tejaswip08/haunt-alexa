@@ -1,0 +1,69 @@
+{
+  "_comment": "Reference only, matching the live pool and app client read-only. Use it to check for drift, and never apply it as a whole: an update that omits any setting resets that setting. Values here are not secrets.",
+  "userPool": {
+    "Id": "us-east-1_nHfQditMF",
+    "Name": "haunt-listeners",
+    "Tier": "ESSENTIALS",
+    "UsernameAttributes": ["email"],
+    "AutoVerifiedAttributes": ["email"],
+    "MfaConfiguration": "OFF",
+    "DeletionProtection": "ACTIVE",
+    "Policies": {
+      "PasswordPolicy": {
+        "MinimumLength": 12,
+        "RequireUppercase": true,
+        "RequireLowercase": true,
+        "RequireNumbers": true,
+        "RequireSymbols": true,
+        "TemporaryPasswordValidityDays": 7
+      },
+      "SignInPolicy": {
+        "AllowedFirstAuthFactors": ["PASSWORD", "EMAIL_OTP"]
+      }
+    },
+    "AccountRecoverySetting": {
+      "RecoveryMechanisms": [
+        { "Priority": 1, "Name": "verified_email" }
+      ]
+    },
+    "AdminCreateUserConfig": {
+      "AllowAdminCreateUserOnly": false,
+      "UnusedAccountValidityDays": 7
+    },
+    "VerificationMessageTemplate": {
+      "DefaultEmailOption": "CONFIRM_WITH_CODE"
+    },
+    "UserAttributeUpdateSettings": {
+      "AttributesRequireVerificationBeforeUpdate": []
+    },
+    "EmailConfiguration": {
+      "EmailSendingAccount": "COGNITO_DEFAULT"
+    },
+    "LambdaConfig": {}
+  },
+  "appClient": {
+    "ClientId": "4b86gcjpsca4paman9m8pgll7c",
+    "ClientName": "haunt-web",
+    "GenerateSecret": false,
+    "ExplicitAuthFlows": ["ALLOW_USER_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"],
+    "PreventUserExistenceErrors": "ENABLED",
+    "EnableTokenRevocation": true,
+    "EnablePropagateAdditionalUserContextData": false,
+    "AllowedOAuthFlowsUserPoolClient": false,
+    "AuthSessionValidity": 3,
+    "AccessTokenValidity": 1,
+    "IdTokenValidity": 1,
+    "RefreshTokenValidity": 30,
+    "TokenValidityUnits": {
+      "AccessToken": "hours",
+      "IdToken": "hours",
+      "RefreshToken": "days"
+    }
+  },
+  "signIn": {
+    "flow": "USER_AUTH",
+    "preferredChallenge": "EMAIL_OTP",
+    "signInCodeDigits": 8,
+    "signUpConfirmationCodeDigits": "decided by Cognito (accepted: 6 to 8)"
+  }
+}

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="room" cx="800" cy="380" r="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1d3034"/>
+      <stop offset=".6" stop-color="#0a1214"/>
+      <stop offset="1" stop-color="#030506"/>
+    </radialGradient>
+    <radialGradient id="glass" cx="800" cy="380" r="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9cc6c8" stop-opacity=".55"/>
+      <stop offset=".7" stop-color="#36585c" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#14222a"/>
+    </radialGradient>
+    <radialGradient id="eye"><stop offset="0" stop-color="#ff3b4e"/><stop offset="1" stop-color="#ff3b4e" stop-opacity="0"/></radialGradient>
+    <clipPath id="mirror"><ellipse cx="800" cy="380" rx="230" ry="300"/></clipPath>
+  </defs>
+  <rect width="1600" height="900" fill="url(#room)"/>
+  <ellipse cx="800" cy="380" rx="262" ry="332" fill="#0c0a08"/>
+  <ellipse cx="800" cy="380" rx="246" ry="316" fill="#3a2c1a"/>
+  <ellipse cx="800" cy="380" rx="230" ry="300" fill="url(#glass)"/>
+  <g clip-path="url(#mirror)">
+    <g fill="#0b1416">
+      <circle cx="800" cy="300" r="72"/>
+      <path d="M680 700 Q690 420 800 400 Q910 420 920 700 Z"/>
+    </g>
+    <circle cx="776" cy="296" r="16" fill="url(#eye)"/>
+    <circle cx="824" cy="296" r="16" fill="url(#eye)"/>
+    <circle cx="776" cy="296" r="4" fill="#ffd0d4"/>
+    <circle cx="824" cy="296" r="4" fill="#ffd0d4"/>
+    <path d="M770 336 Q800 356 830 336" stroke="#ff3b4e" stroke-width="4" fill="none" opacity=".8"/>
+    <g stroke="#cfe6e8" stroke-width="2.5" fill="none" opacity=".75">
+      <path d="M960 120 L880 260 L930 330 L860 470 L900 540"/>
+      <path d="M880 260 L800 230 L740 120"/>
+      <path d="M930 330 L1020 380"/>
+      <path d="M860 470 L760 500 L690 620"/>
+    </g>
+  </g>
+  <g fill="#020303">
+    <circle cx="800" cy="760" r="90"/>
+    <path d="M560 900 Q600 790 800 780 Q1000 790 1040 900 Z"/>
+  </g>
+  <rect y="880" width="1600" height="20" fill="#020303"/>
+</svg>

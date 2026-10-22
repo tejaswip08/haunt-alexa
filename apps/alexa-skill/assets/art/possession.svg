@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c0f08"/>
+      <stop offset="1" stop-color="#1c2212"/>
+    </linearGradient>
+    <radialGradient id="moonbeam" cx="1180" cy="250" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b8d08a" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="candle"><stop offset="0" stop-color="#f2b450" stop-opacity=".85"/><stop offset="1" stop-color="#f2b450" stop-opacity="0"/></radialGradient>
+    <radialGradient id="aura" cx="760" cy="420" r="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9fd15a" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#wall)"/>
+  <rect y="680" width="1600" height="220" fill="#080a05"/>
+  <rect x="1060" y="120" width="240" height="300" fill="#2d3a1e"/>
+  <rect x="1060" y="120" width="240" height="300" fill="url(#moonbeam)"/>
+  <rect x="1172" y="120" width="16" height="300" fill="#0a0c07"/>
+  <rect x="1060" y="230" width="240" height="16" fill="#0a0c07"/>
+  <rect x="1048" y="108" width="264" height="324" fill="none" stroke="#0a0c07" stroke-width="24"/>
+  <polygon points="1060,420 1300,420 1420,680 900,680" fill="#b8d08a" opacity=".07"/>
+  <circle cx="760" cy="420" r="260" fill="url(#aura)"/>
+  <g fill="#050604">
+    <rect x="460" y="560" width="600" height="120" rx="10"/>
+    <rect x="440" y="470" width="40" height="230"/>
+    <rect x="1040" y="520" width="40" height="180"/>
+    <rect x="490" y="530" width="140" height="40" rx="16" fill="#1a1f14"/>
+  </g>
+  <g fill="#030302" filter="url(#soft)">
+    <path d="M560 430 Q760 300 960 430 L940 450 Q760 350 580 450 Z"/>
+    <circle cx="540" cy="455" r="30"/>
+    <path d="M600 440 L560 520 M640 420 L620 510 M900 430 L940 520 M860 410 L880 500" stroke="#030302" stroke-width="14"/>
+  </g>
+  <g transform="translate(260 180)">
+    <rect x="-8" y="0" width="16" height="140" fill="#0a0c07"/>
+    <rect x="-44" y="88" width="88" height="16" fill="#0a0c07"/>
+  </g>
+  <circle cx="1380" cy="620" r="70" fill="url(#candle)"/>
+  <rect x="1372" y="620" width="16" height="60" fill="#d8cfb0"/>
+  <rect x="1378" y="604" width="4" height="16" fill="#ffd27a"/>
+  <circle cx="230" cy="630" r="60" fill="url(#candle)"/>
+  <rect x="222" y="630" width="16" height="50" fill="#d8cfb0"/>
+  <rect x="228" y="614" width="4" height="16" fill="#ffd27a"/>
+  <g stroke="#3e4a28" stroke-width="3" opacity=".6">
+    <path d="M200 700 L320 860 M1400 700 L1300 880 M760 690 L740 900"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+{
+  "name": "haunt-skill",
+  "version": "0.1.0",
+  "description": "Haunt - interactive horror storytelling Alexa skill (welcome experience)",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "npm run build && node --test test/",
+    "package": "npm run build && cd .. && rm -f haunt-lambda.zip && zip -r haunt-lambda.zip lambda/index.js lambda/package.json lambda/dist"
+  },
+  "dependencies": {
+    "ask-sdk-core": "^2.14.0",
+    "ask-sdk-model": "^1.86.0",
+    "qrcode-generator": "^2.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.9.0"
+  }
+}

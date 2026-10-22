@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="hall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c0614"/>
+      <stop offset="1" stop-color="#1e1028"/>
+    </linearGradient>
+    <radialGradient id="rose" cx="800" cy="260" r="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f0c060"/>
+      <stop offset=".3" stop-color="#b3122e"/>
+      <stop offset=".65" stop-color="#5a1a8a"/>
+      <stop offset="1" stop-color="#1b0a2a"/>
+    </radialGradient>
+    <radialGradient id="spill" cx="800" cy="700" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8a2a6a" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="flame"><stop offset="0" stop-color="#ffc66a" stop-opacity=".9"/><stop offset="1" stop-color="#ffc66a" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#hall)"/>
+  <rect y="640" width="1600" height="260" fill="#0a0510"/>
+  <ellipse cx="800" cy="760" rx="620" ry="140" fill="url(#spill)"/>
+  <circle cx="800" cy="260" r="170" fill="url(#rose)"/>
+  <g stroke="#0c0614" stroke-width="10" fill="none">
+    <circle cx="800" cy="260" r="170"/>
+    <circle cx="800" cy="260" r="60"/>
+    <path d="M800 90 V430 M630 260 H970 M680 140 L920 380 M920 140 L680 380"/>
+  </g>
+  <g fill="#050208">
+    <path d="M0 0 H360 V900 H0 Z M360 900 V420 Q360 120 560 60 L560 900 Z"/>
+    <path d="M1600 0 H1240 V900 H1600 Z M1240 900 V420 Q1240 120 1040 60 L1040 900 Z"/>
+    <path d="M560 60 Q800 -20 1040 60 L1040 0 L560 0 Z"/>
+    <rect x="200" y="0" width="70" height="900"/>
+    <rect x="1330" y="0" width="70" height="900"/>
+  </g>
+  <g fill="#050208">
+    <rect x="620" y="600" width="360" height="40"/>
+    <rect x="660" y="640" width="280" height="60"/>
+    <rect x="460" y="520" width="12" height="160"/>
+    <rect x="1128" y="520" width="12" height="160"/>
+    <rect x="420" y="510" width="92" height="10"/>
+    <rect x="1088" y="510" width="92" height="10"/>
+  </g>
+  <g>
+    <circle cx="430" cy="490" r="34" fill="url(#flame)"/><circle cx="466" cy="480" r="34" fill="url(#flame)"/><circle cx="502" cy="490" r="34" fill="url(#flame)"/>
+    <circle cx="1098" cy="490" r="34" fill="url(#flame)"/><circle cx="1134" cy="480" r="34" fill="url(#flame)"/><circle cx="1170" cy="490" r="34" fill="url(#flame)"/>
+    <g fill="#fff0c0"><rect x="428" y="484" width="4" height="12"/><rect x="464" y="474" width="4" height="12"/><rect x="500" y="484" width="4" height="12"/><rect x="1096" y="484" width="4" height="12"/><rect x="1132" y="474" width="4" height="12"/><rect x="1168" y="484" width="4" height="12"/></g>
+  </g>
+  <g fill="#030105">
+    <rect x="782" y="470" width="36" height="130" rx="14"/>
+    <circle cx="800" cy="452" r="20"/>
+  </g>
+</svg>

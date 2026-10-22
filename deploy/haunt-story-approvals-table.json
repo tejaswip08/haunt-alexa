@@ -1,0 +1,92 @@
+{
+  "TableName": "haunt-story-approvals",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "submissionId",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "status",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "submittedAt",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "submittedBy",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "storyId",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "submissionId",
+      "KeyType": "HASH"
+    }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "status-submitted",
+      "KeySchema": [
+        {
+          "AttributeName": "status",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "submittedAt",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      }
+    },
+    {
+      "IndexName": "creator-submitted",
+      "KeySchema": [
+        {
+          "AttributeName": "submittedBy",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "submittedAt",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      }
+    },
+    {
+      "IndexName": "story-submitted",
+      "KeySchema": [
+        {
+          "AttributeName": "storyId",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "submittedAt",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      }
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST",
+  "DeletionProtectionEnabled": true,
+  "SSESpecification": {
+    "Enabled": true
+  },
+  "Tags": [
+    {
+      "Key": "project",
+      "Value": "haunt"
+    }
+  ]
+}

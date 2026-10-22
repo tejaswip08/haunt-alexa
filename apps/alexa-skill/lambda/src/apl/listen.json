@@ -1,0 +1,411 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Listen without choices. Port of apps/tv/src/screens/ListenPlayerScreen.tsx: the story plays straight through. The skill renders one scene at a time with Alexa reading it; onMount waits about as long as the narration, then asks for the next scene (listenNext).",
+  "theme": "dark",
+  "settings": {
+    "idleTimeout": 600000
+  },
+  "layouts": {
+    "TopBar": {
+      "parameters": [
+        "seg"
+      ],
+      "item": {
+        "type": "Container",
+        "position": "absolute",
+        "top": "5vh",
+        "left": "${safeX}",
+        "right": "${safeX}",
+        "direction": "row",
+        "justifyContent": "spaceBetween",
+        "alignItems": "start",
+        "items": [
+          {
+            "type": "Container",
+            "shrink": 1,
+            "items": [
+              {
+                "type": "Text",
+                "text": "${payload.listen.properties.title}",
+                "maxLines": 1,
+                "fontFamily": "Bookerly",
+                "fontWeight": "bold",
+                "fontSize": "${Math.max(18, 36 * u)}",
+                "color": "@text"
+              },
+              {
+                "type": "Text",
+                "text": "${seg.chapter}  ·  ${seg.location}",
+                "maxLines": 1,
+                "spacing": "${4 * u}",
+                "fontFamily": "Amazon Ember Display",
+                "fontWeight": "600",
+                "fontSize": "${Math.max(11, 18 * u)}",
+                "letterSpacing": "${2 * u}",
+                "color": "@accentBright"
+              }
+            ]
+          },
+          {
+            "type": "Container",
+            "direction": "row",
+            "alignItems": "center",
+            "items": [
+              {
+                "type": "Frame",
+                "backgroundColor": "@scrim",
+                "borderRadius": "${20 * u}",
+                "paddingLeft": "${16 * u}",
+                "paddingRight": "${16 * u}",
+                "paddingTop": "${8 * u}",
+                "paddingBottom": "${8 * u}",
+                "item": {
+                  "type": "Container",
+                  "direction": "row",
+                  "alignItems": "center",
+                  "items": [
+                    {
+                      "type": "Icon",
+                      "name": "iconHeadphones",
+                      "size": "${Math.max(14, 20 * u)}",
+                      "color": "#A39D90"
+                    },
+                    {
+                      "type": "Text",
+                      "text": "LISTENING · NO CHOICES",
+                      "spacing": "${10 * u}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontWeight": "600",
+                      "fontSize": "${Math.max(11, 16 * u)}",
+                      "letterSpacing": "${2 * u}",
+                      "color": "@textMuted"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "HButton",
+                "label": "Restart",
+                "action": "restart",
+                "compact": true,
+                "spacing": "${12 * u}"
+              },
+              {
+                "type": "HButton",
+                "label": "Exit",
+                "action": "home",
+                "compact": true,
+                "spacing": "${12 * u}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "Timeline": {
+      "item": {
+        "type": "Container",
+        "direction": "row",
+        "spacing": "${24 * u}",
+        "data": "${payload.listen.properties.segments}",
+        "items": [
+          {
+            "type": "Frame",
+            "grow": "${data.weight}",
+            "basis": 0,
+            "spacing": "${index == 0 ? 0 : 6 * u}",
+            "height": "${Math.max(4, 6 * u)}",
+            "borderRadius": 3,
+            "backgroundColor": "${index < pageIndex ? '@accent' : index == pageIndex ? '@accentBright' : '#ECE6DA33'}"
+          }
+        ]
+      }
+    }
+  },
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [
+          {
+            "name": "u",
+            "type": "number",
+            "value": "${Math.min(viewport.width / 1920, viewport.height / 1080)}"
+          },
+          {
+            "name": "safeX",
+            "type": "number",
+            "value": "${viewport.width * 0.05}"
+          },
+          {
+            "name": "scene",
+            "type": "number",
+            "value": "${payload.listen.properties.scene}"
+          }
+        ],
+        "items": [
+          {
+            "type": "Frame",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "backgroundColor": "@background"
+          },
+          {
+            "type": "Container",
+            "position": "absolute",
+            "width": "100vw",
+            "height": "100vh",
+            "data": "${payload.listen.properties.segments}",
+            "items": [
+              {
+                "type": "Container",
+                "width": "100vw",
+                "height": "100vh",
+                "items": [
+                  {
+                    "type": "SceneArt",
+                    "art": "${data.art}"
+                  },
+                  {
+                    "type": "Shade"
+                  },
+                  {
+                    "type": "Frame",
+                    "position": "absolute",
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0,
+                    "height": "48vh",
+                    "backgroundColor": "#07080A73"
+                  },
+                  {
+                    "type": "TopBar",
+                    "seg": "${data}"
+                  },
+                  {
+                    "type": "Frame",
+                    "when": "${data.found != null}",
+                    "position": "absolute",
+                    "top": "16vh",
+                    "right": "${safeX}",
+                    "width": "${Math.max(220, 480 * u)}",
+                    "backgroundColor": "#0A0B0EEB",
+                    "borderRadius": "${12 * u}",
+                    "item": {
+                      "type": "Container",
+                      "direction": "row",
+                      "items": [
+                        {
+                          "type": "Frame",
+                          "width": "${Math.max(4, 6 * u)}",
+                          "backgroundColor": "@accentBright"
+                        },
+                        {
+                          "type": "Container",
+                          "shrink": 1,
+                          "padding": "${Math.max(12, 24 * u)}",
+                          "items": [
+                            {
+                              "type": "Text",
+                              "text": "CLUE FOUND",
+                              "fontFamily": "Amazon Ember Display",
+                              "fontWeight": "bold",
+                              "fontSize": "${Math.max(11, 16 * u)}",
+                              "letterSpacing": "${3 * u}",
+                              "color": "@accentBright"
+                            },
+                            {
+                              "type": "Text",
+                              "text": "${data.found.name}",
+                              "spacing": "${6 * u}",
+                              "fontFamily": "Bookerly",
+                              "fontWeight": "bold",
+                              "fontSize": "${Math.max(18, 34 * u)}",
+                              "color": "@text"
+                            },
+                            {
+                              "type": "Text",
+                              "text": "${data.found.description}",
+                              "spacing": "${6 * u}",
+                              "fontFamily": "Bookerly",
+                              "fontStyle": "italic",
+                              "fontSize": "${Math.max(13, 22 * u)}",
+                              "color": "@textMuted"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Container",
+                    "position": "absolute",
+                    "left": "${safeX}",
+                    "right": "${safeX}",
+                    "bottom": "6vh",
+                    "items": [
+                      {
+                        "type": "Text",
+                        "text": "SCENE ${pageIndex + 1} OF ${payload.listen.properties.segments.length}",
+                        "fontFamily": "Amazon Ember Display",
+                        "fontWeight": "600",
+                        "fontSize": "${Math.max(11, 18 * u)}",
+                        "letterSpacing": "${3 * u}",
+                        "color": "@textMuted"
+                      },
+                      {
+                        "type": "Text",
+                        "id": "narration${index}",
+                        "text": "${data.narration}",
+                        "spacing": "${18 * u}",
+                        "fontFamily": "Bookerly",
+                        "fontSize": "${Math.max(17, 38 * u)}",
+                        "lineHeight": 1.35,
+                        "color": "@text"
+                      },
+                      {
+                        "type": "Text",
+                        "when": "${data.voice != null}",
+                        "spacing": "${14 * u}",
+                        "text": "<span color='#D61F3D'><b>${data.voice.speaker}:</b></span> <i>“${data.voice.line}”</i>",
+                        "fontFamily": "Bookerly",
+                        "fontSize": "${Math.max(16, 34 * u)}",
+                        "color": "@text"
+                      },
+                      {
+                        "type": "Timeline"
+                      }
+                    ]
+                  }
+                ],
+                "position": "absolute",
+                "opacity": "${scene == index ? 1 : 0}",
+                "bind": [
+                  {
+                    "name": "pageIndex",
+                    "type": "number",
+                    "value": "${index}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Container",
+            "width": "100vw",
+            "height": "100vh",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "paddingLeft": "12vw",
+            "paddingRight": "12vw",
+            "items": [
+              {
+                "type": "SceneArt",
+                "art": "${payload.listen.properties.ending.art}"
+              },
+              {
+                "type": "Frame",
+                "position": "absolute",
+                "width": "100vw",
+                "height": "100vh",
+                "backgroundColor": "#040507B3"
+              },
+              {
+                "type": "Text",
+                "text": "THE END",
+                "textAlign": "center",
+                "fontFamily": "Amazon Ember Display",
+                "fontWeight": "bold",
+                "fontSize": "${Math.max(13, 22 * u)}",
+                "letterSpacing": "${8 * u}",
+                "color": "@accentBright"
+              },
+              {
+                "type": "Text",
+                "text": "${payload.listen.properties.ending.title}",
+                "spacing": "${4 * u}",
+                "textAlign": "center",
+                "fontFamily": "Bookerly",
+                "fontWeight": "bold",
+                "fontSize": "${Math.max(36, 110 * u)}",
+                "color": "@text"
+              },
+              {
+                "type": "Text",
+                "text": "${payload.listen.properties.ending.epilogue}",
+                "spacing": "${22 * u}",
+                "textAlign": "center",
+                "fontFamily": "Bookerly",
+                "fontStyle": "italic",
+                "fontSize": "${Math.max(16, 34 * u)}",
+                "color": "@text"
+              },
+              {
+                "type": "Text",
+                "text": "${payload.listen.properties.ending.found}",
+                "spacing": "${28 * u}",
+                "textAlign": "center",
+                "fontFamily": "Amazon Ember Display",
+                "fontWeight": "600",
+                "fontSize": "${Math.max(12, 20 * u)}",
+                "letterSpacing": "${2 * u}",
+                "color": "@accentBright"
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "spacing": "${40 * u}",
+                "items": [
+                  {
+                    "type": "HButton",
+                    "label": "Play Again",
+                    "action": "playAgain",
+                    "variant": "primary"
+                  },
+                  {
+                    "type": "HButton",
+                    "label": "Back to Home",
+                    "action": "home",
+                    "spacing": "${20 * u}"
+                  }
+                ]
+              }
+            ],
+            "position": "absolute",
+            "opacity": "${scene == payload.listen.properties.segments.length ? 1 : 0}"
+          },
+          {
+            "type": "Toast"
+          }
+        ],
+        "id": "listenRoot"
+      }
+    ]
+  },
+  "onMount": [
+    {
+      "type": "Sequential",
+      "commands": [
+        {
+          "type": "Idle",
+          "delay": "${payload.listen.properties.holdMs}"
+        },
+        {
+          "type": "SendEvent",
+          "when": "${payload.listen.properties.next >= 0}",
+          "arguments": [
+            "listenNext",
+            "${payload.listen.properties.next}"
+          ]
+        }
+      ]
+    }
+  ]
+}

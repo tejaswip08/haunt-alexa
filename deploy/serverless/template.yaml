@@ -1,0 +1,225 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Haunt API on Lambda behind an API Gateway HTTP API. Reuses the existing DynamoDB tables and Cognito pool.
+
+Parameters:
+  CognitoUserPoolId:
+    Type: String
+    Description: Existing Cognito user pool (haunt-listeners). Not a secret, but not committed.
+  CognitoClientId:
+    Type: String
+    Description: Existing Cognito app client (haunt-web). Not a secret, but not committed.
+  PublicUrl:
+    Type: String
+    Default: ""
+    Description: https URL users reach the app at (the Vercel URL). Empty until the frontend exists.
+  FirstPartyOrigins:
+    Type: String
+    Default: ""
+    Description: Comma-separated https origins of Haunt's own pages (the Vercel site). Needed because the Vercel rewrite changes the Host header, so the same-origin check compares against this list (HAUNT_STT_ORIGINS).
+  McpTokens:
+    Type: String
+    NoEcho: true
+    Description: Comma-separated bearer tokens for external MCP clients (HAUNT_MCP_TOKENS).
+  LegacyAdminGroupMode:
+    Type: String
+    Default: "on"
+    AllowedValues: ["on", "off"]
+    Description: Cognito admin-group members keep admin access during the migration (HAUNT_LEGACY_ADMIN_GROUP). Set "off" only after every admin has the ADMIN profile role.
+
+Resources:
+  HauntFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: haunt-api
+      Runtime: nodejs22.x
+      Handler: apps/server/src/lambda.handler
+      CodeUri: build/
+      MemorySize: 1024
+      # API Gateway HTTP API closes requests at 30 seconds, so the function stops just before that.
+      Timeout: 29
+      Environment:
+        Variables:
+          NODE_ENV: production
+          HAUNT_STORE: dynamodb
+          HAUNT_TABLE_NAME: haunt-stories
+          HAUNT_USERS_TABLE: haunt-users
+          HAUNT_LIKES_TABLE: haunt-likes
+          HAUNT_PROGRESS_TABLE: haunt-progress
+          HAUNT_STATS_TABLE: haunt-stats
+          HAUNT_RATE_LIMIT_TABLE: haunt-auth-rate-limits
+          HAUNT_USER_STORIES_TABLE: haunt-user-stories
+          HAUNT_STORY_APPROVALS_TABLE: haunt-story-approvals
+          HAUNT_COVER_BUCKET: !Ref CoverBucket
+          HAUNT_LEGACY_ADMIN_GROUP: !Ref LegacyAdminGroupMode
+          HAUNT_RECORDS: legacy
+          HAUNT_PROVIDER: bedrock
+          HAUNT_AGENT: bedrock
+          HAUNT_BEDROCK_API: converse
+          HAUNT_TTS: polly
+          HAUNT_STT: "off"
+          HAUNT_STT_ORIGINS: !Ref FirstPartyOrigins
+          HAUNT_TRUST_PROXY: "1"
+          HAUNT_COGNITO_USER_POOL_ID: !Ref CognitoUserPoolId
+          HAUNT_COGNITO_CLIENT_ID: !Ref CognitoClientId
+          HAUNT_PUBLIC_URL: !Ref PublicUrl
+          HAUNT_MCP_TOKENS: !Ref McpTokens
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: StoriesAndLibrary
+              Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:DeleteItem, dynamodb:Scan]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-stories
+            - Sid: ListenerProfiles
+              Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-users
+            - Sid: SplitLikesAndProgress
+              Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:Query]
+              Resource:
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-likes
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-progress
+            - Sid: SplitLikeTransactions
+              Effect: Allow
+              Action: [dynamodb:TransactWriteItems]
+              Resource:
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-likes
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-stats
+            - Sid: StatsCounters
+              Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-stats
+            # Trending reads plays through the trend-by-day index on haunt-stats. Query only, on that one index.
+            # The index itself is not created by this template yet (see docs/TRENDING.md): until it exists this grant is unused.
+            - Sid: TrendingIndexQuery
+              Effect: Allow
+              Action: [dynamodb:Query]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-stats/index/trend-by-day
+            - Sid: SignInRateLimitCounters
+              Effect: Allow
+              Action: [dynamodb:UpdateItem]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-auth-rate-limits
+            - Sid: UserStoriesRuntime
+              Effect: Allow
+              # Submit, approve and publish are transactions over this table: the item actions each transaction item needs are granted too.
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem, dynamodb:Query, dynamodb:TransactWriteItems, dynamodb:ConditionCheckItem]
+              Resource:
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-user-stories
+                - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-user-stories/index/published-by-date
+            - Sid: StoryApprovalDecisions
+              Effect: Allow
+              # Review decisions and the submission history (haunt-story-approvals). No delete: a withdrawal is an update.
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:ConditionCheckItem, dynamodb:TransactWriteItems]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-story-approvals
+            - Sid: StoryApprovalQueries
+              Effect: Allow
+              Action: [dynamodb:Query]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-story-approvals/index/*
+            - Sid: CreatorAccessTransactions
+              Effect: Allow
+              # Creator requests, decisions and role changes are transactions over the profile table (creator-access.ts).
+              Action: [dynamodb:TransactWriteItems, dynamodb:ConditionCheckItem]
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/haunt-users
+            - Sid: CoverObjects
+              Effect: Allow
+              # Presigned uploads are signed with the function's role (PutObject); reads and existence checks use GetObject.
+              # Only the covers/ prefix of the cover bucket.
+              Action: [s3:PutObject, s3:GetObject]
+              Resource: !Sub ${CoverBucket.Arn}/covers/*
+            - Sid: BedrockHaiku
+              Effect: Allow
+              Action: [bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream]
+              Resource:
+                - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/us.anthropic.claude-haiku-4-5-20251001-v1:0
+                - arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+                # The us. inference profile routes across US regions; the invoke is authorized in each of them.
+                - arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+                - arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+            - Sid: Narration
+              Effect: Allow
+              Action: [polly:SynthesizeSpeech]
+              Resource: "*"
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /
+            Method: ANY
+            PayloadFormatVersion: "2.0"
+        Proxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /{proxy+}
+            Method: ANY
+            PayloadFormatVersion: "2.0"
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: $default
+      # No CORS: the browser reaches this API through the Vercel rewrite, so calls are same-origin.
+
+  CoverBucket:
+    Type: AWS::S3::Bucket
+    # Keep the bucket and its covers if the stack is ever deleted or the bucket replaced: a non-empty bucket can't be removed by a stack update.
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub haunt-covers-${AWS::AccountId}-${AWS::Region}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Suspended
+      LifecycleConfiguration:
+        Rules:
+          - Id: abort-incomplete-uploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
+      # Browsers POST cover uploads straight to S3 from the Vercel site. Nothing else may read or write it from a browser.
+      CorsConfiguration:
+        CorsRules:
+          # The Vercel site (FirstPartyOrigins), not the API address: browsers upload covers from the site.
+          - AllowedOrigins: [!Ref FirstPartyOrigins]
+            AllowedMethods: [POST]
+            AllowedHeaders: ["*"]
+            MaxAge: 300
+  CoverBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CoverBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource:
+              - !GetAtt CoverBucket.Arn
+              - !Sub ${CoverBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+
+Outputs:
+  CoverBucketName:
+    Description: The private bucket that holds story cover images (HAUNT_COVER_BUCKET)
+    Value: !Ref CoverBucket
+  ApiUrl:
+    Description: Base HTTPS URL of the API
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}

@@ -1,0 +1,15 @@
+{
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build -w @haunt/views && npm run build -w @haunt/web",
+  "outputDirectory": "apps/web/dist",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://itok3jbqel.execute-api.us-east-1.amazonaws.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

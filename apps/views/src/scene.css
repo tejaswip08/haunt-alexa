@@ -1,0 +1,408 @@
+/*
+ * Laid out on Alexa+'s 768×480 base canvas and scaled up with `zoom` on larger
+ * screens (Echo Show renders at 1280×800, so ×1.667). Sizes follow the Alexa+ token
+ * scale: display 28, headline 20, body 16, label 10; spacing 4–24; 48px touch targets.
+ */
+:root {
+  /* Same faces as the Fire TV app (apps/tv/src/theme.ts); system serifs if the fonts can't load. */
+  --font-story: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-ui: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --text-display: 28px;
+  --text-headline: 20px;
+  --text-body: 16px;
+  --text-label: 10px;
+  --space-xs: 8px;
+  --space-s: 12px;
+  --space-m: 16px;
+  --space-l: 24px;
+  --target: 48px;
+
+  /* Dark (default): the Fire TV palette, bone white on near-black with blood crimson */
+  --ink: #ece6da;
+  --ink-dim: #a39d90;
+  --ink-faint: #8a847b;
+  --ground: #07080a;
+  --chip: rgb(17 19 24 / 0.85);
+  --chip-line: #2a2e37;
+  --rule: rgb(255 255 255 / 0.08);
+  --accent: #d61f3d;
+  --accent-deep: #b3122e;
+  --vignette: rgb(0 0 0 / 0.72);
+  --grain-opacity: 0.09;
+  --glow: #3b2f4a;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --ink: #1d1b20;
+  --ink-dim: #4f4b52;
+  --ink-faint: #5f5b64;
+  --ground: #e7e5e8;
+  --chip: rgb(0 0 0 / 0.05);
+  --chip-line: rgb(0 0 0 / 0.18);
+  --rule: rgb(0 0 0 / 0.1);
+  --accent: #b3122e;
+  --accent-deep: #9e1b2a;
+  --vignette: rgb(40 30 45 / 0.22);
+  --grain-opacity: 0.05;
+  --glow: #c9c2d3;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-story);
+}
+
+.scene {
+  position: relative;
+  isolation: isolate;
+  min-height: 360px;
+  padding: var(--space-m) var(--space-l) var(--space-l);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--glow) 65%, transparent), transparent 70%),
+    var(--ground);
+  transition: background 1.2s ease;
+}
+
+/* On a device screen the view fills the frame and the story scrolls inside it. */
+.scene.is-fixed {
+  min-height: 0;
+}
+.scene.is-fixed .narration {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Film grain and vignette. */
+.scene::before,
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+.scene::before {
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* 3 steps every 1.5s: 2 changes a second, under Alexa+'s 3-per-second flash limit. */
+  animation: grain 1.5s steps(3) infinite;
+}
+.scene::after {
+  background: radial-gradient(ellipse at center, transparent 50%, var(--vignette) 100%);
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-6px, 4px); }
+  66% { transform: translate(5px, -5px); }
+}
+
+/* Mood tints stay subtle: Alexa+ asks for no bold color fields behind content. */
+.scene[data-mood="uneasy"] { --glow: #2f3b3a; }
+.scene[data-mood="suspense"] { --glow: #3a2d1f; }
+.scene[data-mood="exploration"] { --glow: #1f2f3d; }
+.scene[data-mood="threat"] { --glow: #4a1717; }
+.scene[data-mood="revelation"] { --glow: #3d2b55; }
+.scene[data-mood="ending"] { --glow: #1c1c24; }
+:root[data-theme="light"] .scene[data-mood="uneasy"] { --glow: #c3cfcc; }
+:root[data-theme="light"] .scene[data-mood="suspense"] { --glow: #d8ccbd; }
+:root[data-theme="light"] .scene[data-mood="exploration"] { --glow: #c4d0dc; }
+:root[data-theme="light"] .scene[data-mood="threat"] { --glow: #e0c3c0; }
+:root[data-theme="light"] .scene[data-mood="revelation"] { --glow: #d4c8e2; }
+:root[data-theme="light"] .scene[data-mood="ending"] { --glow: #d5d4da; }
+
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  min-height: 24px;
+  font: 600 var(--text-label) / 1 var(--font-ui);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.brand {
+  margin-right: auto;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.08em;
+}
+.progress i {
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink-faint);
+  opacity: 0.45;
+}
+.progress i.done {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.expand {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  margin: -12px -12px -12px 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+.expand[hidden] {
+  display: none;
+}
+.expand:hover {
+  color: var(--ink);
+  background: var(--chip);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+.title:empty {
+  display: none;
+}
+
+.narration {
+  font-size: var(--text-body);
+  line-height: 1.6;
+  max-width: 64ch;
+  outline: none;
+}
+.narration p {
+  margin: 0 0 0.8em;
+  animation: rise 0.9s ease both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Captions for the soundscape, so sound cues are never audio-only. */
+.sounds {
+  margin: 0;
+  font: italic 12px/1.3 var(--font-ui);
+  color: var(--ink-faint);
+}
+.sounds:empty {
+  display: none;
+}
+
+.ask {
+  margin-top: auto;
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--rule);
+}
+
+.question {
+  margin: 0 0 var(--space-s);
+  font-size: var(--text-headline);
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--accent);
+  text-wrap: balance;
+}
+.question:empty {
+  display: none;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+.suggestions button {
+  font: 500 14px/1.2 var(--font-ui);
+  color: var(--ink);
+  background: var(--chip);
+  border: 1px solid var(--chip-line);
+  border-radius: 9999px;
+  min-height: var(--target);
+  padding: 0 var(--space-l);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.suggestions button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.suggestions button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.status {
+  margin: 0;
+  font: 14px/1.4 var(--font-ui);
+  color: var(--ink-dim);
+}
+.status:empty {
+  display: none;
+}
+
+.scene[data-state="waiting"] .status {
+  margin: auto 0;
+  text-align: center;
+  font-family: var(--font-story);
+  font-style: italic;
+  font-size: var(--text-headline);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+.scene[data-state="waiting"] .narration,
+.scene[data-state="waiting"] .title,
+.scene[data-state="waiting"] .sounds {
+  opacity: 0.25;
+}
+
+@keyframes breathe {
+  50% { opacity: 0.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene::before,
+  .narration p,
+  .scene[data-state="waiting"] .status {
+    animation: none;
+  }
+}
+
+/* Animated backdrop (scene-fx). Kept dim behind a scrim so text stays the focus, as the
+   Alexa+ guide asks; the light theme keeps its plain design. */
+.fx-host {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.fx-host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(7 7 10 / 0.35), rgb(7 7 10 / 0.8) 55%, rgb(7 7 10 / 0.92));
+}
+.fx-host:empty,
+:root[data-theme="light"] .fx-host {
+  display: none;
+}
+
+/* ---------- Fire TV story player look ---------- */
+
+.brand {
+  font: 700 12px/1 var(--font-story);
+  letter-spacing: 0.28em;
+  color: var(--ink);
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--accent-deep);
+}
+.title {
+  font-weight: 600;
+}
+.narration {
+  font-size: 17px;
+  line-height: 1.55;
+}
+.question {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+.question::before {
+  content: "What do you do?";
+  display: block;
+  margin-bottom: 6px;
+  font: 600 var(--text-label) / 1 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.scene[data-ended="true"] .question::before {
+  content: none;
+}
+.suggestions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-xs);
+  counter-reset: choice;
+}
+.suggestions button {
+  position: relative;
+  counter-increment: choice;
+  text-align: left;
+  font: 600 16px/1.25 var(--font-story);
+  background: var(--chip);
+  border: 2px solid var(--chip-line);
+  border-radius: 10px;
+  padding: 10px 14px 10px 46px;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.2s;
+}
+.suggestions button::before {
+  content: counter(choice);
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--chip-line);
+  font: 600 11px/1 var(--font-ui);
+  color: var(--ink);
+}
+.suggestions button:only-child {
+  padding-left: 14px;
+  text-align: center;
+}
+.suggestions button:only-child::before {
+  content: none;
+}
+.suggestions button:hover:not(:disabled),
+.suggestions button:focus-visible {
+  background: rgb(179 18 46 / 0.45);
+  border-color: var(--accent);
+  box-shadow: 0 0 18px rgb(214 31 61 / 0.45);
+  outline: none;
+}
+.suggestions button:hover:not(:disabled)::before,
+.suggestions button:focus-visible::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+:root[data-theme="light"] .suggestions button:hover:not(:disabled),
+:root[data-theme="light"] .suggestions button:focus-visible {
+  background: rgb(179 18 46 / 0.12);
+}

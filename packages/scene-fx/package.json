@@ -1,0 +1,14 @@
+{
+  "name": "@haunt/scene-fx",
+  "private": true,
+  "type": "module",
+  "description": "Animated scene presentation for Haunt: illustrations, allowlisted effects and motion settings, without a framework.",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fx.css": "./src/fx.css"
+  },
+  "scripts": {
+    "test": "tsx --test test/*.test.ts"
+  }
+}

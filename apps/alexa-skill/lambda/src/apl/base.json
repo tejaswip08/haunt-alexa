@@ -1,0 +1,467 @@
+{
+  "description": "Shared pieces merged into every story-experience document (see screens.ts). Mirrors apps/tv: theme.ts, Logo, TVButton, Toast.",
+  "resources": [
+    {
+      "colors": {
+        "background": "#07080A",
+        "surface": "#111318",
+        "surfaceRaised": "#1A1D24",
+        "border": "#2A2E37",
+        "text": "#ECE6DA",
+        "textMuted": "#A39D90",
+        "textDim": "#6E6A62",
+        "accent": "#B3122E",
+        "accentBright": "#D61F3D",
+        "focus": "#F2EBDD",
+        "scrim": "#040507B8",
+        "scrimLight": "#04050759"
+      }
+    }
+  ],
+  "styles": {
+    "hButtonPrimary": {
+      "values": [
+        {
+          "backgroundColor": "@accent",
+          "borderColor": "transparent"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "backgroundColor": "@focus",
+          "borderColor": "@focus"
+        }
+      ]
+    },
+    "hButtonSecondary": {
+      "values": [
+        {
+          "backgroundColor": "#ECE6DA1A",
+          "borderColor": "transparent"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "backgroundColor": "@focus",
+          "borderColor": "@focus"
+        }
+      ]
+    },
+    "hButtonGhost": {
+      "values": [
+        {
+          "backgroundColor": "transparent",
+          "borderColor": "transparent"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "backgroundColor": "@focus",
+          "borderColor": "@focus"
+        }
+      ]
+    },
+    "hButtonLabel": {
+      "values": [
+        {
+          "color": "@text"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "color": "@background"
+        }
+      ]
+    },
+    "pressBorder": {
+      "values": [
+        {
+          "borderColor": "transparent"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "borderColor": "@focus"
+        }
+      ]
+    },
+    "crimsonPress": {
+      "values": [
+        {
+          "borderColor": "#ECE6DA2E",
+          "backgroundColor": "#0A0B0ED9"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "borderColor": "@accentBright",
+          "backgroundColor": "#D61F3D61"
+        }
+      ]
+    }
+  },
+  "commands": {
+    "ShowToast": {
+      "parameters": [
+        "message"
+      ],
+      "commands": [
+        {
+          "type": "SetValue",
+          "componentId": "hauntToastText",
+          "property": "text",
+          "value": "${message}"
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "hauntToast",
+          "duration": 250,
+          "value": [
+            {
+              "property": "opacity",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "type": "Idle",
+          "delay": 3200
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "hauntToast",
+          "duration": 400,
+          "value": [
+            {
+              "property": "opacity",
+              "from": 1,
+              "to": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "layouts": {
+    "HauntLogo": {
+      "parameters": [
+        "size",
+        {
+          "name": "centered",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "item": {
+        "type": "Container",
+        "alignItems": "${centered ? 'center' : 'start'}",
+        "items": [
+          {
+            "type": "Text",
+            "text": "HAUNT",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${size}",
+            "letterSpacing": "${size * 0.28}",
+            "paddingLeft": "${centered ? size * 0.28 : 0}",
+            "color": "@text"
+          },
+          {
+            "type": "Frame",
+            "spacing": 4,
+            "width": "${size * 0.9}",
+            "height": "${Math.max(3, size * 0.06)}",
+            "backgroundColor": "@accent"
+          }
+        ]
+      }
+    },
+    "HButton": {
+      "description": "TVButton: sends SendEvent [action, arg] on tap.",
+      "parameters": [
+        "label",
+        "action",
+        {
+          "name": "arg",
+          "default": ""
+        },
+        {
+          "name": "variant",
+          "default": "secondary"
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "item": {
+        "type": "TouchWrapper",
+        "onPress": [
+          {
+            "type": "SendEvent",
+            "arguments": [
+              "${action}",
+              "${arg}"
+            ]
+          }
+        ],
+        "item": {
+          "type": "Frame",
+          "inheritParentState": true,
+          "style": "${variant == 'primary' ? 'hButtonPrimary' : variant == 'ghost' ? 'hButtonGhost' : 'hButtonSecondary'}",
+          "borderWidth": "${Math.max(2, 3 * u)}",
+          "borderRadius": "${10 * u}",
+          "height": "${compact ? Math.max(36, 60 * u) : Math.max(44, 76 * u)}",
+          "paddingLeft": "${compact ? Math.max(12, 22 * u) : Math.max(16, 40 * u)}",
+          "paddingRight": "${compact ? Math.max(12, 22 * u) : Math.max(16, 40 * u)}",
+          "item": {
+            "type": "Text",
+            "inheritParentState": true,
+            "style": "hButtonLabel",
+            "text": "${label}",
+            "height": "100%",
+            "textAlign": "center",
+            "textAlignVertical": "center",
+            "fontFamily": "Amazon Ember Display",
+            "fontWeight": "500",
+            "fontSize": "${Math.max(16, 28 * u)}",
+            "maxLines": 1
+          }
+        }
+      }
+    },
+    "MetaPill": {
+      "parameters": [
+        "text"
+      ],
+      "item": {
+        "type": "Frame",
+        "borderWidth": 1,
+        "borderColor": "#ECE6DA40",
+        "borderRadius": "${6 * u}",
+        "paddingLeft": "${12 * u}",
+        "paddingRight": "${12 * u}",
+        "paddingTop": "${5 * u}",
+        "paddingBottom": "${5 * u}",
+        "item": {
+          "type": "Text",
+          "text": "${text}",
+          "fontFamily": "Amazon Ember Display",
+          "fontWeight": "500",
+          "fontSize": "${Math.max(13, 19 * u)}",
+          "color": "@text",
+          "maxLines": 1
+        }
+      }
+    },
+    "SceneArt": {
+      "description": "Full-bleed scene illustration (graphics come from art/art.json).",
+      "parameters": [
+        "art",
+        {
+          "name": "zoomId",
+          "default": ""
+        }
+      ],
+      "item": {
+        "type": "VectorGraphic",
+        "id": "${zoomId}",
+        "source": "${art}",
+        "position": "absolute",
+        "width": "100%",
+        "height": "100%",
+        "scale": "best-fill",
+        "align": "center"
+      }
+    },
+    "Shade": {
+      "description": "Darkens the left, top and bottom edges so text reads over any art (shade.svg).",
+      "item": {
+        "type": "VectorGraphic",
+        "source": "shade",
+        "position": "absolute",
+        "width": "100%",
+        "height": "100%",
+        "scale": "fill"
+      }
+    },
+    "Toast": {
+      "item": {
+        "type": "Container",
+        "position": "absolute",
+        "bottom": "6vh",
+        "left": 0,
+        "right": 0,
+        "alignItems": "center",
+        "items": [
+          {
+            "type": "Frame",
+            "id": "hauntToast",
+            "opacity": 0,
+            "backgroundColor": "#1A1D24F2",
+            "borderColor": "@border",
+            "borderWidth": 1,
+            "borderRadius": "${12 * u}",
+            "paddingLeft": "${Math.max(16, 32 * u)}",
+            "paddingRight": "${Math.max(16, 32 * u)}",
+            "paddingTop": "${Math.max(10, 18 * u)}",
+            "paddingBottom": "${Math.max(10, 18 * u)}",
+            "maxWidth": "80vw",
+            "item": {
+              "type": "Text",
+              "id": "hauntToastText",
+              "text": "",
+              "fontFamily": "Amazon Ember Display",
+              "fontSize": "${Math.max(15, 24 * u)}",
+              "color": "@text",
+              "textAlign": "center"
+            }
+          }
+        ]
+      }
+    },
+    "Icon": {
+      "parameters": [
+        "name",
+        "size",
+        {
+          "name": "color",
+          "default": "#ECE6DA"
+        }
+      ],
+      "item": {
+        "type": "VectorGraphic",
+        "source": "${name}",
+        "width": "${size}",
+        "height": "${size}",
+        "scale": "best-fit",
+        "color": "${color}"
+      }
+    }
+  },
+  "graphics": {
+    "iconBranch": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 24,
+      "height": 24,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color",
+          "default": "#ECE6DA"
+        }
+      ],
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M6,3 L6,15 M6,15 C6,11 18,12 18,6 M6,15 L6,21",
+          "fill": "transparent",
+          "stroke": "${color}",
+          "strokeWidth": 2,
+          "strokeLineCap": "round"
+        },
+        {
+          "type": "path",
+          "pathData": "M4,5 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0z M16,5 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0z M4,19 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0z",
+          "fill": "${color}"
+        }
+      ]
+    },
+    "iconHeadphones": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 24,
+      "height": 24,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color",
+          "default": "#ECE6DA"
+        }
+      ],
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M4,15 L4,12 C4,7 7.5,4 12,4 C16.5,4 20,7 20,12 L20,15",
+          "fill": "transparent",
+          "stroke": "${color}",
+          "strokeWidth": 2,
+          "strokeLineCap": "round"
+        },
+        {
+          "type": "path",
+          "pathData": "M3,14 h4 v7 h-2 a2,2 0 0 1 -2,-2z M17,14 h4 v5 a2,2 0 0 1 -2,2 h-2z",
+          "fill": "${color}"
+        }
+      ]
+    },
+    "iconLock": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 24,
+      "height": 24,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color",
+          "default": "#ECE6DA"
+        }
+      ],
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M8,11 V8 a4,4 0 0 1 8,0 V11",
+          "fill": "transparent",
+          "stroke": "${color}",
+          "strokeWidth": 2
+        },
+        {
+          "type": "path",
+          "pathData": "M6,11 h12 v10 h-12z",
+          "fill": "${color}"
+        }
+      ]
+    },
+    "iconPause": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 24,
+      "height": 24,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color",
+          "default": "#ECE6DA"
+        }
+      ],
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M6,4 h4 v16 h-4z M14,4 h4 v16 h-4z",
+          "fill": "${color}"
+        }
+      ]
+    },
+    "iconCheck": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 24,
+      "height": 24,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "color",
+          "default": "#ECE6DA"
+        }
+      ],
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M5,12 L10,17 L19,7",
+          "fill": "transparent",
+          "stroke": "${color}",
+          "strokeWidth": 3,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+}

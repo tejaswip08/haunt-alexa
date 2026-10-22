@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#03050a"/>
+      <stop offset="1" stop-color="#16202e"/>
+    </linearGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e1724"/>
+      <stop offset="1" stop-color="#02040a"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="1220" cy="180" r="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#dfe6ee" stop-opacity=".4"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="warm"><stop offset="0" stop-color="#e8963a" stop-opacity=".7"/><stop offset="1" stop-color="#e8963a" stop-opacity="0"/></radialGradient>
+    <filter id="fog"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1220" cy="180" r="240" fill="url(#halo)"/>
+  <circle cx="1220" cy="180" r="54" fill="#d6dce2"/>
+  <path d="M0 520 L80 430 L140 500 L220 380 L300 490 L380 410 L460 510 L560 420 L640 520 L760 450 L860 520 L980 430 L1080 520 L1200 440 L1320 520 L1440 420 L1600 510 V560 H0Z" fill="#05080c"/>
+  <rect y="560" width="1600" height="340" fill="url(#lake)"/>
+  <circle cx="1220" cy="700" r="40" fill="#d6dce2" opacity=".12"/>
+  <g fill="#020305">
+    <rect x="240" y="440" width="300" height="130"/>
+    <polygon points="220,445 390,350 560,445"/>
+    <rect x="470" y="370" width="30" height="60"/>
+    <rect x="560" y="560" width="420" height="14"/>
+    <rect x="600" y="574" width="10" height="40"/><rect x="760" y="574" width="10" height="40"/><rect x="930" y="574" width="10" height="40"/>
+  </g>
+  <circle cx="330" cy="500" r="80" fill="url(#warm)"/>
+  <rect x="310" y="480" width="40" height="44" fill="#d88b34"/>
+  <g fill="#000">
+    <rect x="884" y="490" width="34" height="70" rx="10"/>
+    <circle cx="901" cy="474" r="17"/>
+  </g>
+  <ellipse cx="901" cy="474" rx="10" ry="12" fill="#c9c4b6" opacity=".85"/>
+  <circle cx="897" cy="471" r="2" fill="#000"/><circle cx="905" cy="471" r="2" fill="#000"/>
+  <g fill="#c4d0de" opacity=".08" filter="url(#fog)">
+    <ellipse cx="700" cy="590" rx="700" ry="40"/>
+  </g>
+</svg>

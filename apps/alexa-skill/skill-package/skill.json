@@ -1,0 +1,40 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "Haunt",
+          "summary": "An interactive horror storytelling experience.",
+          "description": "Haunt is an AI-powered interactive horror storytelling experience. Every story is told only once.",
+          "examplePhrases": [
+            "Alexa, open Haunt Stories"
+          ],
+          "keywords": [
+            "horror",
+            "story",
+            "interactive"
+          ]
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Say 'Alexa, open Haunt Stories'. Voice-only devices hear the welcome message; display devices also see the APL welcome screen.",
+      "category": "GAMES",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "interfaces": [
+          {
+            "type": "ALEXA_PRESENTATION_APL",
+            "supportedViewports": [
+              { "mode": "HUB", "shape": "ROUND", "minWidth": 100, "maxWidth": 960, "minHeight": 100, "maxHeight": 960 },
+              { "mode": "HUB", "shape": "RECTANGLE", "minWidth": 960, "maxWidth": 1920, "minHeight": 480, "maxHeight": 1279 },
+              { "mode": "TV", "shape": "RECTANGLE", "minWidth": 960, "maxWidth": 1920, "minHeight": 540, "maxHeight": 1080 }
+            ]
+          }
+        ]
+      }
+    },
+    "manifestVersion": "1.0"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "TableName": "haunt-user-stories",
+  "AttributeDefinitions": [
+    { "AttributeName": "userId", "AttributeType": "S" },
+    { "AttributeName": "hauntId", "AttributeType": "S" },
+    { "AttributeName": "publishedKey", "AttributeType": "S" },
+    { "AttributeName": "publishedAt", "AttributeType": "S" }
+  ],
+  "KeySchema": [
+    { "AttributeName": "userId", "KeyType": "HASH" },
+    { "AttributeName": "hauntId", "KeyType": "RANGE" }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "published-by-date",
+      "KeySchema": [
+        { "AttributeName": "publishedKey", "KeyType": "HASH" },
+        { "AttributeName": "publishedAt", "KeyType": "RANGE" }
+      ],
+      "Projection": { "ProjectionType": "ALL" }
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST",
+  "DeletionProtectionEnabled": true,
+  "SSESpecification": { "Enabled": true },
+  "Tags": [{ "Key": "project", "Value": "haunt" }]
+}

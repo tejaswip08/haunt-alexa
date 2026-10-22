@@ -1,0 +1,28 @@
+{
+  "name": "@firetales/core",
+  "version": "0.1.0",
+  "description": "Open-source engine for voice-first, interactive AI stories that remember every choice.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./claude": "./src/providers/claude.ts",
+    "./dynamodb": "./src/dynamodb.ts",
+    "./converse": "./src/providers/converse.ts"
+  },
+  "scripts": {
+    "test": "tsx --test test/*.test.ts",
+    "example:cli": "tsx examples/cli-story.ts",
+    "example:bedtime": "tsx examples/bedtime-tales.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.134.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1152.0",
+    "@aws-sdk/client-dynamodb": "^3.1152.0",
+    "@aws-sdk/lib-dynamodb": "^3.1152.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "@anthropic-ai/bedrock-sdk": "^0.35.0"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "haunt-alexa",
+  "private": true,
+  "type": "module",
+  "description": "Haunt for Alexa+: interactive voice horror stories over a self-hosted MCP server (spec 2025-11-25, Streamable HTTP), an Agent Skill, and a simulated Echo Show / Echo device.",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run build -w @haunt/views && concurrently -n views,server,web -c magenta,cyan,green \"npm run dev -w @haunt/views\" \"npm run dev -w @haunt/server\" \"npm run dev -w @haunt/web\"",
+    "build": "npm run build -w @haunt/views && npm run build -w @haunt/web",
+    "build:lambda": "npm run build -w @haunt/views && node scripts/build-lambda.mjs",
+    "start": "npm run start -w @haunt/server",
+    "test": "npm test -w @firetales/core && npm test -w @haunt/scene-fx && npm test -w @haunt/server && npm test -w @haunt/web",
+    "typecheck": "tsc -p packages/firetales && tsc -p packages/scene-fx && tsc -p apps/server && tsc -p apps/views && tsc -p apps/web",
+    "dev:real-auth": "bash scripts/dev-real-auth.sh",
+    "dev:mock": "NODE_ENV=development HAUNT_AUTH=mock HAUNT_PROVIDER=mock HAUNT_AGENT=mock HAUNT_TTS=browser HAUNT_PREWRITE=off HAUNT_STORE=file npm run dev"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

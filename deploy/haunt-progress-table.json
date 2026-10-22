@@ -1,0 +1,34 @@
+{
+  "TableName": "haunt-progress",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "hauntId",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "hauntId",
+      "KeyType": "RANGE"
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST",
+  "DeletionProtectionEnabled": true,
+  "SSESpecification": {
+    "Enabled": true
+  },
+  "Tags": [
+    {
+      "Key": "project",
+      "Value": "haunt"
+    }
+  ]
+}

@@ -1,0 +1,736 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Home. Port of apps/tv/src/screens/HomeScreen.tsx: hero for the selected item, story rails, Create rail. Tap a card to show it in the hero, tap again (or the hero button) to open it.",
+  "theme": "dark",
+  "layouts": {
+    "NavTab": {
+      "parameters": [
+        "label",
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "toast",
+          "default": ""
+        },
+        {
+          "name": "action",
+          "default": ""
+        }
+      ],
+      "item": {
+        "type": "TouchWrapper",
+        "onPress": [
+          {
+            "type": "SendEvent",
+            "when": "${action != ''}",
+            "arguments": [
+              "${action}",
+              ""
+            ]
+          },
+          {
+            "type": "ShowToast",
+            "when": "${toast != ''}",
+            "message": "${toast}"
+          }
+        ],
+        "item": {
+          "type": "Frame",
+          "inheritParentState": true,
+          "style": "hButtonGhost",
+          "borderRadius": "${30 * u}",
+          "paddingLeft": "${Math.max(10, 22 * u)}",
+          "paddingRight": "${Math.max(10, 22 * u)}",
+          "paddingTop": "${10 * u}",
+          "paddingBottom": "${10 * u}",
+          "item": {
+            "type": "Container",
+            "alignItems": "center",
+            "items": [
+              {
+                "type": "Text",
+                "inheritParentState": true,
+                "style": "hButtonLabel",
+                "text": "${label}",
+                "fontFamily": "Amazon Ember Display",
+                "fontWeight": "${active ? '600' : '500'}",
+                "fontSize": "${Math.max(15, 24 * u)}",
+                "opacity": "${active ? 1 : 0.75}"
+              },
+              {
+                "type": "Frame",
+                "when": "${active}",
+                "position": "absolute",
+                "bottom": "${-6 * u}",
+                "width": "${28 * u}",
+                "height": 3,
+                "borderRadius": 2,
+                "backgroundColor": "@accentBright"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "StoryCard": {
+      "parameters": [
+        "card"
+      ],
+      "item": {
+        "type": "Container",
+        "direction": "row",
+        "alignItems": "start",
+        "items": [
+          {
+            "type": "Text",
+            "when": "${card.rank > 0}",
+            "text": "${card.rank}",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${200 * u}",
+            "color": "${hero == card.heroIndex ? '@accent' : '@border'}",
+            "paddingRight": "${4 * u}"
+          },
+          {
+            "type": "TouchWrapper",
+            "onPress": [
+              {
+                "type": "SendEvent",
+                "when": "${hero == card.heroIndex}",
+                "arguments": [
+                  "${card.action}",
+                  "${card.arg}"
+                ]
+              },
+              {
+                "type": "SetValue",
+                "when": "${hero != card.heroIndex}",
+                "componentId": "homeRoot",
+                "property": "hero",
+                "value": "${card.heroIndex}"
+              }
+            ],
+            "item": {
+              "type": "Container",
+              "width": "${cardW}",
+              "items": [
+                {
+                  "type": "Frame",
+                  "width": "${cardW}",
+                  "height": "${cardW * 0.5639}",
+                  "borderRadius": "${12 * u}",
+                  "borderWidth": "${Math.max(2, 4 * u)}",
+                  "borderColor": "${hero == card.heroIndex ? '@focus' : 'transparent'}",
+                  "backgroundColor": "@surface",
+                  "item": {
+                    "type": "Container",
+                    "width": "100%",
+                    "height": "100%",
+                    "items": [
+                      {
+                        "type": "VectorGraphic",
+                        "source": "${card.art}",
+                        "position": "absolute",
+                        "width": "100%",
+                        "height": "100%",
+                        "scale": "best-fill",
+                        "align": "center"
+                      },
+                      {
+                        "type": "Frame",
+                        "position": "absolute",
+                        "top": "${12 * u}",
+                        "left": "${12 * u}",
+                        "borderRadius": "${5 * u}",
+                        "backgroundColor": "${card.original ? '@accent' : '#ECE6DA2E'}",
+                        "paddingLeft": "${9 * u}",
+                        "paddingRight": "${9 * u}",
+                        "paddingTop": "${4 * u}",
+                        "paddingBottom": "${4 * u}",
+                        "item": {
+                          "type": "Text",
+                          "text": "${card.original ? 'HAUNT ORIGINAL' : 'COMMUNITY'}",
+                          "fontFamily": "Amazon Ember Display",
+                          "fontWeight": "600",
+                          "fontSize": "${Math.max(9, 14 * u)}",
+                          "letterSpacing": "${1.5 * u}",
+                          "color": "@text"
+                        }
+                      },
+                      {
+                        "type": "Frame",
+                        "position": "absolute",
+                        "right": "${12 * u}",
+                        "bottom": "${12 * u}",
+                        "borderRadius": "${5 * u}",
+                        "backgroundColor": "@scrim",
+                        "paddingLeft": "${9 * u}",
+                        "paddingRight": "${9 * u}",
+                        "paddingTop": "${3 * u}",
+                        "paddingBottom": "${3 * u}",
+                        "item": {
+                          "type": "Text",
+                          "text": "♥ ${card.likes}",
+                          "fontFamily": "Amazon Ember Display",
+                          "fontWeight": "500",
+                          "fontSize": "${Math.max(10, 16 * u)}",
+                          "color": "@text"
+                        }
+                      },
+                      {
+                        "type": "Frame",
+                        "when": "${card.progress >= 0}",
+                        "position": "absolute",
+                        "left": 0,
+                        "right": 0,
+                        "bottom": 0,
+                        "height": "${Math.max(3, 6 * u)}",
+                        "backgroundColor": "#00000099",
+                        "item": {
+                          "type": "Frame",
+                          "width": "${card.progress * 100}%",
+                          "height": "100%",
+                          "backgroundColor": "@accentBright"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Container",
+                  "paddingTop": "${16 * u}",
+                  "paddingLeft": "${4 * u}",
+                  "paddingRight": "${4 * u}",
+                  "items": [
+                    {
+                      "type": "Text",
+                      "text": "${card.title}",
+                      "maxLines": 1,
+                      "fontFamily": "Amazon Ember Display",
+                      "fontWeight": "600",
+                      "fontSize": "${Math.max(14, 24 * u)}",
+                      "color": "${hero == card.heroIndex ? '@text' : '@textMuted'}"
+                    },
+                    {
+                      "type": "Text",
+                      "text": "${card.subtitle}",
+                      "maxLines": 1,
+                      "spacing": 2,
+                      "fontFamily": "Bookerly",
+                      "fontStyle": "italic",
+                      "fontSize": "${Math.max(13, 22 * u)}",
+                      "color": "@textMuted"
+                    },
+                    {
+                      "type": "Text",
+                      "text": "${card.meta}",
+                      "maxLines": 1,
+                      "spacing": "${8 * u}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontWeight": "500",
+                      "fontSize": "${Math.max(12, 18 * u)}",
+                      "color": "@text",
+                      "opacity": 0.85
+                    },
+                    {
+                      "type": "Text",
+                      "text": "${card.byline}",
+                      "maxLines": 1,
+                      "spacing": "${4 * u}",
+                      "fontFamily": "Amazon Ember Display",
+                      "fontSize": "${Math.max(11, 17 * u)}",
+                      "color": "@textDim"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "SubgenreTile": {
+      "parameters": [
+        "card"
+      ],
+      "item": {
+        "type": "TouchWrapper",
+        "onPress": [
+          {
+            "type": "SendEvent",
+            "when": "${hero == card.heroIndex}",
+            "arguments": [
+              "${card.action}",
+              "${card.arg}"
+            ]
+          },
+          {
+            "type": "SetValue",
+            "when": "${hero != card.heroIndex}",
+            "componentId": "homeRoot",
+            "property": "hero",
+            "value": "${card.heroIndex}"
+          }
+        ],
+        "item": {
+          "type": "Frame",
+          "width": "${tileW}",
+          "height": "${tileW * 0.6667}",
+          "borderRadius": "${12 * u}",
+          "borderWidth": "${Math.max(2, 4 * u)}",
+          "borderColor": "${hero == card.heroIndex ? '@focus' : 'transparent'}",
+          "backgroundColor": "@surface",
+          "item": {
+            "type": "Container",
+            "width": "100%",
+            "height": "100%",
+            "justifyContent": "end",
+            "items": [
+              {
+                "type": "VectorGraphic",
+                "when": "${card.art != ''}",
+                "source": "${card.art}",
+                "position": "absolute",
+                "width": "100%",
+                "height": "100%",
+                "scale": "best-fill",
+                "align": "center"
+              },
+              {
+                "type": "Frame",
+                "when": "${card.art != ''}",
+                "position": "absolute",
+                "width": "100%",
+                "height": "100%",
+                "backgroundColor": "#04050773"
+              },
+              {
+                "type": "Container",
+                "when": "${card.art == ''}",
+                "position": "absolute",
+                "width": "100%",
+                "height": "100%",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "paddingBottom": "${30 * u}",
+                "items": [
+                  {
+                    "type": "Frame",
+                    "position": "absolute",
+                    "width": "100%",
+                    "height": "100%",
+                    "backgroundColor": "#B3122E38"
+                  },
+                  {
+                    "type": "Text",
+                    "text": "+",
+                    "fontFamily": "Amazon Ember Display",
+                    "fontWeight": "300",
+                    "fontSize": "${64 * u}",
+                    "color": "@text"
+                  }
+                ]
+              },
+              {
+                "type": "Text",
+                "text": "${card.title}",
+                "maxLines": 1,
+                "fontFamily": "Bookerly",
+                "fontWeight": "bold",
+                "fontSize": "${Math.max(14, 30 * u)}",
+                "color": "@text",
+                "textAlign": "${card.art == '' ? 'center' : 'left'}",
+                "paddingLeft": "${16 * u}",
+                "paddingRight": "${16 * u}",
+                "paddingBottom": "${12 * u}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "StoryRail": {
+      "parameters": [
+        "rail"
+      ],
+      "item": {
+        "type": "Container",
+        "paddingBottom": "${Math.max(16, 32 * u)}",
+        "items": [
+          {
+            "type": "Text",
+            "text": "${rail.title}",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${Math.max(18, 36 * u)}",
+            "color": "@text",
+            "paddingLeft": "${safeX}"
+          },
+          {
+            "type": "Sequence",
+            "scrollDirection": "horizontal",
+            "width": "100%",
+            "height": "${storyRailH}",
+            "paddingLeft": "${safeX}",
+            "paddingRight": "${safeX}",
+            "paddingTop": "${Math.max(10, 18 * u)}",
+            "data": "${rail.items}",
+            "items": [
+              {
+                "type": "StoryCard",
+                "card": "${data}",
+                "spacing": "${28 * u}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "CreateRail": {
+      "parameters": [
+        "rail"
+      ],
+      "item": {
+        "type": "Container",
+        "paddingBottom": "${Math.max(16, 32 * u)}",
+        "items": [
+          {
+            "type": "Text",
+            "text": "${rail.title}",
+            "fontFamily": "Bookerly",
+            "fontWeight": "bold",
+            "fontSize": "${Math.max(18, 36 * u)}",
+            "color": "@text",
+            "paddingLeft": "${safeX}"
+          },
+          {
+            "type": "Sequence",
+            "scrollDirection": "horizontal",
+            "width": "100%",
+            "height": "${createRailH}",
+            "paddingLeft": "${safeX}",
+            "paddingRight": "${safeX}",
+            "paddingTop": "${Math.max(10, 18 * u)}",
+            "data": "${rail.items}",
+            "items": [
+              {
+                "type": "SubgenreTile",
+                "card": "${data}",
+                "spacing": "${28 * u}"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "items": [
+      {
+        "type": "Container",
+        "id": "homeRoot",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [
+          {
+            "name": "u",
+            "type": "number",
+            "value": "${Math.min(viewport.width / 1920, viewport.height / 1080)}"
+          },
+          {
+            "name": "hero",
+            "type": "number",
+            "value": 0
+          },
+          {
+            "name": "safeX",
+            "type": "number",
+            "value": "${viewport.width * 0.05}"
+          },
+          {
+            "name": "cardW",
+            "type": "number",
+            "value": "${Math.max(180, 360 * u)}"
+          },
+          {
+            "name": "tileW",
+            "type": "number",
+            "value": "${Math.max(150, 300 * u)}"
+          },
+          {
+            "name": "storyRailH",
+            "type": "number",
+            "value": "${cardW * 0.5639 + 170 * u}"
+          },
+          {
+            "name": "createRailH",
+            "type": "number",
+            "value": "${tileW * 0.6667 + 50 * u}"
+          },
+          {
+            "name": "railsTop",
+            "type": "number",
+            "value": "${viewport.height * 0.58}"
+          }
+        ],
+        "items": [
+          {
+            "type": "Frame",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "backgroundColor": "@background"
+          },
+          {
+            "type": "SceneArt",
+            "art": "${payload.home.heroes[hero].art}"
+          },
+          {
+            "type": "Shade"
+          },
+          {
+            "type": "Container",
+            "position": "absolute",
+            "top": "5vh",
+            "left": "${safeX}",
+            "right": "${safeX}",
+            "direction": "row",
+            "alignItems": "center",
+            "justifyContent": "spaceBetween",
+            "items": [
+              {
+                "type": "Container",
+                "direction": "row",
+                "alignItems": "center",
+                "items": [
+                  {
+                    "type": "HauntLogo",
+                    "size": "${Math.max(22, 40 * u)}"
+                  },
+                  {
+                    "type": "Container",
+                    "direction": "row",
+                    "spacing": "${56 * u}",
+                    "items": [
+                      {
+                        "type": "NavTab",
+                        "label": "Home",
+                        "active": true
+                      },
+                      {
+                        "type": "NavTab",
+                        "label": "Create",
+                        "action": "create"
+                      },
+                      {
+                        "type": "NavTab",
+                        "label": "Community",
+                        "toast": "Community library arrives with accounts."
+                      },
+                      {
+                        "type": "NavTab",
+                        "label": "My Stories",
+                        "toast": "Saved stories arrive with accounts."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "TouchWrapper",
+                "onPress": [
+                  {
+                    "type": "ShowToast",
+                    "message": "Profiles arrive when Haunt accounts are connected."
+                  }
+                ],
+                "item": {
+                  "type": "Frame",
+                  "inheritParentState": true,
+                  "style": "pressBorder",
+                  "borderWidth": "${Math.max(2, 3 * u)}",
+                  "borderRadius": "${40 * u}",
+                  "backgroundColor": "#ECE6DA14",
+                  "paddingTop": "${8 * u}",
+                  "paddingBottom": "${8 * u}",
+                  "paddingLeft": "${8 * u}",
+                  "paddingRight": "${24 * u}",
+                  "item": {
+                    "type": "Container",
+                    "direction": "row",
+                    "alignItems": "center",
+                    "items": [
+                      {
+                        "type": "Frame",
+                        "width": "${Math.max(28, 48 * u)}",
+                        "height": "${Math.max(28, 48 * u)}",
+                        "borderRadius": "${Math.max(14, 24 * u)}",
+                        "backgroundColor": "@accent",
+                        "item": {
+                          "type": "Text",
+                          "text": "${payload.home.initial}",
+                          "width": "100%",
+                          "height": "100%",
+                          "textAlign": "center",
+                          "textAlignVertical": "center",
+                          "fontFamily": "Amazon Ember Display",
+                          "fontWeight": "600",
+                          "fontSize": "${Math.max(13, 22 * u)}",
+                          "color": "@text"
+                        }
+                      },
+                      {
+                        "type": "Text",
+                        "text": "${payload.home.displayName}",
+                        "spacing": "${14 * u}",
+                        "fontFamily": "Amazon Ember Display",
+                        "fontWeight": "500",
+                        "fontSize": "${Math.max(13, 22 * u)}",
+                        "color": "@text"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "Container",
+            "position": "absolute",
+            "left": "${safeX}",
+            "top": "${Math.max(64, 150 * u)}",
+            "width": "62vw",
+            "items": [
+              {
+                "type": "Text",
+                "text": "${payload.home.heroes[hero].eyebrow}",
+                "maxLines": 1,
+                "fontFamily": "Amazon Ember Display",
+                "fontWeight": "600",
+                "fontSize": "${Math.max(11, 19 * u)}",
+                "letterSpacing": "${3 * u}",
+                "color": "@accentBright"
+              },
+              {
+                "type": "Text",
+                "text": "${payload.home.heroes[hero].title}",
+                "maxLines": 1,
+                "spacing": "${8 * u}",
+                "fontFamily": "Bookerly",
+                "fontWeight": "bold",
+                "fontSize": "${Math.max(30, 84 * u)}",
+                "color": "@text"
+              },
+              {
+                "type": "Text",
+                "text": "${payload.home.heroes[hero].subtitle}",
+                "maxLines": 1,
+                "fontFamily": "Bookerly",
+                "fontStyle": "italic",
+                "fontSize": "${Math.max(16, 34 * u)}",
+                "color": "@text",
+                "opacity": 0.85
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "wrap": "wrap",
+                "spacing": "${18 * u}",
+                "items": [
+                  {
+                    "type": "MetaPill",
+                    "text": "${payload.home.heroes[hero].meta[0]}",
+                    "display": "${payload.home.heroes[hero].meta.length > 0 ? 'normal' : 'none'}",
+                    "spacing": "${10 * u}"
+                  },
+                  {
+                    "type": "MetaPill",
+                    "text": "${payload.home.heroes[hero].meta[1]}",
+                    "display": "${payload.home.heroes[hero].meta.length > 1 ? 'normal' : 'none'}",
+                    "spacing": "${10 * u}"
+                  },
+                  {
+                    "type": "MetaPill",
+                    "text": "${payload.home.heroes[hero].meta[2]}",
+                    "display": "${payload.home.heroes[hero].meta.length > 2 ? 'normal' : 'none'}",
+                    "spacing": "${10 * u}"
+                  },
+                  {
+                    "type": "MetaPill",
+                    "text": "${payload.home.heroes[hero].meta[3]}",
+                    "display": "${payload.home.heroes[hero].meta.length > 3 ? 'normal' : 'none'}",
+                    "spacing": "${10 * u}"
+                  },
+                  {
+                    "type": "MetaPill",
+                    "text": "${payload.home.heroes[hero].meta[4]}",
+                    "display": "${payload.home.heroes[hero].meta.length > 4 ? 'normal' : 'none'}",
+                    "spacing": "${10 * u}"
+                  }
+                ]
+              },
+              {
+                "type": "Text",
+                "text": "${payload.home.heroes[hero].logline}",
+                "maxLines": 2,
+                "spacing": "${10 * u}",
+                "fontFamily": "Amazon Ember Display",
+                "fontSize": "${Math.max(14, 26 * u)}",
+                "lineHeight": 1.45,
+                "color": "@textMuted"
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "spacing": "${20 * u}",
+                "items": [
+                  {
+                    "type": "HButton",
+                    "label": "${payload.home.heroes[hero].actionLabel}",
+                    "action": "${payload.home.heroes[hero].action}",
+                    "arg": "${payload.home.heroes[hero].arg}",
+                    "variant": "primary",
+                    "compact": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Sequence",
+            "scrollDirection": "vertical",
+            "snap": "start",
+            "position": "absolute",
+            "top": "${railsTop}",
+            "left": 0,
+            "width": "100vw",
+            "height": "${viewport.height - railsTop}",
+            "paddingBottom": "${viewport.height * 0.25}",
+            "data": "${payload.home.rails}",
+            "items": [
+              {
+                "type": "CreateRail",
+                "when": "${data.kind == 'create'}",
+                "rail": "${data}"
+              },
+              {
+                "type": "StoryRail",
+                "rail": "${data}"
+              }
+            ]
+          },
+          {
+            "type": "Toast"
+          }
+        ]
+      }
+    ]
+  }
+}

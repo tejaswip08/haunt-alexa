@@ -1,0 +1,205 @@
+{
+  "_about": "Canonical branching definitions for two local test stories. Dry run: npm run restore:local-tests. Write (DynamoDB Local at localhost:8001 only): npm run restore:local-tests -- --apply",
+  "stories": [
+    {
+      "entry": {
+        "ending": "Test ending.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "Local Test: The Lamp at Gale Point (test data)",
+          "script": "The keeper’s cottage at Gale Point had been empty for eleven years, but the lamp in the lighthouse was lit the night Mara arrived. She had driven the coast road in the rain, following a letter that promised a room and a key under the step. The key was there. The door opened onto a kitchen with two cups set out on the table, still warm, as if someone had just stepped out to check the weather. Mara told herself the agent had been careless with his visits. Then she saw the tide chart pinned by the window, dated for tomorrow, with a single line marked in red: the light must be seen from the sea.\n\nThe logbook lay open on the windowsill, its pages stiff with salt. Mara read the entries by lamplight. Each night for eleven years someone had written the same few words: lamp trimmed, wind north-west, nothing passing. The handwriting changed partway down the page, from a careful upright hand to a looser one she recognised from her own letters. She was halfway through the last entry when the cottage door opened behind her. The wind came in first, then the smell of paraffin, and then a voice on the stairs, patient and kind, asking whether she had found the tea.\n\nShe followed the voice up the spiral stairs, counting the steps the way the logbook had taught her. Ninety-one, ninety-two. The walls grew damp and then warm, and the light at the top grew stronger with every turn. At the landing a window looked out over the black water, and far out, a single boat was drifting without a lamp. Mara stopped, her hand on the cold rail, because the figure at the top of the stairs was not the man from the agency. It was a woman in a grey coat, holding a lantern, and she was waiting for someone to take her place.\n\nThe lamp room was bright and clean, its brass polished, the great lens turning slowly on its bed of quicksilver. The woman in the grey coat explained, without any urgency, that the light had to be kept for the ships that still came in the dark. Whoever stayed to tend it would never be relieved, and whoever left would find the cottage empty. Mara thought of the boat and the missing lamp. She took the trimming shears from the bench and lit the wick herself. Below her the water settled, and for the first time in eleven years the sea had a light to steer by.",
+          "segments": [
+            {
+              "mood": "suspense",
+              "narration": "The keeper’s cottage at Gale Point had been empty for eleven years, but the lamp in the lighthouse was lit the night Mara arrived. She had driven the coast road in the rain, following a letter that promised a room and a key under the step. The key was there. The door opened onto a kitchen with two cups set out on the table, still warm, as if someone had just stepped out to check the weather. Mara told herself the agent had been careless with his visits. Then she saw the tide chart pinned by the window, dated for tomorrow, with a single line marked in red: the light must be seen from the sea.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 1"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Follow the voice up the stairs",
+                    "next": 2
+                  },
+                  {
+                    "label": "Tear out the last page and run",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Follow the voice up the stairs, or tear out the last page and run?"
+              },
+              "mood": "suspense",
+              "narration": "The logbook lay open on the windowsill, its pages stiff with salt. Mara read the entries by lamplight. Each night for eleven years someone had written the same few words: lamp trimmed, wind north-west, nothing passing. The handwriting changed partway down the page, from a careful upright hand to a looser one she recognised from her own letters. She was halfway through the last entry when the cottage door opened behind her. The wind came in first, then the smell of paraffin, and then a voice on the stairs, patient and kind, asking whether she had found the tea.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 2"
+            },
+            {
+              "mood": "suspense",
+              "narration": "She followed the voice up the spiral stairs, counting the steps the way the logbook had taught her. Ninety-one, ninety-two. The walls grew damp and then warm, and the light at the top grew stronger with every turn. At the landing a window looked out over the black water, and far out, a single boat was drifting without a lamp. Mara stopped, her hand on the cold rail, because the figure at the top of the stairs was not the man from the agency. It was a woman in a grey coat, holding a lantern, and she was waiting for someone to take her place.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 3"
+            },
+            {
+              "ending": true,
+              "mood": "suspense",
+              "narration": "The lamp room was bright and clean, its brass polished, the great lens turning slowly on its bed of quicksilver. The woman in the grey coat explained, without any urgency, that the light had to be kept for the ships that still came in the dark. Whoever stayed to tend it would never be relieved, and whoever left would find the cottage empty. Mara thought of the boat and the missing lamp. She took the trimming shears from the bench and lit the wick herself. Below her the water settled, and for the first time in eleven years the sea had a light to steer by.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 4"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Drive on without looking back",
+                    "next": 5
+                  },
+                  {
+                    "label": "Look back at the light",
+                    "next": 6
+                  }
+                ],
+                "prompt": "Drive on, or look back at the light?"
+              },
+              "mood": "threat",
+              "narration": "Mara tore the last page from the logbook, pushed it into her coat and ran. The cottage door banged behind her. The car’s engine caught on the second try, and the headlights swung across the gravel. Halfway down the coast road she glanced in the mirror, and the lighthouse was lit from top to bottom, though it had been dark when she arrived. At the top of the tower a figure in a grey coat raised a lantern, patient, and waited for her to decide.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "calm",
+              "narration": "Mara drove until the lamp was only a glow behind the headland. In the morning she reached the town, bought a coffee, and unfolded the page she had taken. The words on it had changed. They recorded her arrival, the lamp trimmed, and the wind north-west, and beneath them a single line in her own careful hand: the light has a keeper again. She put the page away and did not read it again, and the coast road never led her back to Gale Point.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Mara turned the car around. At the cottage the door stood open and the two cups were set out as before. She climbed the spiral stairs, counting, until the woman in the grey coat handed her the lantern and a coat that fitted perfectly. The lamp in the lighthouse burned steady, and from the sea it looked exactly as it always had. Mara trimmed the wick and stayed, because someone had to keep the light for the ships that still came in the dark.",
+              "sceneIndex": 6,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "test-lighthouse",
+          "title": "Local Test: The Lamp at Gale Point",
+          "wordCount": 426
+        },
+        "genre": "Horror",
+        "publishedAt": "2026-10-20T11:07:56.225Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Lighthouses",
+        "summary": "Test data for the local resume check."
+      },
+      "id": "library#test-lighthouse"
+    },
+    {
+      "entry": {
+        "ending": "Test ending.",
+        "episode": {
+          "estimatedMinutes": 2,
+          "language": "en",
+          "premise": "Local Test: The Quiet Hall (test data)",
+          "script": "Ellen had house-sat for the Ashdowns before, and she knew the rules: keep the heating low, feed the cat, and never go up to the hall after dark. The house was quiet in the way old houses are quiet, with the clock ticking in the front room and the lamp in the upstairs hall flickering on a timer she had not set. She made tea in the kitchen and listened to the floorboards overhead settle, one by one, as if someone were walking from door to door and checking each room was empty.\n\nAt ten o’clock the lamp upstairs flickered and went out, and a single creak came from the stairs, slow and deliberate, the way a host might climb to greet a late guest. Ellen stood in the kitchen doorway with her mug going cold. The hall was the only room the agency had asked her to keep shut, and the key was still on its hook beside the cooker. The creaking stopped at the top of the stairs. A soft voice, friendly and tired, called her name from the landing, as though it had been waiting all evening for her to answer.\n\nEllen climbed the stairs with the torch shaking in her hand. The upstairs hall was lined with doors, every one standing open on a bedroom made up with fresh linen and two cups laid on the nightstands. On the hall table lay a visitors’ book, its pages curling at the edges. The last entry was in her own handwriting, dated tonight, and beneath her name someone had written, in a neat hand: stayed until morning. She heard the front door close softly downstairs, though she had not heard it open.\n\nBy morning the Ashdowns’ house was quiet again, the clock ticking, the cat asleep on the windowsill. Ellen signed the book, locked the front door and walked to the bus stop without looking back. The visitors’ book stayed on the hall table. Its last line, in neat handwriting, now recorded a second guest, and the lamp upstairs burned all night, steady and bright, for whoever came next.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Ellen had house-sat for the Ashdowns before, and she knew the rules: keep the heating low, feed the cat, and never go up to the hall after dark. The house was quiet in the way old houses are quiet, with the clock ticking in the front room and the lamp in the upstairs hall flickering on a timer she had not set. She made tea in the kitchen and listened to the floorboards overhead settle, one by one, as if someone were walking from door to door and checking each room was empty.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 1"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Climb the stairs to the hall",
+                    "next": 2
+                  },
+                  {
+                    "label": "Lock yourself in the kitchen",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Climb the stairs to the hall, or lock yourself in the kitchen?"
+              },
+              "mood": "uneasy",
+              "narration": "At ten o’clock the lamp upstairs flickered and went out, and a single creak came from the stairs, slow and deliberate, the way a host might climb to greet a late guest. Ellen stood in the kitchen doorway with her mug going cold. The hall was the only room the agency had asked her to keep shut, and the key was still on its hook beside the cooker. The creaking stopped at the top of the stairs. A soft voice, friendly and tired, called her name from the landing, as though it had been waiting all evening for her to answer.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 2"
+            },
+            {
+              "mood": "threat",
+              "narration": "Ellen climbed the stairs with the torch shaking in her hand. The upstairs hall was lined with doors, every one standing open on a bedroom made up with fresh linen and two cups laid on the nightstands. On the hall table lay a visitors’ book, its pages curling at the edges. The last entry was in her own handwriting, dated tonight, and beneath her name someone had written, in a neat hand: stayed until morning. She heard the front door close softly downstairs, though she had not heard it open.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 3"
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "By morning the Ashdowns’ house was quiet again, the clock ticking, the cat asleep on the windowsill. Ellen signed the book, locked the front door and walked to the bus stop without looking back. The visitors’ book stayed on the hall table. Its last line, in neat handwriting, now recorded a second guest, and the lamp upstairs burned all night, steady and bright, for whoever came next.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 4"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Open the cellar hatch",
+                    "next": 5
+                  },
+                  {
+                    "label": "Wait by the back door",
+                    "next": 6
+                  }
+                ],
+                "prompt": "Open the cellar hatch, or wait by the back door?"
+              },
+              "mood": "suspense",
+              "narration": "Ellen locked the kitchen door and wedged a chair under the handle. The bolt slid home, but a moment later the handle turned slowly from the other side. Footsteps crossed the hall, unhurried, and stopped outside. A voice she knew from the answering machine asked, very politely, whether she would let the owners in. The cellar hatch in the floor stood open, cold air rising from it. Behind her, the back door rattled in its frame, as if someone had already walked around the house to try it.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "threat",
+              "narration": "She went down the cellar steps with the torch, into a room of shelves lined with old jars, each labelled in a neat hand. Every label bore a name and a date, and the newest was her own, with tonight’s date. Above her the footsteps reached the top of the cellar stairs and paused, as if to let her finish reading. The house had always kept its guests. Ellen understood, too late, that the cellar was where the house put the ones it meant to keep.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Ellen unbolted the back door and stepped into the garden, where frost lay white on the lawn and the night air was clean. She ran to the gate without looking back and did not stop until the lane met the road. The house stayed dark behind her. When the taxi finally came, the driver asked how the house-sitting had gone. Ellen said it had been quiet, and that she hoped never to hear the upstairs lamp flicker again.",
+              "sceneIndex": 6,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "test-ghost-house",
+          "title": "Local Test: The Quiet Hall",
+          "wordCount": 351
+        },
+        "genre": "Horror",
+        "publishedAt": "2026-10-20T11:07:56.153Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Haunted houses",
+        "summary": "Test data for the local resume check."
+      },
+      "id": "library#test-ghost-house"
+    }
+  ]
+}

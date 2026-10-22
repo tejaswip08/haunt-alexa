@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="sky" cx="900" cy="260" r="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2a1430"/>
+      <stop offset=".5" stop-color="#0d0814"/>
+      <stop offset="1" stop-color="#030205"/>
+    </radialGradient>
+    <radialGradient id="iris" cx="900" cy="250" r="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000"/>
+      <stop offset=".25" stop-color="#000"/>
+      <stop offset=".3" stop-color="#d6a64a"/>
+      <stop offset=".7" stop-color="#7a2a1a"/>
+      <stop offset="1" stop-color="#2a0c10"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="900" cy="250" r="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c0503a" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g fill="#e8e0f0">
+    <circle cx="120" cy="90" r="2"/><circle cx="300" cy="200" r="1.5"/><circle cx="460" cy="70" r="2"/><circle cx="1320" cy="120" r="2"/>
+    <circle cx="1480" cy="260" r="1.5"/><circle cx="1180" cy="60" r="1.5"/><circle cx="620" cy="160" r="1.5"/><circle cx="220" cy="330" r="1.5"/>
+    <circle cx="1400" cy="400" r="2"/><circle cx="80" cy="460" r="1.5"/>
+  </g>
+  <circle cx="900" cy="250" r="380" fill="url(#glow)"/>
+  <path d="M640 250 Q900 60 1160 250 Q900 440 640 250 Z" fill="#e7dccb"/>
+  <circle cx="900" cy="250" r="120" fill="url(#iris)"/>
+  <path d="M640 250 Q900 60 1160 250" fill="none" stroke="#120810" stroke-width="16"/>
+  <g stroke="#120a14" stroke-width="22" fill="none" stroke-linecap="round" filter="url(#blur)" opacity=".8">
+    <path d="M600 260 C450 300 360 420 260 520"/>
+    <path d="M1200 260 C1350 320 1420 440 1520 540"/>
+  </g>
+  <path d="M0 760 L200 700 L320 740 L480 690 L620 730 L760 650 L820 650 L880 730 L1040 700 L1200 740 L1380 690 L1600 740 V900 H0Z" fill="#030204"/>
+  <g fill="#030204">
+    <rect x="770" y="580" width="40" height="80"/>
+    <path d="M750 590 A40 40 0 0 1 830 590 Z"/>
+  </g>
+  <rect x="786" y="610" width="8" height="10" fill="#e0b060"/>
+</svg>

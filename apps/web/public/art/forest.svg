@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#030605"/>
+      <stop offset=".55" stop-color="#0f1a15"/>
+      <stop offset="1" stop-color="#1c2620"/>
+    </linearGradient>
+    <radialGradient id="light" cx="820" cy="560" r="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9fb2a6" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="eye"><stop offset="0" stop-color="#f0d27a"/><stop offset=".4" stop-color="#c88a20" stop-opacity=".6"/><stop offset="1" stop-color="#c88a20" stop-opacity="0"/></radialGradient>
+    <filter id="fog"><feGaussianBlur stdDeviation="26"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#light)"/>
+  <path d="M640 900 C720 760 790 640 810 560 C830 640 900 760 1000 900Z" fill="#26302a" opacity=".55"/>
+  <g fill="#0a110d">
+    <rect x="120" y="0" width="34" height="900"/><rect x="330" y="0" width="22" height="900"/><rect x="520" y="0" width="28" height="900"/>
+    <rect x="1040" y="0" width="26" height="900"/><rect x="1240" y="0" width="34" height="900"/><rect x="1430" y="0" width="22" height="900"/>
+  </g>
+  <g fill="#040705">
+    <rect x="30" y="0" width="70" height="900"/><rect x="240" y="0" width="56" height="900"/><rect x="430" y="0" width="64" height="900"/><rect x="600" y="0" width="40" height="900"/>
+    <rect x="960" y="0" width="44" height="900"/><rect x="1120" y="0" width="70" height="900"/><rect x="1320" y="0" width="60" height="900"/><rect x="1500" y="0" width="80" height="900"/>
+  </g>
+  <g stroke="#040705" stroke-width="8" fill="none">
+    <path d="M100 300 L190 240 M296 420 L380 360 M494 260 L560 210 M1004 340 L930 290 M1190 230 L1270 180 M1380 470 L1300 420"/>
+  </g>
+  <circle cx="1080" cy="610" r="22" fill="url(#eye)"/>
+  <circle cx="1112" cy="610" r="22" fill="url(#eye)"/>
+  <circle cx="1080" cy="610" r="4" fill="#fff4cf"/>
+  <circle cx="1112" cy="610" r="4" fill="#fff4cf"/>
+  <rect x="800" y="610" width="10" height="70" fill="#3a2f22"/>
+  <rect x="790" y="600" width="30" height="12" fill="#b3122e"/>
+  <g fill="#b9c7bf" opacity=".09" filter="url(#fog)">
+    <ellipse cx="300" cy="760" rx="520" ry="60"/>
+    <ellipse cx="1200" cy="740" rx="560" ry="56"/>
+    <ellipse cx="800" cy="640" rx="360" ry="40"/>
+  </g>
+  <rect y="820" width="1600" height="80" fill="#030504"/>
+</svg>

@@ -1,0 +1,128 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ClaudeHaikuThroughUsInferenceProfile",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:us-east-1:ACCOUNT_ID:inference-profile/us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0",
+        "arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0",
+        "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0"
+      ]
+    },
+    {
+      "Sid": "Narration",
+      "Effect": "Allow",
+      "Action": "polly:SynthesizeSpeech",
+      "Resource": "*"
+    },
+    {
+      "Sid": "SpokenAnswers",
+      "Effect": "Allow",
+      "Action": "transcribe:StartStreamTranscription",
+      "Resource": "*"
+    },
+    {
+      "Sid": "StoriesAndLibrary",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Scan"
+      ],
+      "Resource": "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-stories"
+    },
+    {
+      "Sid": "SignInRateLimitCounters",
+      "Effect": "Allow",
+      "Action": "dynamodb:UpdateItem",
+      "Resource": "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-auth-rate-limits",
+      "Condition": {
+        "ForAllValues:StringLike": {
+          "dynamodb:LeadingKeys": [
+            "otp-rl#*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "ListenerProfiles",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-users"
+    },
+    {
+      "Sid": "EngagementCounterTotals",
+      "Effect": "Allow",
+      "Action": "dynamodb:UpdateItem",
+      "Resource": "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-stories",
+      "Condition": {
+        "ForAllValues:StringLike": {
+          "dynamodb:LeadingKeys": [
+            "stat#*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "SplitLikesAndProgress",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:Query"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-likes",
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-progress"
+      ]
+    },
+    {
+      "Sid": "UserStoriesRuntime",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Query"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-user-stories",
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-user-stories/index/published-by-date"
+      ]
+    },
+    {
+      "Sid": "SplitLikeTransactions",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:TransactWriteItems"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-likes",
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-stats"
+      ]
+    },
+    {
+      "Sid": "StatsCounters",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/haunt-stats"
+      ]
+    }
+  ]
+}

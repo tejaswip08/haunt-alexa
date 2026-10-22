@@ -1,0 +1,26 @@
+{
+  "TableName": "haunt-users",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+    }
+  ],
+  "BillingMode": "PAY_PER_REQUEST",
+  "DeletionProtectionEnabled": true,
+  "SSESpecification": {
+    "Enabled": true
+  },
+  "Tags": [
+    {
+      "Key": "project",
+      "Value": "haunt"
+    }
+  ]
+}

@@ -1,0 +1,665 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Haunt welcome screen",
+  "theme": "dark",
+  "styles": {
+    "hauntButtonPrimary": {
+      "values": [
+        {
+          "backgroundColor": "#B3122E"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "backgroundColor": "#F2EBDD"
+        }
+      ]
+    },
+    "hauntButtonLabel": {
+      "values": [
+        {
+          "color": "#ECE6DA"
+        },
+        {
+          "when": "${state.pressed || state.focused}",
+          "color": "#07080A"
+        }
+      ]
+    }
+  },
+  "graphics": {
+    "hauntScene": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 1280,
+      "height": 800,
+      "items": [
+        {
+          "type": "path",
+          "description": "Night sky lit from the moon",
+          "pathData": "M0,0 L1280,0 L1280,800 L0,800 Z",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#3a1420",
+              "#1a0910",
+              "#070306",
+              "#000000"
+            ],
+            "inputRange": [
+              0,
+              0.25,
+              0.6,
+              1
+            ],
+            "centerX": 0.79,
+            "centerY": 0.19,
+            "radius": 0.9
+          }
+        },
+        {
+          "type": "path",
+          "description": "Moon glow outer",
+          "pathData": "M880,150 a130,130 0 1,0 260,0 a130,130 0 1,0 -260,0",
+          "fill": "#e8dccb",
+          "fillOpacity": 0.05
+        },
+        {
+          "type": "path",
+          "description": "Moon glow inner",
+          "pathData": "M920,150 a90,90 0 1,0 180,0 a90,90 0 1,0 -180,0",
+          "fill": "#e8dccb",
+          "fillOpacity": 0.1
+        },
+        {
+          "type": "path",
+          "description": "Moon",
+          "pathData": "M952,150 a58,58 0 1,0 116,0 a58,58 0 1,0 -116,0",
+          "fill": "#ddd2c0"
+        },
+        {
+          "type": "path",
+          "description": "Crater",
+          "pathData": "M982,138 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0",
+          "fill": "#b9ab97",
+          "fillOpacity": 0.5
+        },
+        {
+          "type": "path",
+          "description": "Crater",
+          "pathData": "M1021,168 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0",
+          "fill": "#b9ab97",
+          "fillOpacity": 0.5
+        },
+        {
+          "type": "path",
+          "description": "Cloud wisp across the moon",
+          "pathData": "M900,160 C950,150 1000,156 1050,152 C1085,149 1110,154 1125,158 C1080,162 1020,165 970,164 C935,163 912,162 900,160 Z",
+          "fill": "#0a0508",
+          "fillOpacity": 0.55
+        },
+        {
+          "type": "path",
+          "description": "Horizon glow",
+          "pathData": "M0,280 L1280,280 L1280,660 L0,660 Z",
+          "fill": {
+            "type": "linear",
+            "colorRange": [
+              "#00000000",
+              "#5a1a28B3"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "x1": 0,
+            "y1": 0,
+            "x2": 0,
+            "y2": 1
+          }
+        },
+        {
+          "type": "path",
+          "description": "Far hill",
+          "pathData": "M0,600 C200,560 380,590 560,580 C760,570 900,540 1080,560 C1180,570 1240,575 1280,570 L1280,800 L0,800 Z",
+          "fill": "#140a10"
+        },
+        {
+          "type": "path",
+          "description": "Lonely house on the hill",
+          "pathData": "M520,585 L520,540 L545,515 L570,540 L570,585 Z M556,522 L556,505 L562,505 L562,528 Z",
+          "fill": "#0b0508"
+        },
+        {
+          "type": "path",
+          "description": "Lit window",
+          "pathData": "M538,552 L546,552 L546,562 L538,562 Z",
+          "fill": "#c2410c",
+          "fillOpacity": 0.75
+        },
+        {
+          "type": "path",
+          "description": "Near hill",
+          "pathData": "M0,640 C160,600 320,620 480,640 C640,660 820,600 1000,610 C1120,616 1200,630 1280,620 L1280,800 L0,800 Z",
+          "fill": "#0b0508"
+        },
+        {
+          "type": "path",
+          "description": "Gravestones",
+          "pathData": "M980,720 L980,672 C980,656 1012,656 1012,672 L1012,720 Z M1070,722 L1070,680 L1058,680 L1058,672 L1070,672 L1070,660 L1078,660 L1078,672 L1090,672 L1090,680 L1078,680 L1078,722 Z M1130,722 L1130,688 C1130,676 1154,676 1154,688 L1154,722 Z",
+          "fill": "#060304"
+        },
+        {
+          "type": "path",
+          "description": "Dead tree trunk",
+          "pathData": "M140,800 L170,560 C176,500 166,460 150,420 L160,418 C184,455 198,500 194,560 L212,800 Z",
+          "fill": "#040203"
+        },
+        {
+          "type": "group",
+          "description": "Dead tree branches",
+          "items": [
+            {
+              "type": "path",
+              "pathData": "M178,520 C220,470 260,450 320,430",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 7,
+              "strokeLineCap": "round"
+            },
+            {
+              "type": "path",
+              "pathData": "M260,452 C280,420 300,400 330,380",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 4,
+              "strokeLineCap": "round"
+            },
+            {
+              "type": "path",
+              "pathData": "M168,470 C130,430 100,410 60,395",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 6,
+              "strokeLineCap": "round"
+            },
+            {
+              "type": "path",
+              "pathData": "M120,425 C110,395 95,375 70,360",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 3,
+              "strokeLineCap": "round"
+            },
+            {
+              "type": "path",
+              "pathData": "M155,425 C150,380 160,340 175,300",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 5,
+              "strokeLineCap": "round"
+            },
+            {
+              "type": "path",
+              "pathData": "M165,350 C190,330 215,320 240,318",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 3,
+              "strokeLineCap": "round"
+            },
+            {
+              "type": "path",
+              "pathData": "M160,380 C135,360 120,340 110,310",
+              "fill": "transparent",
+              "stroke": "#040203",
+              "strokeWidth": 3,
+              "strokeLineCap": "round"
+            }
+          ]
+        },
+        {
+          "type": "path",
+          "description": "Foreground ground",
+          "pathData": "M0,720 C200,700 420,712 640,720 C860,728 1080,705 1280,715 L1280,800 L0,800 Z",
+          "fill": "#030102"
+        },
+        {
+          "type": "path",
+          "description": "Edge vignette",
+          "pathData": "M0,0 L1280,0 L1280,800 L0,800 Z",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#00000000",
+              "#0000008C"
+            ],
+            "inputRange": [
+              0.45,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.75
+          }
+        },
+        {
+          "type": "path",
+          "description": "Bottom fade",
+          "pathData": "M0,480 L1280,480 L1280,800 L0,800 Z",
+          "fill": {
+            "type": "linear",
+            "colorRange": [
+              "#00000000",
+              "#000000CC"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "x1": 0,
+            "y1": 0,
+            "x2": 0,
+            "y2": 1
+          }
+        }
+      ]
+    },
+    "hauntFog": {
+      "type": "AVG",
+      "version": "1.2",
+      "width": 1600,
+      "height": 300,
+      "items": [
+        {
+          "type": "path",
+          "pathData": "M-120,200 a320,70 0 1,0 640,0 a320,70 0 1,0 -640,0",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#b9aeb80A",
+              "#b9aeb800"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "pathData": "M270,180 a380,80 0 1,0 760,0 a380,80 0 1,0 -760,0",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#b9aeb80D",
+              "#b9aeb800"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "pathData": "M740,210 a360,75 0 1,0 720,0 a360,75 0 1,0 -720,0",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#b9aeb80A",
+              "#b9aeb800"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "pathData": "M1150,190 a300,70 0 1,0 600,0 a300,70 0 1,0 -600,0",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#b9aeb80D",
+              "#b9aeb800"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "pathData": "M-80,250 a500,60 0 1,0 1000,0 a500,60 0 1,0 -1000,0",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#b9aeb80F",
+              "#b9aeb800"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "pathData": "M480,260 a520,60 0 1,0 1040,0 a520,60 0 1,0 -1040,0",
+          "fill": {
+            "type": "radial",
+            "colorRange": [
+              "#b9aeb80F",
+              "#b9aeb800"
+            ],
+            "inputRange": [
+              0,
+              1
+            ],
+            "centerX": 0.5,
+            "centerY": 0.5,
+            "radius": 0.5
+          }
+        }
+      ]
+    }
+  },
+  "onMount": [
+    {
+      "type": "Parallel",
+      "commands": [
+        {
+          "type": "AnimateItem",
+          "componentId": "hauntTitle",
+          "duration": 3000,
+          "easing": "ease-out",
+          "value": [
+            {
+              "property": "opacity",
+              "from": 0,
+              "to": 1
+            },
+            {
+              "property": "transform",
+              "from": [
+                {
+                  "scale": 1.08
+                }
+              ],
+              "to": [
+                {
+                  "scale": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "hauntDivider",
+          "delay": 1800,
+          "duration": 1200,
+          "value": [
+            {
+              "property": "opacity",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "hauntSubtitle",
+          "delay": 2200,
+          "duration": 2000,
+          "value": [
+            {
+              "property": "opacity",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "hauntContinue",
+          "delay": 3400,
+          "duration": 1200,
+          "value": [
+            {
+              "property": "opacity",
+              "from": 0,
+              "to": 1
+            }
+          ]
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "fogBack",
+          "duration": 14000,
+          "easing": "ease-in-out",
+          "repeatCount": 1000,
+          "repeatMode": "reverse",
+          "value": [
+            {
+              "property": "transform",
+              "from": [
+                {
+                  "translateX": -60
+                }
+              ],
+              "to": [
+                {
+                  "translateX": 60
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "AnimateItem",
+          "componentId": "fogFront",
+          "duration": 10000,
+          "easing": "ease-in-out",
+          "repeatCount": 1000,
+          "repeatMode": "reverse",
+          "value": [
+            {
+              "property": "transform",
+              "from": [
+                {
+                  "translateX": 50
+                }
+              ],
+              "to": [
+                {
+                  "translateX": -50
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [
+          {
+            "name": "tall",
+            "type": "boolean",
+            "value": "${viewport.width <= viewport.height}"
+          },
+          {
+            "name": "titleSize",
+            "type": "number",
+            "value": "${Math.min(viewport.width * 0.13, viewport.height * 0.2)}"
+          },
+          {
+            "name": "subtitleSize",
+            "type": "number",
+            "value": "${Math.max(18, Math.min(viewport.width * 0.035, viewport.height * 0.042))}"
+          },
+          {
+            "name": "fogHeight",
+            "type": "number",
+            "value": "${Math.min(viewport.height * 0.45, viewport.width * 0.35)}"
+          },
+          {
+            "name": "btnFont",
+            "type": "number",
+            "value": "${Math.max(18, subtitleSize * 0.85)}"
+          },
+          {
+            "name": "btnHeight",
+            "type": "number",
+            "value": "${Math.max(44, subtitleSize * 2.1)}"
+          }
+        ],
+        "items": [
+          {
+            "type": "VectorGraphic",
+            "source": "hauntScene",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "scale": "best-fill",
+            "align": "${tall ? 'right' : 'top'}"
+          },
+          {
+            "type": "VectorGraphic",
+            "id": "fogBack",
+            "source": "hauntFog",
+            "position": "absolute",
+            "left": "-25vw",
+            "bottom": "4vh",
+            "width": "150vw",
+            "height": "${fogHeight}",
+            "scale": "fill",
+            "opacity": 0.7
+          },
+          {
+            "type": "Container",
+            "position": "absolute",
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "justifyContent": "center",
+            "alignItems": "center",
+            "paddingLeft": "${viewport.shape == 'round' ? '12vw' : '6vw'}",
+            "paddingRight": "${viewport.shape == 'round' ? '12vw' : '6vw'}",
+            "items": [
+              {
+                "type": "Text",
+                "id": "hauntTitle",
+                "text": "${payload.welcome.title}",
+                "opacity": 0,
+                "fontFamily": "Bookerly",
+                "fontSize": "${titleSize}",
+                "fontWeight": "300",
+                "letterSpacing": "${titleSize * 0.15}",
+                "paddingLeft": "${titleSize * 0.15}",
+                "color": "#e8e0d2",
+                "textAlign": "center"
+              },
+              {
+                "type": "Frame",
+                "id": "hauntDivider",
+                "opacity": 0,
+                "width": "14vw",
+                "height": 2,
+                "backgroundColor": "#8b0a14"
+              },
+              {
+                "type": "Text",
+                "id": "hauntSubtitle",
+                "text": "${payload.welcome.subtitle}",
+                "opacity": 0,
+                "paddingTop": "${subtitleSize * 0.7}",
+                "fontFamily": "Bookerly",
+                "fontSize": "${subtitleSize}",
+                "fontStyle": "italic",
+                "letterSpacing": "${subtitleSize * 0.07}",
+                "color": "#b5a998",
+                "textAlign": "center"
+              },
+              {
+                "type": "TouchWrapper",
+                "id": "hauntContinue",
+                "opacity": 0,
+                "spacing": "${subtitleSize * 1.5}",
+                "onPress": [
+                  {
+                    "type": "SendEvent",
+                    "arguments": [
+                      "continue"
+                    ]
+                  }
+                ],
+                "item": {
+                  "type": "Frame",
+                  "inheritParentState": true,
+                  "style": "hauntButtonPrimary",
+                  "borderRadius": "${btnHeight * 0.17}",
+                  "height": "${btnHeight}",
+                  "paddingLeft": "${btnHeight * 0.8}",
+                  "paddingRight": "${btnHeight * 0.8}",
+                  "item": {
+                    "type": "Text",
+                    "inheritParentState": true,
+                    "style": "hauntButtonLabel",
+                    "text": "${payload.welcome.continueLabel}",
+                    "height": "100%",
+                    "textAlignVertical": "center",
+                    "fontFamily": "Amazon Ember Display",
+                    "fontWeight": "500",
+                    "fontSize": "${btnFont}",
+                    "letterSpacing": "${btnFont * 0.04}",
+                    "maxLines": 1
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "VectorGraphic",
+            "id": "fogFront",
+            "source": "hauntFog",
+            "position": "absolute",
+            "left": "-25vw",
+            "bottom": "${-fogHeight * 0.25}",
+            "width": "150vw",
+            "height": "${fogHeight * 0.9}",
+            "scale": "fill",
+            "opacity": 0.5
+          }
+        ]
+      }
+    ]
+  }
+}

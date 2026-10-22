@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="end" cx="800" cy="430" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9aa6b0" stop-opacity=".55"/>
+      <stop offset=".35" stop-color="#2a3138" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#040506" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1e22"/>
+      <stop offset="1" stop-color="#050607"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="fog"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#040506"/>
+  <polygon points="0,0 1600,0 960,330 640,330" fill="#0b0d10"/>
+  <polygon points="0,900 1600,900 960,560 640,560" fill="url(#floor)"/>
+  <polygon points="0,0 640,330 640,560 0,900" fill="#090b0d"/>
+  <polygon points="1600,0 960,330 960,560 1600,900" fill="#0a0c0f"/>
+  <rect x="640" y="330" width="320" height="230" fill="url(#end)"/>
+  <g fill="#050607">
+    <polygon points="120,180 300,250 300,690 120,780"/>
+    <polygon points="420,280 520,315 520,600 420,640"/>
+    <polygon points="1480,180 1300,250 1300,690 1480,780"/>
+    <polygon points="1180,280 1080,315 1080,600 1180,640"/>
+  </g>
+  <polygon points="1180,280 1080,315 1080,600 1180,640" fill="#5a0f1a" opacity=".35"/>
+  <g fill="#030303" filter="url(#soft)">
+    <ellipse cx="800" cy="470" rx="22" ry="70"/>
+    <circle cx="800" cy="395" r="16"/>
+    <path d="M778 430 Q760 470 770 540 L830 540 Q840 470 822 430 Z"/>
+  </g>
+  <rect x="790" y="320" width="20" height="8" fill="#d8d2c0" opacity=".7"/>
+  <g fill="#c8ced4" opacity=".06" filter="url(#fog)">
+    <ellipse cx="800" cy="600" rx="600" ry="60"/>
+  </g>
+</svg>

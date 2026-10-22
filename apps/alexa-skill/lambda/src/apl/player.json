@@ -1,0 +1,367 @@
+{
+  "type": "APL",
+  "version": "2023.3",
+  "description": "Story player with choices. Port of apps/tv/src/screens/StoryPlayerScreen.tsx (+ ChoiceButton, NarrationIndicator). Alexa reads the scene aloud; choices fade in when the narration should be done.",
+  "theme": "dark",
+  "settings": { "idleTimeout": 300000 },
+  "layouts": {
+    "Bar": {
+      "parameters": ["n"],
+      "item": { "type": "Frame", "id": "bar${n}", "spacing": 4, "width": "${Math.max(3, 5 * u)}", "height": "${Math.max(16, 28 * u)}", "borderRadius": 3, "backgroundColor": "${narrating ? '@accentBright' : '@textDim'}" }
+    },
+    "ChoiceButton": {
+      "parameters": ["c"],
+      "item": {
+        "type": "TouchWrapper",
+        "grow": 1,
+        "shrink": 1,
+        "basis": 0,
+        "spacing": "${22 * u}",
+        "onPress": [
+          { "type": "SendEvent", "when": "${!c.locked}", "arguments": ["choose", "${c.id}"] },
+          { "type": "ShowToast", "when": "${c.locked}", "message": "${c.lockedReason}" }
+        ],
+        "item": {
+          "type": "Frame",
+          "inheritParentState": true,
+          "style": "crimsonPress",
+          "opacity": "${c.locked ? 0.55 : 1}",
+          "minHeight": "${Math.max(64, 124 * u)}",
+          "borderRadius": "${14 * u}",
+          "borderWidth": "${Math.max(2, 3 * u)}",
+          "paddingTop": "${Math.max(10, 20 * u)}",
+          "paddingBottom": "${Math.max(10, 20 * u)}",
+          "paddingLeft": "${Math.max(12, 22 * u)}",
+          "paddingRight": "${Math.max(12, 22 * u)}",
+          "item": {
+            "type": "Container",
+            "direction": "row",
+            "alignItems": "start",
+            "items": [
+              {
+                "type": "Frame",
+                "width": "${Math.max(28, 44 * u)}",
+                "height": "${Math.max(28, 44 * u)}",
+                "borderRadius": "${Math.max(14, 22 * u)}",
+                "borderWidth": 2,
+                "borderColor": "#ECE6DA59",
+                "item": {
+                  "type": "Container",
+                  "width": "100%",
+                  "height": "100%",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "items": [
+                    { "type": "Text", "when": "${!c.locked}", "text": "${c.index}", "fontFamily": "Amazon Ember Display", "fontWeight": "bold", "fontSize": "${Math.max(14, 20 * u)}", "color": "@text" },
+                    { "type": "Icon", "when": "${c.locked}", "name": "iconLock", "size": "${Math.max(14, 20 * u)}" }
+                  ]
+                }
+              },
+              {
+                "type": "Container",
+                "grow": 1,
+                "shrink": 1,
+                "spacing": "${18 * u}",
+                "items": [
+                  { "type": "Text", "text": "${c.label}", "maxLines": 2, "fontFamily": "Bookerly", "fontWeight": "bold", "fontSize": "${Math.max(16, 32 * u)}", "lineHeight": 1.15, "color": "${c.locked ? '@textMuted' : '@text'}" },
+                  { "type": "Text", "when": "${c.locked}", "text": "${c.lockedReason}", "spacing": "${6 * u}", "maxLines": 2, "fontFamily": "Amazon Ember Display", "fontWeight": "600", "fontSize": "${Math.max(12, 18 * u)}", "color": "@accentBright" },
+                  { "type": "Text", "when": "${!c.locked && c.hint != ''}", "text": "${c.hint}", "spacing": "${6 * u}", "maxLines": 2, "fontFamily": "Bookerly", "fontStyle": "italic", "fontSize": "${Math.max(13, 22 * u)}", "color": "@textMuted" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Pill": {
+      "parameters": ["text", { "name": "item", "type": "boolean", "default": false }],
+      "item": {
+        "type": "Frame",
+        "spacing": "${12 * u}",
+        "backgroundColor": "${item ? '#B3122E40' : '@scrim'}",
+        "borderColor": "${item ? '@accent' : 'transparent'}",
+        "borderWidth": 1,
+        "borderRadius": "${20 * u}",
+        "paddingLeft": "${16 * u}",
+        "paddingRight": "${16 * u}",
+        "paddingTop": "${8 * u}",
+        "paddingBottom": "${8 * u}",
+        "item": { "type": "Text", "text": "${text}", "maxLines": 1, "fontFamily": "Amazon Ember Display", "fontWeight": "500", "fontSize": "${Math.max(12, 18 * u)}", "color": "${item ? '@text' : '@textMuted'}" }
+      }
+    }
+  },
+  "onMount": [
+    {
+      "type": "Parallel",
+      "commands": [
+        { "type": "AnimateItem", "componentId": "fadeBlack", "duration": 900, "value": [{ "property": "opacity", "from": 1, "to": 0 }] },
+        { "type": "AnimateItem", "componentId": "sceneArt", "duration": 24000, "easing": "linear", "value": [{ "property": "transform", "from": [{ "scale": 1 }], "to": [{ "scale": 1.12 }] }] },
+        { "type": "AnimateItem", "componentId": "bar0", "duration": 260, "repeatCount": "${payload.player.barRepeats}", "repeatMode": "reverse", "value": [{ "property": "transform", "from": [{ "scaleY": 0.3 }], "to": [{ "scaleY": 1 }] }] },
+        { "type": "AnimateItem", "componentId": "bar1", "duration": 330, "repeatCount": "${payload.player.barRepeats}", "repeatMode": "reverse", "value": [{ "property": "transform", "from": [{ "scaleY": 0.3 }], "to": [{ "scaleY": 1 }] }] },
+        { "type": "AnimateItem", "componentId": "bar2", "duration": 400, "repeatCount": "${payload.player.barRepeats}", "repeatMode": "reverse", "value": [{ "property": "transform", "from": [{ "scaleY": 0.3 }], "to": [{ "scaleY": 1 }] }] },
+        { "type": "AnimateItem", "componentId": "bar3", "duration": 470, "repeatCount": "${payload.player.barRepeats}", "repeatMode": "reverse", "value": [{ "property": "transform", "from": [{ "scaleY": 0.3 }], "to": [{ "scaleY": 1 }] }] },
+        { "type": "AnimateItem", "componentId": "bar4", "duration": 540, "repeatCount": "${payload.player.barRepeats}", "repeatMode": "reverse", "value": [{ "property": "transform", "from": [{ "scaleY": 0.3 }], "to": [{ "scaleY": 1 }] }] },
+        {
+          "type": "Sequential",
+          "commands": [
+            { "type": "Idle", "delay": "${payload.player.narrationMs}" },
+            { "type": "SetValue", "componentId": "playerRoot", "property": "narrating", "value": false },
+            { "type": "AnimateItem", "componentId": "voiceLine", "duration": 500, "value": [{ "property": "opacity", "from": 0, "to": 1 }] },
+            { "type": "AnimateItem", "componentId": "choices", "duration": 600, "value": [{ "property": "opacity", "from": 0, "to": 1 }] },
+            { "type": "AnimateItem", "componentId": "endingWrap", "duration": 900, "value": [{ "property": "opacity", "from": 0, "to": 1 }] }
+          ]
+        },
+        {
+          "type": "Sequential",
+          "commands": [
+            { "type": "AnimateItem", "componentId": "clueBanner", "delay": 700, "duration": 400, "value": [{ "property": "opacity", "from": 0, "to": 1 }, { "property": "transform", "from": [{ "translateX": 40 }], "to": [{ "translateX": 0 }] }] },
+            { "type": "Idle", "delay": 5000 },
+            { "type": "AnimateItem", "componentId": "clueBanner", "duration": 500, "value": [{ "property": "opacity", "from": 1, "to": 0 }] }
+          ]
+        }
+      ]
+    }
+  ],
+  "mainTemplate": {
+    "parameters": ["payload"],
+    "items": [
+      {
+        "type": "Container",
+        "id": "playerRoot",
+        "width": "100vw",
+        "height": "100vh",
+        "bind": [
+          { "name": "u", "type": "number", "value": "${Math.min(viewport.width / 1920, viewport.height / 1080)}" },
+          { "name": "narrating", "type": "boolean", "value": true },
+          { "name": "paused", "type": "boolean", "value": false },
+          { "name": "safeX", "type": "number", "value": "${viewport.width * 0.05}" }
+        ],
+        "items": [
+          { "type": "Frame", "position": "absolute", "width": "100%", "height": "100%", "backgroundColor": "@background" },
+          { "type": "SceneArt", "art": "${payload.player.scene.art}", "zoomId": "sceneArt" },
+          { "type": "Shade" },
+          { "type": "Frame", "position": "absolute", "left": 0, "right": 0, "bottom": 0, "height": "48vh", "backgroundColor": "#07080A73" },
+
+          {
+            "type": "Container",
+            "position": "absolute",
+            "top": "5vh",
+            "left": "${safeX}",
+            "right": "${safeX}",
+            "direction": "row",
+            "justifyContent": "spaceBetween",
+            "alignItems": "start",
+            "items": [
+              {
+                "type": "Container",
+                "shrink": 1,
+                "items": [
+                  { "type": "Text", "text": "${payload.player.title}", "maxLines": 1, "fontFamily": "Bookerly", "fontWeight": "bold", "fontSize": "${Math.max(18, 36 * u)}", "color": "@text" },
+                  { "type": "Text", "text": "${payload.player.scene.chapter}  ·  ${payload.player.scene.location}", "maxLines": 1, "spacing": "${4 * u}", "fontFamily": "Amazon Ember Display", "fontWeight": "600", "fontSize": "${Math.max(11, 18 * u)}", "letterSpacing": "${2 * u}", "color": "@accentBright" }
+                ]
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "alignItems": "center",
+                "items": [
+                  { "type": "Container", "direction": "row", "data": "${payload.player.inventory}", "items": [{ "type": "Pill", "text": "${data}", "item": true }] },
+                  { "type": "Pill", "text": "Scene ${payload.player.sceneNumber}" },
+                  {
+                    "type": "TouchWrapper",
+                    "spacing": "${12 * u}",
+                    "onPress": [{ "type": "SetValue", "componentId": "playerRoot", "property": "paused", "value": true }],
+                    "item": {
+                      "type": "Frame",
+                      "inheritParentState": true,
+                      "style": "hButtonSecondary",
+                      "borderWidth": 2,
+                      "width": "${Math.max(36, 56 * u)}",
+                      "height": "${Math.max(36, 56 * u)}",
+                      "borderRadius": "${Math.max(18, 28 * u)}",
+                      "item": { "type": "Container", "width": "100%", "height": "100%", "justifyContent": "center", "alignItems": "center", "items": [{ "type": "Icon", "name": "iconPause", "size": "${Math.max(16, 24 * u)}" }] }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+
+          {
+            "type": "Frame",
+            "id": "clueBanner",
+            "when": "${payload.player.found != null}",
+            "opacity": 0,
+            "position": "absolute",
+            "top": "16vh",
+            "right": "${safeX}",
+            "width": "${Math.max(220, 480 * u)}",
+            "backgroundColor": "#0A0B0EEB",
+            "borderRadius": "${12 * u}",
+            "item": {
+              "type": "Container",
+              "direction": "row",
+              "items": [
+                { "type": "Frame", "width": "${Math.max(4, 6 * u)}", "backgroundColor": "@accentBright" },
+                {
+                  "type": "Container",
+                  "shrink": 1,
+                  "padding": "${Math.max(12, 24 * u)}",
+                  "items": [
+                    { "type": "Text", "text": "CLUE FOUND", "fontFamily": "Amazon Ember Display", "fontWeight": "bold", "fontSize": "${Math.max(11, 16 * u)}", "letterSpacing": "${3 * u}", "color": "@accentBright" },
+                    { "type": "Text", "text": "${payload.player.found.name}", "spacing": "${6 * u}", "fontFamily": "Bookerly", "fontWeight": "bold", "fontSize": "${Math.max(18, 34 * u)}", "color": "@text" },
+                    { "type": "Text", "text": "${payload.player.found.description}", "spacing": "${6 * u}", "fontFamily": "Bookerly", "fontStyle": "italic", "fontSize": "${Math.max(13, 22 * u)}", "color": "@textMuted" }
+                  ]
+                }
+              ]
+            }
+          },
+
+          {
+            "type": "Container",
+            "when": "${payload.player.ending == null}",
+            "position": "absolute",
+            "left": "${safeX}",
+            "right": "${safeX}",
+            "bottom": "6vh",
+            "items": [
+              {
+                "type": "Container",
+                "direction": "row",
+                "alignItems": "center",
+                "items": [
+                  {
+                    "type": "Container",
+                    "direction": "row",
+                    "alignItems": "center",
+                    "height": "${Math.max(16, 28 * u)}",
+                    "items": [{ "type": "Bar", "n": 0 }, { "type": "Bar", "n": 1 }, { "type": "Bar", "n": 2 }, { "type": "Bar", "n": 3 }, { "type": "Bar", "n": 4 }]
+                  },
+                  { "type": "Text", "text": "${narrating ? 'NARRATING' : 'WHAT DO YOU DO?'}", "spacing": "${14 * u}", "fontFamily": "Amazon Ember Display", "fontWeight": "600", "fontSize": "${Math.max(11, 18 * u)}", "letterSpacing": "${3 * u}", "color": "@textMuted" }
+                ]
+              },
+              { "type": "Text", "text": "${payload.player.scene.narration}", "spacing": "${18 * u}", "fontFamily": "Bookerly", "fontSize": "${Math.max(17, 38 * u)}", "lineHeight": 1.35, "color": "@text" },
+              {
+                "type": "Text",
+                "id": "voiceLine",
+                "when": "${payload.player.scene.voice != null}",
+                "opacity": 0,
+                "spacing": "${14 * u}",
+                "text": "<span color='#D61F3D'><b>${payload.player.scene.voice.speaker}:</b></span> <i>“${payload.player.scene.voice.line}”</i>",
+                "fontFamily": "Bookerly",
+                "fontSize": "${Math.max(16, 34 * u)}",
+                "color": "@text"
+              },
+              {
+                "type": "Container",
+                "id": "choices",
+                "opacity": 0,
+                "spacing": "${28 * u}",
+                "items": [
+                  { "type": "Container", "direction": "row", "data": "${payload.player.choices}", "items": [{ "type": "ChoiceButton", "c": "${data}" }] },
+                  { "type": "Text", "text": "${payload.player.voiceHint}", "spacing": "${14 * u}", "fontFamily": "Amazon Ember Display", "fontSize": "${Math.max(12, 18 * u)}", "color": "@textDim" }
+                ]
+              }
+            ]
+          },
+
+          {
+            "type": "Container",
+            "id": "endingWrap",
+            "when": "${payload.player.ending != null}",
+            "opacity": 0,
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "paddingLeft": "12vw",
+            "paddingRight": "12vw",
+            "items": [
+              { "type": "Frame", "position": "absolute", "width": "100vw", "height": "100vh", "backgroundColor": "#0405078C" },
+              { "type": "Text", "text": "THE END", "textAlign": "center", "fontFamily": "Amazon Ember Display", "fontWeight": "bold", "fontSize": "${Math.max(13, 22 * u)}", "letterSpacing": "${8 * u}", "color": "@accentBright" },
+              { "type": "Text", "text": "${payload.player.ending.title}", "spacing": "${4 * u}", "textAlign": "center", "fontFamily": "Bookerly", "fontWeight": "bold", "fontSize": "${Math.max(36, 110 * u)}", "color": "@text" },
+              { "type": "Text", "text": "${payload.player.scene.narration}", "spacing": "${10 * u}", "textAlign": "center", "fontFamily": "Bookerly", "fontSize": "${Math.max(14, 28 * u)}", "lineHeight": 1.4, "color": "@textMuted" },
+              { "type": "Text", "text": "${payload.player.ending.epilogue}", "spacing": "${22 * u}", "textAlign": "center", "fontFamily": "Bookerly", "fontStyle": "italic", "fontSize": "${Math.max(16, 34 * u)}", "color": "@text" },
+              { "type": "Text", "text": "${payload.player.ending.found}", "spacing": "${28 * u}", "textAlign": "center", "fontFamily": "Amazon Ember Display", "fontWeight": "600", "fontSize": "${Math.max(12, 20 * u)}", "letterSpacing": "${2 * u}", "color": "@accentBright" },
+              {
+                "type": "Container",
+                "direction": "row",
+                "wrap": "wrap",
+                "justifyContent": "center",
+                "spacing": "${18 * u}",
+                "data": "${payload.player.ending.path}",
+                "items": [
+                  {
+                    "type": "Frame",
+                    "spacing": "${10 * u}",
+                    "borderWidth": 1,
+                    "borderColor": "@border",
+                    "backgroundColor": "#111318CC",
+                    "borderRadius": "${8 * u}",
+                    "paddingLeft": "${14 * u}",
+                    "paddingRight": "${14 * u}",
+                    "paddingTop": "${6 * u}",
+                    "paddingBottom": "${6 * u}",
+                    "item": { "type": "Text", "text": "${index + 1}. ${data}", "maxLines": 1, "fontFamily": "Amazon Ember Display", "fontSize": "${Math.max(11, 18 * u)}", "color": "@textMuted" }
+                  }
+                ]
+              },
+              {
+                "type": "Container",
+                "direction": "row",
+                "spacing": "${40 * u}",
+                "items": [
+                  { "type": "HButton", "label": "Play Again", "action": "playAgain", "variant": "primary" },
+                  { "type": "HButton", "label": "Back to Home", "action": "home", "spacing": "${20 * u}" }
+                ]
+              }
+            ]
+          },
+
+          {
+            "type": "Container",
+            "display": "${paused ? 'normal' : 'none'}",
+            "position": "absolute",
+            "width": "100%",
+            "height": "100%",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "items": [
+              { "type": "Frame", "position": "absolute", "width": "100vw", "height": "100vh", "backgroundColor": "#040507D9" },
+              { "type": "Text", "text": "Paused", "fontFamily": "Bookerly", "fontWeight": "bold", "fontSize": "${Math.max(40, 110 * u)}", "color": "@text" },
+              { "type": "Text", "text": "${payload.player.title}  ·  ${payload.player.scene.chapter}", "spacing": "${4 * u}", "fontFamily": "Amazon Ember Display", "fontSize": "${Math.max(14, 24 * u)}", "color": "@textMuted" },
+              {
+                "type": "Container",
+                "direction": "row",
+                "spacing": "${48 * u}",
+                "items": [
+                  {
+                    "type": "TouchWrapper",
+                    "onPress": [{ "type": "SetValue", "componentId": "playerRoot", "property": "paused", "value": false }],
+                    "item": {
+                      "type": "Frame",
+                      "inheritParentState": true,
+                      "style": "hButtonPrimary",
+                      "borderWidth": "${Math.max(2, 3 * u)}",
+                      "borderRadius": "${10 * u}",
+                      "height": "${Math.max(44, 76 * u)}",
+                      "paddingLeft": "${Math.max(16, 40 * u)}",
+                      "paddingRight": "${Math.max(16, 40 * u)}",
+                      "item": { "type": "Text", "inheritParentState": true, "style": "hButtonLabel", "text": "Resume", "height": "100%", "textAlignVertical": "center", "fontFamily": "Amazon Ember Display", "fontWeight": "500", "fontSize": "${Math.max(16, 28 * u)}" }
+                    }
+                  },
+                  { "type": "HButton", "label": "Restart Story", "action": "restart", "spacing": "${20 * u}" },
+                  { "type": "HButton", "label": "Exit to Home", "action": "home", "spacing": "${20 * u}" }
+                ]
+              }
+            ]
+          },
+
+          { "type": "Frame", "id": "fadeBlack", "position": "absolute", "width": "100%", "height": "100%", "backgroundColor": "#000000" },
+          { "type": "Toast" }
+        ]
+      }
+    ]
+  }
+}

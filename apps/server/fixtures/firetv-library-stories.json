@@ -1,0 +1,1845 @@
+{
+  "_about": "Canonical records for every Fire TV library story (library# items in haunt-stories). Restore with apps/server/scripts/restore-firetv-library.ts (dry run by default).",
+  "stories": [
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "They leave before dawn, but the last page they wrote is still waiting for them at home.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A honeymoon couple rents a quiet guest house in the hills and finds their names already written in its guestbook, dated for tomorrow.",
+          "script": "The Ashgrove guest house sat at the end of a gravel road that the map app had given up on. Nadia and Tomas arrived in the last of the light, tired from the drive and happy to see a lamp burning in the window. The owner, a thin man named Mr Hale, did not come out to greet them. He had left a key under a stone and a note that said the guestbook was on the hall table and they should sign it before they slept. Nadia laughed at the old-fashioned request. Tomas flipped the book open and stopped. Their names were already there, written in neat blue ink, with the date of tomorrow beside them.\n\nTomas told himself that Mr Hale had prepared the book for guests who had booked in advance, and that the clerk had simply made a mistake with the dates. Nadia was less willing to be reassured. Their booking had been made on the spur of the moment, a single phone call that morning from a petrol station. The handwriting beside their names was not Mr Hale's. It was theirs, a little rounder, the way they wrote when they were tired. Upstairs a door opened and closed, slowly, the way a person closes a door when they are trying not to wake someone.\n\nThey searched the house and found no one, though every room had been made up with fresh sheets and two cups set out on the nightstands. In the study they found a shelf of guestbooks going back a hundred years, each one filled with the names of couples who had stayed a single night. Every entry ended with the same line in the same rounded hand: they left before the morning. At the bottom of the oldest book the ink had faded almost to nothing, but the last name in it was one Nadia recognised, because it was written in her own handwriting and dated the day her grandmother died.\n\nThey did not sleep. At four in the morning they packed the car in silence and drove down the gravel road with the headlights off, following the moon. At the bottom of the hill, the signal returned, and Nadia's phone lit up with a message from the booking site confirming their stay at Ashgrove, with a reminder to sign the guestbook before checking out. When they got home, the hall table in their flat had a small leather book on it that neither of them remembered buying. Tomas opened it, and the first page already held their names, and a date three days from now.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "The Ashgrove guest house sat at the end of a gravel road that the map app had given up on. Nadia and Tomas arrived in the last of the light, tired from the drive and happy to see a lamp burning in the window. The owner, a thin man named Mr Hale, did not come out to greet them. He had left a key under a stone and a note that said the guestbook was on the hall table and they should sign it before they slept. Nadia laughed at the old-fashioned request. Tomas flipped the book open and stopped. Their names were already there, written in neat blue ink, with the date of tomorrow beside them.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Search the house for the owner",
+                    "next": 2
+                  },
+                  {
+                    "label": "Sign the guestbook and stay the night",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Search the house, or sign the guestbook?"
+              },
+              "mood": "uneasy",
+              "narration": "Tomas told himself that Mr Hale had prepared the book for guests who had booked in advance, and that the clerk had simply made a mistake with the dates. Nadia was less willing to be reassured. Their booking had been made on the spur of the moment, a single phone call that morning from a petrol station. The handwriting beside their names was not Mr Hale's. It was theirs, a little rounder, the way they wrote when they were tired. Upstairs a door opened and closed, slowly, the way a person closes a door when they are trying not to wake someone.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "They searched the house and found no one, though every room had been made up with fresh sheets and two cups set out on the nightstands. In the study they found a shelf of guestbooks going back a hundred years, each one filled with the names of couples who had stayed a single night. Every entry ended with the same line in the same rounded hand: they left before the morning. At the bottom of the oldest book the ink had faded almost to nothing, but the last name in it was one Nadia recognised, because it was written in her own handwriting and dated the day her grandmother died.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "They did not sleep. At four in the morning they packed the car in silence and drove down the gravel road with the headlights off, following the moon. At the bottom of the hill, the signal returned, and Nadia's phone lit up with a message from the booking site confirming their stay at Ashgrove, with a reminder to sign the guestbook before checking out. When they got home, the hall table in their flat had a small leather book on it that neither of them remembered buying. Tomas opened it, and the first page already held their names, and a date three days from now.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Tomas took the pen from the hall table and wrote their names under the last entry, the way the note had asked. The ink was still wet when he finished, and the line above it, which had been in a stranger's hand, now read: they stayed. Upstairs a door opened and closed, and two cups clinked on a tray. Nadia said she could smell tea. They climbed to the room with the lamp, lay down together in their coats, and told each other it was only a guest house. At three the bedroom door creaked, and a cool voice asked whether they had slept well, and whether they were ready to be added to the book.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "In the morning the room was empty except for a neat stack of guestbooks by the bed. The one on top was open at a page dated the day they had arrived. Their names were already written there in rounded hands, followed by a line neither of them remembered signing: Checked out, never. Downstairs, a fresh guest was being welcomed at the door by a thin man named Mr Hale, and the book on the hall table lay open, waiting for the next pair of signatures.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-01",
+          "title": "The Guestbook at Ashgrove",
+          "wordCount": 434
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Haunted houses",
+        "summary": "A honeymoon couple rents a quiet guest house in the hills and finds their names already written in its guestbook, dated for tomorrow."
+      },
+      "id": "library#haunt-original-01"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The volunteer takes the keeper's place, and the last entry is written in her hand.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A new lighthouse volunteer discovers that the old keeper's logbook is still being written in, every night, by someone who has been dead for forty years.",
+          "script": "The Skerry Point lighthouse had been automated for thirty years, and the only people who still climbed its spiral stairs were volunteers with clipboards and an interest in history. Lena was twenty-two and had signed up for the summer because she needed a quiet place to finish her thesis. On her first evening she found the old logbook on a shelf in the watch room. Its last entry was from the autumn of 1981, in the steady handwriting of a keeper named Arthur Dunne. The entries were brief: weather, visibility, the passage of ships. Lena read them with her tea going cold and thought them rather lovely.\n\nOn the second morning there was a new line at the bottom of the page. It was written in the same hand as the others, with the same dry precision. Wind south-west, force four. Light steady. One vessel passed at a distance of three miles, heading north. Lena checked the date. It was the day before. She decided that a previous volunteer had been playing a joke, and she tore the page out and put it in the bin. The next morning there was a new line again, and this time the entry noted that the volunteer had removed a page, and that this was not permitted.\n\nShe stopped sleeping well. She kept the lamp trimmed and the windows clean, but at night she heard a man climbing the stairs in slow, careful steps, pausing on each landing to catch his breath. On the seventh night she sat in the watch room with the door locked and waited, and at two in the morning the stairs began to creak. The footsteps came up to the top and stopped outside the door. Then the pen began to scratch on the logbook on the desk beside her, although no one was touching it. The entry read: Visitor in the watch room. Lamp to be kept lit until relieved. Relief not yet arrived.\n\nIn the morning the door was open and the logbook was closed, and there was a faint smell of paraffin and cold sea air. Lena called the volunteer coordinator, who told her that the lighthouse had no keeper, that no one had been assigned to it since 1981, and that she should take the rest of the week off. Lena did not take the week off. She returned that evening, climbed the stairs, and found the logbook open to a fresh page. She read the first line and recognised her own handwriting. It described her climbing the stairs, and it said that someone had to stay, and that the relief had finally come.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "The Skerry Point lighthouse had been automated for thirty years, and the only people who still climbed its spiral stairs were volunteers with clipboards and an interest in history. Lena was twenty-two and had signed up for the summer because she needed a quiet place to finish her thesis. On her first evening she found the old logbook on a shelf in the watch room. Its last entry was from the autumn of 1981, in the steady handwriting of a keeper named Arthur Dunne. The entries were brief: weather, visibility, the passage of ships. Lena read them with her tea going cold and thought them rather lovely.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Wait in the watch room with the door locked",
+                    "next": 2
+                  },
+                  {
+                    "label": "Write a reply in the logbook",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Wait in the watch room, or answer the log?"
+              },
+              "mood": "suspense",
+              "narration": "On the second morning there was a new line at the bottom of the page. It was written in the same hand as the others, with the same dry precision. Wind south-west, force four. Light steady. One vessel passed at a distance of three miles, heading north. Lena checked the date. It was the day before. She decided that a previous volunteer had been playing a joke, and she tore the page out and put it in the bin. The next morning there was a new line again, and this time the entry noted that the volunteer had removed a page, and that this was not permitted.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "She stopped sleeping well. She kept the lamp trimmed and the windows clean, but at night she heard a man climbing the stairs in slow, careful steps, pausing on each landing to catch his breath. On the seventh night she sat in the watch room with the door locked and waited, and at two in the morning the stairs began to creak. The footsteps came up to the top and stopped outside the door. Then the pen began to scratch on the logbook on the desk beside her, although no one was touching it. The entry read: Visitor in the watch room. Lamp to be kept lit until relieved. Relief not yet arrived.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "In the morning the door was open and the logbook was closed, and there was a faint smell of paraffin and cold sea air. Lena called the volunteer coordinator, who told her that the lighthouse had no keeper, that no one had been assigned to it since 1981, and that she should take the rest of the week off. Lena did not take the week off. She returned that evening, climbed the stairs, and found the logbook open to a fresh page. She read the first line and recognised her own handwriting. It described her climbing the stairs, and it said that someone had to stay, and that the relief had finally come.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Lena took the pen and wrote beneath the last entry, in her own careful hand: Wind south-west, force four. Light steady. Keeper on duty. The next morning the line was there, but it had been answered. Below her entry, in the dry precise hand, someone had written the time she had written it and a single instruction: Take the watch. She found herself counting the steps down from the lamp room the way the keeper had counted them, and realised she could no longer remember which footsteps on the stair were her own. That night the lamp needed trimming, and she went up without being asked.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "The next volunteer arrived in June, a boy with a clipboard and a sunburn. He found the lighthouse immaculate: the lamp polished, the windows clean, the logbook open on the desk. The last entry was in Lena's hand, dated that morning, and it said simply: Keeper relieved. Visibility excellent. The woman in the grey coat in the lamp room did not turn round when he asked her name. She was busy keeping the light, the way she always had, and she would go on keeping it long after the logbook was full.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-02",
+          "title": "The Keeper's Log",
+          "wordCount": 440
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Ghosts and spirits",
+        "summary": "A new lighthouse volunteer discovers that the old keeper's logbook is still being written in, every night, by someone who has been dead for forty years."
+      },
+      "id": "library#haunt-original-02"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She starts to wonder which of them is the reflection, and which of them is still at work.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A dental technician starts noticing that her reflection in the surgery mirror is a few seconds late, and then that it sometimes does things she has not done.",
+          "script": "Priya had worked at the same dental practice for six years, and she knew every tile on its cream-coloured walls. The mirror above the sink in the sterilisation room was an old one with a plain wooden frame. She had checked her teeth in it a hundred times without thinking. The first time she noticed anything wrong was a Tuesday afternoon, when she raised a hand to push back her hair and saw the reflection do the same movement a fraction of a second after she did. It was so small that she decided she had been tired, and she went back to work.\n\nBy Friday the delay had grown. When she turned her head to the left, the woman in the mirror turned hers a moment later, as if the glass were thinking about it. Priya tested this carefully, with her phone's stopwatch running, and counted the difference: seven seconds. She told her colleague Joe, who laughed and said the room needed a better light. He stood beside her and looked in the mirror, and then he went quiet. He was looking not at her reflection but at the space beside it, where, for a flicker, a second woman seemed to be standing with her back to the room.\n\nOn Monday the reflection stopped moving when she did. It stood with its hands in its pockets, looking at her with an expression of mild impatience, as though Priya were the one who had been late. When Priya lifted her hand to wave, the reflection waited a moment before doing the same. Then it leaned forward and mouthed something she could not hear, and she realised that she could read the shape of the words. They were the last thing she had said to her sister before the accident, the one she had never told anyone about. The reflection repeated them, and this time she heard the voice.\n\nPriya finished her shift and went home. That night she sat on her bed and could not decide where to look. When she finally checked the mirror on her wardrobe, she saw herself, still and ordinary, and she felt a surge of relief that lasted almost a minute. Then she noticed that she was the one lagging behind. The woman in the glass was already reaching for the light switch, already turning to face the door, and Priya found, to her horror, that her own hand would not rise until the reflection had moved first. She was still trying to decide who was following whom when the lights went out.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Priya had worked at the same dental practice for six years, and she knew every tile on its cream-coloured walls. The mirror above the sink in the sterilisation room was an old one with a plain wooden frame. She had checked her teeth in it a hundred times without thinking. The first time she noticed anything wrong was a Tuesday afternoon, when she raised a hand to push back her hair and saw the reflection do the same movement a fraction of a second after she did. It was so small that she decided she had been tired, and she went back to work.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep going to the clinic and face the glass",
+                    "next": 2
+                  },
+                  {
+                    "label": "Smash the mirror in the sterilisation room",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep going to the clinic, or break the mirror?"
+              },
+              "mood": "uneasy",
+              "narration": "By Friday the delay had grown. When she turned her head to the left, the woman in the mirror turned hers a moment later, as if the glass were thinking about it. Priya tested this carefully, with her phone's stopwatch running, and counted the difference: seven seconds. She told her colleague Joe, who laughed and said the room needed a better light. He stood beside her and looked in the mirror, and then he went quiet. He was looking not at her reflection but at the space beside it, where, for a flicker, a second woman seemed to be standing with her back to the room.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "On Monday the reflection stopped moving when she did. It stood with its hands in its pockets, looking at her with an expression of mild impatience, as though Priya were the one who had been late. When Priya lifted her hand to wave, the reflection waited a moment before doing the same. Then it leaned forward and mouthed something she could not hear, and she realised that she could read the shape of the words. They were the last thing she had said to her sister before the accident, the one she had never told anyone about. The reflection repeated them, and this time she heard the voice.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Priya finished her shift and went home. That night she sat on her bed and could not decide where to look. When she finally checked the mirror on her wardrobe, she saw herself, still and ordinary, and she felt a surge of relief that lasted almost a minute. Then she noticed that she was the one lagging behind. The woman in the glass was already reaching for the light switch, already turning to face the door, and Priya found, to her horror, that her own hand would not rise until the reflection had moved first. She was still trying to decide who was following whom when the lights went out.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Priya took the heavy steel tray from the sterilisation bench and swung it at the glass. The mirror cracked in a web of lines, and for a moment she saw her own face, whole and frightened, in every fragment. Then the pieces began to slide back toward the frame, each one catching up to her movement a second late. Joe came running in and stopped in the doorway. The woman in the pieces was not Priya. She had been seven seconds behind all along, and she was pressing her palm against the inside of the glass as if asking to be let out.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Priya stayed late that night, sweeping up the glass. When she finally looked at her reflection in the cabinet door, she was perfectly on time, and it was a relief until she understood that she was the one who had been let out. The woman who had been trapped in the frame was now the one behind the glass, following every move with a seven-second delay. Priya got home, lay down, and listened for footsteps that were always a moment late.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-03",
+          "title": "Seven Seconds Behind",
+          "wordCount": 428
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Psychological horror",
+        "summary": "A dental technician starts noticing that her reflection in the surgery mirror is a few seconds late, and then that it sometimes does things she has not done."
+      },
+      "id": "library#haunt-original-03"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The last note plays, and the family finally remembers the only thing that matters: who the box belongs to.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A grandmother's music box plays a lullaby that seems to count down, and each time it finishes, someone in the house forgets a little more of their life.",
+          "script": "The music box arrived in a brown paper parcel after Grandmother Ruth died. It was made of walnut, with a tiny brass key and a lid painted with faded roses. Inside, a dancer turned slowly on a silver pin to the tune of a lullaby that Ruth had sung when Owen was small. Owen's mother, Helen, cried when she heard it, and set it on the mantelpiece where the family could see it. For two days it played whenever someone walked past, and the house felt warmer for it. On the third evening the tune stopped in the middle of a bar, and nobody could say who had wound it.\n\nThe next morning Owen could not remember the name of his school friend, and when he tried to say it his mouth formed the shape of a word he did not know. Helen, making tea, paused with the kettle in her hand and asked her husband what their wedding song had been. He stared at her. Then they both looked at the box. Its lid was open a crack, and the dancer had stopped, but the tune was still faintly audible, as if it were being counted out in a room the family could not enter. Each time the lullaby reached its end, one more memory slipped away.\n\nHelen tried to wind the box shut, but the key would not turn past the point where the music started. Owen tried to throw it in the bin, but it returned to the mantelpiece every time. The youngest child, Sami, stopped talking entirely, because the words had gone, and she sat by the box humming the tune and tracing the roses with her finger. When Helen asked her what the song was called, Sami smiled and said it was the one that counted, and that once it reached zero everybody would be quiet forever, the way Grandmother had been.\n\nOwen found the letter at the bottom of the parcel, folded inside the lid. It was in Ruth's careful hand and was addressed to whoever opened the box. It explained that the lullaby was not a lullaby at all, but a way of keeping a family's memories safe, and that the dancer had to be wound by the one who loved the most people in the house. It also said that the tune could only be stopped by singing the words aloud, all of them, in order, while everyone was in the room. Owen gathered the family round the mantelpiece, and they sang together, haltingly, remembering as they went, until the last note faded into a silence that felt, for the first time in days, like home.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "The music box arrived in a brown paper parcel after Grandmother Ruth died. It was made of walnut, with a tiny brass key and a lid painted with faded roses. Inside, a dancer turned slowly on a silver pin to the tune of a lullaby that Ruth had sung when Owen was small. Owen's mother, Helen, cried when she heard it, and set it on the mantelpiece where the family could see it. For two days it played whenever someone walked past, and the house felt warmer for it. On the third evening the tune stopped in the middle of a bar, and nobody could say who had wound it.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Try to wind the box shut",
+                    "next": 2
+                  },
+                  {
+                    "label": "Ask Sami to teach them the words",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Try to shut the box, or ask Sami?"
+              },
+              "mood": "suspense",
+              "narration": "The next morning Owen could not remember the name of his school friend, and when he tried to say it his mouth formed the shape of a word he did not know. Helen, making tea, paused with the kettle in her hand and asked her husband what their wedding song had been. He stared at her. Then they both looked at the box. Its lid was open a crack, and the dancer had stopped, but the tune was still faintly audible, as if it were being counted out in a room the family could not enter. Each time the lullaby reached its end, one more memory slipped away.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Helen tried to wind the box shut, but the key would not turn past the point where the music started. Owen tried to throw it in the bin, but it returned to the mantelpiece every time. The youngest child, Sami, stopped talking entirely, because the words had gone, and she sat by the box humming the tune and tracing the roses with her finger. When Helen asked her what the song was called, Sami smiled and said it was the one that counted, and that once it reached zero everybody would be quiet forever, the way Grandmother had been.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Owen found the letter at the bottom of the parcel, folded inside the lid. It was in Ruth's careful hand and was addressed to whoever opened the box. It explained that the lullaby was not a lullaby at all, but a way of keeping a family's memories safe, and that the dancer had to be wound by the one who loved the most people in the house. It also said that the tune could only be stopped by singing the words aloud, all of them, in order, while everyone was in the room. Owen gathered the family round the mantelpiece, and they sang together, haltingly, remembering as they went, until the last note faded into a silence that felt, for the first time in days, like home.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Owen sat on the rug beside Sami and asked her to sing the words slowly. She did, but they were not a lullaby. They were a list of the family, names and birthdays, each followed by the phrase to be kept. As she sang, Owen felt each name leave him like warmth leaving a room. Helen grabbed the box and found that the dancer had stopped turning, and that the photographs on the wall had gone pale. Sami smiled, took the box back, and began the list again, this time with Helen's name first.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "They never sang the lullaby again. The house stayed warm and quiet, and the family moved through their days smiling at each other across the table, pleasant and polite, like guests in a house where everyone had been very well looked after. Only Sami remembered the tune. Each night she sat on the mantelpiece humming it to the box, counting out the names and keeping them safe. Owen sometimes tried to recall his grandmother's face, and found a rose-painted lid instead.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-04",
+          "title": "The Lullaby Box",
+          "wordCount": 444
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Cursed objects",
+        "summary": "A grandmother's music box plays a lullaby that seems to count down, and each time it finishes, someone in the house forgets a little more of their life."
+      },
+      "id": "library#haunt-original-04"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She boards the train one last time, and this time the carriage is full of people she has been waiting for all her life.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A commuter misses the nine-fourteen train home and finds that the station clock is stuck, and that the same train keeps arriving on the same platform.",
+          "script": "Marian had caught the nine-fourteen from Millbrook for eleven years. It was never late and never crowded, and she used the twenty minutes on the platform to finish the crossword in her paper. On a Thursday in October she bought her coffee, reached the platform at nine-thirteen, and watched the train pull in exactly on time. The doors opened. She stepped forward, and the platform clock above her ticked to nine-fourteen and stayed there. The train pulled out. Marian blinked, looked at her coffee, and told herself that she had simply lost track of the time.\n\nThe next train arrived at nine-fourteen, and the carriage was the same, with the same grey seats and the same sticker on the window. Marian boarded it and sat in the seat she always took, facing the direction of travel. A man across the aisle nodded at her. She nodded back. Then the train left the station, and the platform behind it was empty, and the clock still read nine-fourteen. When she got off at her stop, the station master was reading the paper, and she saw from the date at the top that it was yesterday's.\n\nShe tried everything she could think of. She walked the length of the platform and counted the paces. She took a different train, a taxi, and finally a long walk through the fields, but each time the road bent back toward the station at the same place, and the same clock stood above the same doors. At night she heard the nine-fourteen whistle in the distance, and she woke up in her bed with her coat already on and her ticket already in her hand. The man across the aisle was always there. Each time she saw him, he looked a little more worried, and a little more like someone who was waiting for her to remember.\n\nOn the fortieth morning she stopped trying to leave. She sat on the bench and waited, and when the train came in she recognised the man, and the woman beside him, and the boy in the window seat with his nose pressed against the glass. They were her family, the ones she had lost in a fire on a line not far from here, and they had been riding the same loop for nearly thirty years, waiting for someone to get on who would tell them it was safe to stop. Marian stepped into the carriage. The doors closed. The clock above the platform finally moved, and for the first time in a long while everyone in the train was going somewhere together.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Marian had caught the nine-fourteen from Millbrook for eleven years. It was never late and never crowded, and she used the twenty minutes on the platform to finish the crossword in her paper. On a Thursday in October she bought her coffee, reached the platform at nine-thirteen, and watched the train pull in exactly on time. The doors opened. She stepped forward, and the platform clock above her ticked to nine-fourteen and stayed there. The train pulled out. Marian blinked, looked at her coffee, and told herself that she had simply lost track of the time.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep trying to get off at Millbrook",
+                    "next": 2
+                  },
+                  {
+                    "label": "Sit down and ask the man his name",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep trying to get off, or sit with him?"
+              },
+              "mood": "uneasy",
+              "narration": "The next train arrived at nine-fourteen, and the carriage was the same, with the same grey seats and the same sticker on the window. Marian boarded it and sat in the seat she always took, facing the direction of travel. A man across the aisle nodded at her. She nodded back. Then the train left the station, and the platform behind it was empty, and the clock still read nine-fourteen. When she got off at her stop, the station master was reading the paper, and she saw from the date at the top that it was yesterday's.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "She tried everything she could think of. She walked the length of the platform and counted the paces. She took a different train, a taxi, and finally a long walk through the fields, but each time the road bent back toward the station at the same place, and the same clock stood above the same doors. At night she heard the nine-fourteen whistle in the distance, and she woke up in her bed with her coat already on and her ticket already in her hand. The man across the aisle was always there. Each time she saw him, he looked a little more worried, and a little more like someone who was waiting for her to remember.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "On the fortieth morning she stopped trying to leave. She sat on the bench and waited, and when the train came in she recognised the man, and the woman beside him, and the boy in the window seat with his nose pressed against the glass. They were her family, the ones she had lost in a fire on a line not far from here, and they had been riding the same loop for nearly thirty years, waiting for someone to get on who would tell them it was safe to stop. Marian stepped into the carriage. The doors closed. The clock above the platform finally moved, and for the first time in a long while everyone in the train was going somewhere together.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "The man across the aisle folded his newspaper and told her his name, and it was her father's. He said he had been riding the loop for thirty years, waiting for her to stop running, and that the train only ever stops for people who want to be on it. The carriage lights dimmed. Through the window the platform flickered past, every station sign reading Millbrook, but the faces on the platform were the faces of people she had known and forgotten. Marian realised she was crying, and that the conductor had begun calling her stop.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Marian got off at a station that was not on any map she had ever seen. The platform was empty but warm, and a woman in a grey coat waited there with a ticket in her hand. This is your seat on the line, the woman said. Marian took it. Behind her the train pulled away, and the clock above the platform began, at last, to move. In the carriage her family was reading the crossword, and for the first time in years nobody on the loop was waiting for anyone.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-05",
+          "title": "The Nine-Fourteen Again",
+          "wordCount": 433
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Time loops",
+        "summary": "A commuter misses the nine-fourteen train home and finds that the station clock is stuck, and that the same train keeps arriving on the same platform."
+      },
+      "id": "library#haunt-original-05"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "He finds his own name on the discharge list, and understands that he has been the patient all along.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A night security guard in a closed hospital finds a ward ledger that lists patients who have not been born yet, with their admission dates set for the coming year.",
+          "script": "St Brenna's Hospital closed its doors in 1997, but the building was never sold, and a small security firm kept a night guard on the premises to deter squatters and copper thieves. Daniel took the job because it paid well and gave him time to study for his exams. He patrolled the long corridors with a torch, checked the locked wards, and wrote his reports in a cramped notebook. On his third night he found a ledger in the nurses' station on the children's ward. It was thick and green, and it appeared to be the admissions register for a year that had not yet happened.\n\nThe entries were written in a neat, looping hand, with dates in the coming twelve months. Each one recorded a name, an age, a ward and a diagnosis. Daniel read the first few and thought they were a cruel prank. Then he came to a name that belonged to a boy he had seen at the petrol station that morning, with his mother, buying sweets. The admission date was three weeks away. The diagnosis was a single word, which the handwriting had pressed so hard into the paper that it had torn through: Waiting. He went back to the desk and found that the page for that week was already blank except for a single line: Bed nine, to be made up.\n\nOver the following nights the ledger filled in. Each morning Daniel checked it, and each morning there were more names, more beds, more dates. He began to recognise the people, because they walked past the security gate on their way to work or school, and he watched them with a growing dread. On the fourth night he heard footsteps in the children's ward, the soft tap of small feet running from one door to another, and a child's voice counting the beds. The number nine was called clearly, and then came the sound of a bed being wheeled into place.\n\nOn the fifth night Daniel opened the ledger to the current month and saw his own name. It was written in the same looping hand, with his age, the ward of the staff room, and a diagnosis he did not recognise at first. Then he understood it: exhaustion. The admission date was tonight, and the discharge date was blank. He walked the corridors one last time, past the locked doors and the quiet beds, and at the end of the east wing he found a small room with a clean bed and a folded hospital gown on the pillow. He put the gown on, lay down, and waited for the night nurse to arrive, which she did, at exactly midnight, smiling warmly as she checked his chart.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "St Brenna's Hospital closed its doors in 1997, but the building was never sold, and a small security firm kept a night guard on the premises to deter squatters and copper thieves. Daniel took the job because it paid well and gave him time to study for his exams. He patrolled the long corridors with a torch, checked the locked wards, and wrote his reports in a cramped notebook. On his third night he found a ledger in the nurses' station on the children's ward. It was thick and green, and it appeared to be the admissions register for a year that had not yet happened.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep the night watch as usual",
+                    "next": 2
+                  },
+                  {
+                    "label": "Tear out the page with the boy's name",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep the night watch, or read the ledger?"
+              },
+              "mood": "suspense",
+              "narration": "The entries were written in a neat, looping hand, with dates in the coming twelve months. Each one recorded a name, an age, a ward and a diagnosis. Daniel read the first few and thought they were a cruel prank. Then he came to a name that belonged to a boy he had seen at the petrol station that morning, with his mother, buying sweets. The admission date was three weeks away. The diagnosis was a single word, which the handwriting had pressed so hard into the paper that it had torn through: Waiting. He went back to the desk and found that the page for that week was already blank except for a single line: Bed nine, to be made up.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Over the following nights the ledger filled in. Each morning Daniel checked it, and each morning there were more names, more beds, more dates. He began to recognise the people, because they walked past the security gate on their way to work or school, and he watched them with a growing dread. On the fourth night he heard footsteps in the children's ward, the soft tap of small feet running from one door to another, and a child's voice counting the beds. The number nine was called clearly, and then came the sound of a bed being wheeled into place.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "On the fifth night Daniel opened the ledger to the current month and saw his own name. It was written in the same looping hand, with his age, the ward of the staff room, and a diagnosis he did not recognise at first. Then he understood it: exhaustion. The admission date was tonight, and the discharge date was blank. He walked the corridors one last time, past the locked doors and the quiet beds, and at the end of the east wing he found a small room with a clean bed and a folded hospital gown on the pillow. He put the gown on, lay down, and waited for the night nurse to arrive, which she did, at exactly midnight, smiling warmly as she checked his chart.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Daniel tore out the page with the boy's name and ran for the gate. The security door was locked from the outside, and the keypad flashed the word Admitted. He ran back through the corridors, the torch beam jittering across the peeling walls, and heard a child's voice counting beds behind him. The page in his hand had changed. The boy's name was gone, and in its place was a line with Daniel's own name, dated tomorrow, under a diagnosis of: Waiting.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Daniel woke in a bed by a window with the sun coming in and a nurse at his side. She said he had been brought in with exhaustion after a long night shift. A visitor came in soon after, a boy with his mother, carrying a paper bag of sweets from the petrol station. Daniel smiled and took one. Through the window the car park was full of morning traffic, and back at St Brenna's, on the nurses' desk, the admissions page lay blank, waiting for a new name.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-06",
+          "title": "The Night Ledger of St Brenna's",
+          "wordCount": 455
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Abandoned hospitals",
+        "summary": "A night security guard in a closed hospital finds a ward ledger that lists patients who have not been born yet, with their admission dates set for the coming year."
+      },
+      "id": "library#haunt-original-06"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "They finally reach the road, but the last number they carved has their own names beside it.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "Two hikers follow the red trail markers through a pine forest and keep arriving back at the same fallen tree, where someone has carved a number that goes up by one each time.",
+          "script": "Sofia and Ben planned a single night in the Blackwater Pines, a dense stand of forest in the hills where the trail was marked with red paint on the trunks. They had a map, a compass and a bottle of cheap wine. The trail was easy at first, through open heather and then into the shade of the trees. They laughed about the old stories told in the village about the forest, and they joked about who would be the first to get lost. At noon they came to a fallen pine with a small hollow in its trunk, and someone had carved a number into the bark: one.\n\nThey walked on and came to the same fallen pine an hour later. The number carved on it was two. Ben said that a previous group must have made the same mistake, and that the carving had simply been weathered by the rain. Sofia pointed out that the bark was pale and clean, as if it had been cut that morning. They turned back, checking the trail markers on every tree, and found that the red paint was fresh, and that every marker led them forward in a perfect circle. By the time the light began to fail they had reached the fallen pine a third time, and the number was three.\n\nThey tried to make camp, but the ground was soft with needles and the air grew colder with every breath. Sofia heard something moving between the trunks, something that stepped carefully and paused each time she looked at it. Ben lit a fire, but it burned blue and gave off no warmth. In the middle of the night she heard him counting quietly to himself, and when she asked what he was doing he said he was counting the trees between them and the road, because the number had to keep going up until they reached it. Each time he said a number, another carving appeared on the fallen pine, deeper than the last.\n\nAt dawn they found the road, a grey thread through the trees, and they ran toward it without looking back. A lorry driver stopped and asked them where they had come from, and they tried to explain about the trail and the fallen pine. He listened patiently and then told them that the forest had been closed for twenty years, ever since two hikers had gone in and never come out. He showed them a photograph in the glovebox, a news cutting from the local paper, and Sofia recognised the faces. The last carving on the fallen pine, they later learned, had their names beside it, and the number at the top was one that they had not yet reached.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Sofia and Ben planned a single night in the Blackwater Pines, a dense stand of forest in the hills where the trail was marked with red paint on the trunks. They had a map, a compass and a bottle of cheap wine. The trail was easy at first, through open heather and then into the shade of the trees. They laughed about the old stories told in the village about the forest, and they joked about who would be the first to get lost. At noon they came to a fallen pine with a small hollow in its trunk, and someone had carved a number into the bark: one.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Follow the trail back toward the road",
+                    "next": 2
+                  },
+                  {
+                    "label": "Follow the carvings deeper into the trees",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Follow the trail back, or follow the carvings?"
+              },
+              "mood": "uneasy",
+              "narration": "They walked on and came to the same fallen pine an hour later. The number carved on it was two. Ben said that a previous group must have made the same mistake, and that the carving had simply been weathered by the rain. Sofia pointed out that the bark was pale and clean, as if it had been cut that morning. They turned back, checking the trail markers on every tree, and found that the red paint was fresh, and that every marker led them forward in a perfect circle. By the time the light began to fail they had reached the fallen pine a third time, and the number was three.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "They tried to make camp, but the ground was soft with needles and the air grew colder with every breath. Sofia heard something moving between the trunks, something that stepped carefully and paused each time she looked at it. Ben lit a fire, but it burned blue and gave off no warmth. In the middle of the night she heard him counting quietly to himself, and when she asked what he was doing he said he was counting the trees between them and the road, because the number had to keep going up until they reached it. Each time he said a number, another carving appeared on the fallen pine, deeper than the last.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "At dawn they found the road, a grey thread through the trees, and they ran toward it without looking back. A lorry driver stopped and asked them where they had come from, and they tried to explain about the trail and the fallen pine. He listened patiently and then told them that the forest had been closed for twenty years, ever since two hikers had gone in and never come out. He showed them a photograph in the glovebox, a news cutting from the local paper, and Sofia recognised the faces. The last carving on the fallen pine, they later learned, had their names beside it, and the number at the top was one that they had not yet reached.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "They left the trail and followed the carvings, each number leading them deeper among the trunks. The pines were older here, their bark furrowed like faces. Ben called out the numbers as they went, and each time he said one, an answer came back from behind a tree in Sofia's own voice. They reached a clearing where a row of stakes stood, each one carved with a number and a name. Sofia saw her own name, freshly cut, beside the highest number. Ben stopped counting. The forest had reached the number they had been walking toward.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Sofia and Ben were found a week later, sitting side by side in the clearing with their hands folded in their laps. The rangers who carried them out said the trail was clear and the markers were old and faded. On the largest stake, under the names, a new number had been carved. In the village people still say the Blackwater Pines keep count, and that they always keep the last number for whoever turns back toward the road too late.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-07",
+          "title": "The Pines Keep Count",
+          "wordCount": 455
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Dark forests",
+        "summary": "Two hikers follow the red trail markers through a pine forest and keep arriving back at the same fallen tree, where someone has carved a number that goes up by one each time."
+      },
+      "id": "library#haunt-original-07"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She plays the tape back to the professor, and the voice has begun to answer the questions she has not yet thought of.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A parapsychology student records a session in an empty chapel and hears a fourth voice on the tape, repeating each of her questions a second before she asks them.",
+          "script": "Hannah was a second-year student in a small parapsychology programme that was half research and half folklore. For her final project she chose to investigate St Ellen's chapel, a stone building on a windswept headland that had been empty since the last vicar died in 1971. She set up three recorders on tripods in a rough triangle, a thermometer, and a camera with a night lens. Her professor had given her one instruction: ask the room questions, and wait. The chapel smelled of damp stone and candle wax. Hannah sat in the middle of the nave, cleared her throat, and began.\n\nShe asked the basic questions first: her name, the date, whether anyone was present. Her voice echoed back from the vaulted ceiling and sounded thinner than she expected. On the playback, she heard the three voices clearly, her own and the faint background hiss. Then there was a fourth voice, lower and slower, speaking the same questions a moment before she asked them. Her name, the date, whether anyone was present. Hannah listened twice to make sure she was not imagining it, and then she checked the timestamps. The fourth voice was always earlier. It was never late.\n\nShe returned to the chapel the next evening with a fresh set of tapes and a friend, Owen, who insisted on staying in the porch. This time she asked questions that she had written down in advance and kept sealed in an envelope. The fourth voice read them aloud before she opened the envelope. When she pulled out the card and checked it, the words were identical. Owen called to her from the door, asking why she had stopped speaking. She looked up and saw that he was standing very still, and that behind him the porch door had closed on its own, and the voice on the tape was now answering questions in a language she did not know.\n\nHannah took the tapes to her professor, who listened to them in silence with his eyes closed. When the recording reached the final minutes, he asked her to play a single line again and again. The fourth voice was saying something quiet and deliberate in English, a sentence that the professor, who had spent forty years studying these recordings, recognised as the opening of a question he had once asked a dead colleague. Hannah realised that the voice was no longer repeating her questions. It had begun to ask questions of its own, and it was waiting, patiently, for someone in the room to answer them.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Hannah was a second-year student in a small parapsychology programme that was half research and half folklore. For her final project she chose to investigate St Ellen's chapel, a stone building on a windswept headland that had been empty since the last vicar died in 1971. She set up three recorders on tripods in a rough triangle, a thermometer, and a camera with a night lens. Her professor had given her one instruction: ask the room questions, and wait. The chapel smelled of damp stone and candle wax. Hannah sat in the middle of the nave, cleared her throat, and began.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Play the tapes to the professor",
+                    "next": 2
+                  },
+                  {
+                    "label": "Go back to the chapel alone at midnight",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Play the tapes to the professor, or go back alone?"
+              },
+              "mood": "suspense",
+              "narration": "She asked the basic questions first: her name, the date, whether anyone was present. Her voice echoed back from the vaulted ceiling and sounded thinner than she expected. On the playback, she heard the three voices clearly, her own and the faint background hiss. Then there was a fourth voice, lower and slower, speaking the same questions a moment before she asked them. Her name, the date, whether anyone was present. Hannah listened twice to make sure she was not imagining it, and then she checked the timestamps. The fourth voice was always earlier. It was never late.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "She returned to the chapel the next evening with a fresh set of tapes and a friend, Owen, who insisted on staying in the porch. This time she asked questions that she had written down in advance and kept sealed in an envelope. The fourth voice read them aloud before she opened the envelope. When she pulled out the card and checked it, the words were identical. Owen called to her from the door, asking why she had stopped speaking. She looked up and saw that he was standing very still, and that behind him the porch door had closed on its own, and the voice on the tape was now answering questions in a language she did not know.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Hannah took the tapes to her professor, who listened to them in silence with his eyes closed. When the recording reached the final minutes, he asked her to play a single line again and again. The fourth voice was saying something quiet and deliberate in English, a sentence that the professor, who had spent forty years studying these recordings, recognised as the opening of a question he had once asked a dead colleague. Hannah realised that the voice was no longer repeating her questions. It had begun to ask questions of its own, and it was waiting, patiently, for someone in the room to answer them.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Hannah returned alone at midnight and sat in the nave with the recorder in her lap. She said nothing. After a long silence the fourth voice spoke her name, gently, the way a teacher does when a pupil has finally come to class. It asked her what she had been afraid to ask for two months: whether she wanted to know who had been recording the chapel all these years. The recorder clicked. Behind her the porch door opened, and footsteps crossed the stone, stopping just behind her chair.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Hannah's recordings were published the following spring under her professor's name, and they became a favourite of the students. The final track has a voice that is hers, reading questions into the empty chapel, though she has never been back there since. Whenever a student asks a question in the building, the answer comes a moment before it is spoken, in her own calm tone, asking them to wait a little while.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-08",
+          "title": "The Fourth Voice",
+          "wordCount": 425
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Paranormal investigations",
+        "summary": "A parapsychology student records a session in an empty chapel and hears a fourth voice on the tape, repeating each of her questions a second before she asks them."
+      },
+      "id": "library#haunt-original-08"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The rhyme gets one line wrong, and the wrong line is the one that saves the family.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A children's rhyme warns that three knocks at midnight mean someone has come to take your place, and a new neighbour on Orchard Street seems to know the rhyme by heart.",
+          "script": "Every child on Orchard Street knew the rhyme. Three knocks at the door when the clock strikes twelve, do not answer, do not look, the knocker only wants what it is owed. Ruby had learned it from her older cousin, who had learned it from someone on the bus. It was a game more than a fear, something to shriek over at sleepovers. When the Fenwick family moved into number nineteen, Ruby's little brother Joe asked whether they knew the rhyme. His mother laughed and said it was a silly story, and that the new neighbours seemed perfectly nice, with a daughter about Ruby's age and a cat called Pickle.\n\nThe new girl, Maud, was quiet and polite, and she knew all the verses. She sang them with Ruby on the front step one evening, and then she stopped at the last line and looked up the street, toward the Fenwicks' house. The last line in the usual version said the knocker would be turned away if you did not open the door. Maud sang a different ending, one that Ruby had never heard before: the knocker can only take what it is given. Ruby asked where she had learned it. Maud said her grandmother had taught her, and that her grandmother had lived on Orchard Street in a house that was now a car park.\n\nThat night, at a minute past midnight, the knocking started. Three knocks, slow and deliberate, from the front door of number seventeen. Ruby pulled the blanket over her head and counted the seconds between each sound. Downstairs her father got up and went to the window, and Ruby heard him gasp. Then he went to the door and stood there, one hand on the latch, and Ruby heard a voice on the other side, calm and friendly, asking whether the family could spare a little of what they owed. Her mother was crying softly in the kitchen, and Joe was whispering the rhyme under his breath, getting it slightly wrong.\n\nRuby crept down the stairs in her socks and found Maud sitting on the bottom step, her finger pressed to her lips. Maud whispered that the rhyme had always been wrong about one thing. It said the family should not answer the door, but the knocker only ever came for the person who was owed, and the person who was owed was not the child but the adult who had made the promise. Ruby's father had promised, years ago, to take the bad luck of the street onto himself, and the debt had been waiting for him to remember. Ruby ran to the door and pulled it open, and in the moonlight there was no one there at all, only a neat line of orchard trees in bloom, though it was the middle of winter.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Every child on Orchard Street knew the rhyme. Three knocks at the door when the clock strikes twelve, do not answer, do not look, the knocker only wants what it is owed. Ruby had learned it from her older cousin, who had learned it from someone on the bus. It was a game more than a fear, something to shriek over at sleepovers. When the Fenwick family moved into number nineteen, Ruby's little brother Joe asked whether they knew the rhyme. His mother laughed and said it was a silly story, and that the new neighbours seemed perfectly nice, with a daughter about Ruby's age and a cat called Pickle.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Go down the stairs with Maud",
+                    "next": 2
+                  },
+                  {
+                    "label": "Answer the door before the third knock",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Go down the stairs with Maud, or answer the door?"
+              },
+              "mood": "uneasy",
+              "narration": "The new girl, Maud, was quiet and polite, and she knew all the verses. She sang them with Ruby on the front step one evening, and then she stopped at the last line and looked up the street, toward the Fenwicks' house. The last line in the usual version said the knocker would be turned away if you did not open the door. Maud sang a different ending, one that Ruby had never heard before: the knocker can only take what it is given. Ruby asked where she had learned it. Maud said her grandmother had taught her, and that her grandmother had lived on Orchard Street in a house that was now a car park.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "That night, at a minute past midnight, the knocking started. Three knocks, slow and deliberate, from the front door of number seventeen. Ruby pulled the blanket over her head and counted the seconds between each sound. Downstairs her father got up and went to the window, and Ruby heard him gasp. Then he went to the door and stood there, one hand on the latch, and Ruby heard a voice on the other side, calm and friendly, asking whether the family could spare a little of what they owed. Her mother was crying softly in the kitchen, and Joe was whispering the rhyme under his breath, getting it slightly wrong.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Ruby crept down the stairs in her socks and found Maud sitting on the bottom step, her finger pressed to her lips. Maud whispered that the rhyme had always been wrong about one thing. It said the family should not answer the door, but the knocker only ever came for the person who was owed, and the person who was owed was not the child but the adult who had made the promise. Ruby's father had promised, years ago, to take the bad luck of the street onto himself, and the debt had been waiting for him to remember. Ruby ran to the door and pulled it open, and in the moonlight there was no one there at all, only a neat line of orchard trees in bloom, though it was the middle of winter.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Ruby crept to the front door and, before the third knock could come, pulled back the bolt. The street outside was white with frost and silent. On the step stood a small woman in a grey coat, holding Pickle the cat. She said the debt had been paid in the wrong currency, and asked whether Ruby would like to see the house on Orchard Street, the one that was now a car park. Behind her the Fenwicks' house was dark, and she was holding Joe's hand.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Ruby came home the next morning with a scraped knee and no memory of the walk. Joe was sleeping soundly, and her mother sat in the kitchen with a cup of tea she had not drunk. The children on Orchard Street sang the new verse now, the one about the knocker taking only what it was given, and nobody on the street ever again heard three knocks at midnight. Only the Fenwicks noticed that Ruby no longer sang the old verse at all, and that she sometimes went out to the car park to visit a tree in bloom.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-09",
+          "title": "Three Knocks on Orchard Street",
+          "wordCount": 471
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Urban legends",
+        "summary": "A children's rhyme warns that three knocks at midnight mean someone has come to take your place, and a new neighbour on Orchard Street seems to know the rhyme by heart."
+      },
+      "id": "library#haunt-original-09"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The village finally sings the forgotten verse, and the names in it belong to the people who have just finished singing.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "The village choir of Little Haddon stops singing after the Harvest service, and the hymn book in the church pew has an extra verse that none of the choir members can remember learning.",
+          "script": "The choir of St Michael's in Little Haddon had sung every Sunday for two hundred years, and when the new organist, Elspeth, took over the Harvest service she found them in fine voice. The hymns were familiar, the congregation knew the responses, and the village sat in the old pews with their bread and marrow in baskets by the door. Elspeth noticed only one thing that struck her as strange. The hymn board showed number forty-one, a hymn she had never seen in the book. When she asked the choirmaster about it, he looked puzzled and said there was no forty-one in their hymnal.\n\nThe choir began the familiar opening verse, and then it stopped. Elspeth turned to see why, and found the singers staring at their books with expressions of fear. They could not remember the next line. They were not hoarse or ill. They knew every word of the verses above it, but the verse below was blank in their minds, like a door they had walked past every week without noticing. Elspeth opened the old hymnal from the pew and found the page. The forgotten verse was printed in faded ink, and its first line was a list of names that she recognised from the parish register. They were the names of the choir.\n\nThe choir members began to fall silent one by one. Each of them, as they reached the names in the forgotten verse, went pale and sat down, and the next morning they could not remember why they had been singing at all. The congregation did not notice at first. They sang the familiar hymns with loud voices, and the church filled with a warm, comforting sound. But Elspeth noticed that the voices grew fainter as the choir fell away, and that the people in the pews were beginning to struggle over the words, as though the same blank space were opening in them too.\n\nElspeth stood up at the front of the church, held the hymnal open, and began to sing the forgotten verse herself, reading each name aloud as she came to it. Slowly, a few voices joined her, then more. As each name was sung, a member of the choir looked up, blinked, and remembered their own face. By the last line the church was full of singing, the old tune rising to the rafters, and the village realised that the names in the verse were the names of the people who had kept the hymn alive for two centuries and had almost been forgotten by the very song they sang.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "The choir of St Michael's in Little Haddon had sung every Sunday for two hundred years, and when the new organist, Elspeth, took over the Harvest service she found them in fine voice. The hymns were familiar, the congregation knew the responses, and the village sat in the old pews with their bread and marrow in baskets by the door. Elspeth noticed only one thing that struck her as strange. The hymn board showed number forty-one, a hymn she had never seen in the book. When she asked the choirmaster about it, he looked puzzled and said there was no forty-one in their hymnal.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Let the congregation carry on with the hymns",
+                    "next": 2
+                  },
+                  {
+                    "label": "Stop the organ and ask for the names",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Let the hymns carry on, or stop the organ?"
+              },
+              "mood": "suspense",
+              "narration": "The choir began the familiar opening verse, and then it stopped. Elspeth turned to see why, and found the singers staring at their books with expressions of fear. They could not remember the next line. They were not hoarse or ill. They knew every word of the verses above it, but the verse below was blank in their minds, like a door they had walked past every week without noticing. Elspeth opened the old hymnal from the pew and found the page. The forgotten verse was printed in faded ink, and its first line was a list of names that she recognised from the parish register. They were the names of the choir.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "The choir members began to fall silent one by one. Each of them, as they reached the names in the forgotten verse, went pale and sat down, and the next morning they could not remember why they had been singing at all. The congregation did not notice at first. They sang the familiar hymns with loud voices, and the church filled with a warm, comforting sound. But Elspeth noticed that the voices grew fainter as the choir fell away, and that the people in the pews were beginning to struggle over the words, as though the same blank space were opening in them too.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Elspeth stood up at the front of the church, held the hymnal open, and began to sing the forgotten verse herself, reading each name aloud as she came to it. Slowly, a few voices joined her, then more. As each name was sung, a member of the choir looked up, blinked, and remembered their own face. By the last line the church was full of singing, the old tune rising to the rafters, and the village realised that the names in the verse were the names of the people who had kept the hymn alive for two centuries and had almost been forgotten by the very song they sang.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Elspeth stopped the organ and asked the parish clerk to read the names aloud from the register, one at a time. As each name was spoken, the congregation fell quiet, and the names began to sound like a roll call. The clerk did not stop at the choir. He kept going through the pews, and each family he named stood up, bewildered, and walked toward the altar as if called to account. Elspeth realised she had asked for the verse to be sung, and that it had decided for itself who it was meant for.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "The forgotten verse was never printed in the hymnal, and Elspeth never found out who had written it. From that Sunday the church of St Michael's sang one hymn fewer, and the congregation carried a quiet kind of care into the village, as if every name had been kept in a room with the door left open. Each Harvest Sunday the choir leaves a single gap in the programme, and the people in the pews fill it with a name.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-10",
+          "title": "The Verse Nobody Sang",
+          "wordCount": 430
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Supernatural mysteries",
+        "summary": "The village choir of Little Haddon stops singing after the Harvest service, and the hymn book in the church pew has an extra verse that none of the choir members can remember learning."
+      },
+      "id": "library#haunt-original-10"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She writes her own name in the ledger and finds that the account is already balanced, paid in full by someone who died to pay it.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A bookkeeper inherits a grey ledger from a seaside merchant, and every debt written in it is paid off by a stranger, at a cost that always falls on someone she loves.",
+          "script": "Ingrid had kept the accounts for a small harbour firm for fifteen years, and she liked her work because numbers, unlike people, did what they were told. When her uncle died and left her a grey cloth-bound ledger from his seaside chandlery, she assumed it was a sentimental gift, a record of the trade he had loved. The first page was headed with a single line, in faded brown ink: Debts Accepted, Debts Settled. The entries that followed were in a precise, old-fashioned hand, each one recording a sum, a name, and a date in the past.\n\nIngrid tested the book, as she tested everything. She picked a debt from the list, a sum owed by a fisherman named Abel Pryce to a widow in the village, and found it marked as settled in the ledger. The next day she went to the village and found the widow had received an envelope with exactly that sum in cash, and that Abel had gone to sea and not come back. Ingrid sat in her car outside the harbour office and shook. She understood that the ledger was not recording payments. It was making them, and the cost was being taken from somewhere else.\n\nOver the following weeks she found more entries. A bakery owner's loan written off. A drunken brawl in the pub settled by a stranger who vanished before the police arrived. Each time she checked the ledger, the cost appeared in the margin, beside a name that she knew. Her sister's car was crushed in a car park. Her neighbour's child fell ill with a fever that the doctor could not explain. Ingrid tried to burn the ledger, but the pages would not catch. She tried to throw it into the sea, and it floated back to the jetty, dry and waiting, the ink now freshly wet with a new line.\n\nOn the last night of the month she sat at her desk and opened the ledger to a clean page. She wrote her own name in careful, steady numbers, the sum she owed to the world for her uncle's unfinished debts, and waited. The clock ticked past midnight. Nothing happened. Then, in the margin, a new line appeared in the old precise hand. The account was already balanced. The payment had been made by her uncle, who had died on the harbour wall the night before the will was read, and who had quietly settled everything the ledger had ever demanded, so that his niece would never have to pay for what she had not chosen to owe.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Ingrid had kept the accounts for a small harbour firm for fifteen years, and she liked her work because numbers, unlike people, did what they were told. When her uncle died and left her a grey cloth-bound ledger from his seaside chandlery, she assumed it was a sentimental gift, a record of the trade he had loved. The first page was headed with a single line, in faded brown ink: Debts Accepted, Debts Settled. The entries that followed were in a precise, old-fashioned hand, each one recording a sum, a name, and a date in the past.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Write your name in the ledger",
+                    "next": 2
+                  },
+                  {
+                    "label": "Burn the ledger in the harbour stove",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Write your name in the ledger, or burn it?"
+              },
+              "mood": "suspense",
+              "narration": "Ingrid tested the book, as she tested everything. She picked a debt from the list, a sum owed by a fisherman named Abel Pryce to a widow in the village, and found it marked as settled in the ledger. The next day she went to the village and found the widow had received an envelope with exactly that sum in cash, and that Abel had gone to sea and not come back. Ingrid sat in her car outside the harbour office and shook. She understood that the ledger was not recording payments. It was making them, and the cost was being taken from somewhere else.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Over the following weeks she found more entries. A bakery owner's loan written off. A drunken brawl in the pub settled by a stranger who vanished before the police arrived. Each time she checked the ledger, the cost appeared in the margin, beside a name that she knew. Her sister's car was crushed in a car park. Her neighbour's child fell ill with a fever that the doctor could not explain. Ingrid tried to burn the ledger, but the pages would not catch. She tried to throw it into the sea, and it floated back to the jetty, dry and waiting, the ink now freshly wet with a new line.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "On the last night of the month she sat at her desk and opened the ledger to a clean page. She wrote her own name in careful, steady numbers, the sum she owed to the world for her uncle's unfinished debts, and waited. The clock ticked past midnight. Nothing happened. Then, in the margin, a new line appeared in the old precise hand. The account was already balanced. The payment had been made by her uncle, who had died on the harbour wall the night before the will was read, and who had quietly settled everything the ledger had ever demanded, so that his niece would never have to pay for what she had not chosen to owe.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Ingrid carried the ledger to the stove in the harbour office, opened the iron door, and fed the pages in one at a time. The paper caught at once, and for a moment the flames were blue and clean. Then the smoke turned salt-white and drifted out through the open window toward the village. The phone began to ring in the outer office. On the line a calm voice read out her sister's name, then her own, followed by the figure the account now owed. She had not burned the debts. She had only moved them to the first line of a new ledger, and the new ledger was hers.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Ingrid left the harbour office and walked to the jetty without looking back. The village went quietly on. The boats came in, the bakery opened, and the pub filled with laughter, and nobody noticed that the accounts were now kept by a different hand. Some nights she could still hear the stove ticking as it cooled. Some mornings she found a single line in her own handwriting in the margin of the harbour register, paying a debt she had not yet been asked to owe.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-11",
+          "title": "The Salt Ledger",
+          "wordCount": 430
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Cursed objects",
+        "summary": "A bookkeeper inherits a grey ledger from a seaside merchant, and every debt written in it is paid off by a stranger, at a cost that always falls on someone she loves."
+      },
+      "id": "library#haunt-original-11"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She finally goes upstairs and finds the flat furnished exactly as her own, with a woman waiting at the table who has been living a different life in the same rooms.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A tenant in a converted terrace hears someone moving heavy furniture in the flat upstairs, every night at two, though the flat has been empty since the sixties.",
+          "script": "Clare rented the ground floor of a tall Victorian terrace on a quiet street in the north of the city. The building had been converted into flats in the seventies, and her landlord, a cheerful man called Dennis, said the flat upstairs had been empty for as long as anyone could remember. It was locked, the windows were boarded, and the stairs had been cut off with a sheet of plywood. Clare had no reason to think about it. She liked the high ceilings and the sunny kitchen, and she liked the quiet, which was why the first sounds from above surprised her so much.\n\nIt began with a scraping, like a table being pushed across bare boards. Then came a soft thud, and the creak of a chair being pulled out. Clare lay in bed at two in the morning and counted the noises: a cupboard door, a kettle filling, a drawer being opened and closed with great care. The sounds were calm and domestic, and somehow more frightening than anything else. She asked Dennis about it the next morning, and he went pale and told her to keep the door locked and not to go up the stairs, whatever she heard. When she pressed him, he said only that the last tenant upstairs had been a woman who had not wanted to leave.\n\nEach night the sounds moved closer to her own floor. Clare heard footsteps in the hall above her kitchen, then in the corridor, then directly over her bedroom, pacing back and forth as if measuring the room. One night the ceiling lamp swayed, and a long shadow crossed the plaster. She tried recording the noises on her phone, and when she played them back there was a second set of footsteps, lighter and quicker, always one step behind her own, as though someone were copying her every move from the flat above. On the final night she heard the footsteps stop directly over her head, and a voice, close and friendly, asked her to come up for tea.\n\nClare went up the stairs that night, with a torch in one hand and her phone in the other, and pushed through the plywood sheet that was no longer there. The flat was furnished exactly like her own, with the same sunny kitchen, the same high ceilings, the same view across the rooftops. At the table sat a woman with grey hair and a cup of tea, who looked up with a calm smile and said that she had been waiting a long time for a tenant who would listen. In this flat, she explained, every tenant who moved in would live the life she had not been able to finish, and the only way out was to take the kettle downstairs and make the tea for the one who came next.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Clare rented the ground floor of a tall Victorian terrace on a quiet street in the north of the city. The building had been converted into flats in the seventies, and her landlord, a cheerful man called Dennis, said the flat upstairs had been empty for as long as anyone could remember. It was locked, the windows were boarded, and the stairs had been cut off with a sheet of plywood. Clare had no reason to think about it. She liked the high ceilings and the sunny kitchen, and she liked the quiet, which was why the first sounds from above surprised her so much.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Stay in bed and ask nothing more",
+                    "next": 2
+                  },
+                  {
+                    "label": "Call Dennis and ask for the keys upstairs",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Stay in bed, or call Dennis about the flat?"
+              },
+              "mood": "uneasy",
+              "narration": "It began with a scraping, like a table being pushed across bare boards. Then came a soft thud, and the creak of a chair being pulled out. Clare lay in bed at two in the morning and counted the noises: a cupboard door, a kettle filling, a drawer being opened and closed with great care. The sounds were calm and domestic, and somehow more frightening than anything else. She asked Dennis about it the next morning, and he went pale and told her to keep the door locked and not to go up the stairs, whatever she heard. When she pressed him, he said only that the last tenant upstairs had been a woman who had not wanted to leave.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Each night the sounds moved closer to her own floor. Clare heard footsteps in the hall above her kitchen, then in the corridor, then directly over her bedroom, pacing back and forth as if measuring the room. One night the ceiling lamp swayed, and a long shadow crossed the plaster. She tried recording the noises on her phone, and when she played them back there was a second set of footsteps, lighter and quicker, always one step behind her own, as though someone were copying her every move from the flat above. On the final night she heard the footsteps stop directly over her head, and a voice, close and friendly, asked her to come up for tea.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Clare went up the stairs that night, with a torch in one hand and her phone in the other, and pushed through the plywood sheet that was no longer there. The flat was furnished exactly like her own, with the same sunny kitchen, the same high ceilings, the same view across the rooftops. At the table sat a woman with grey hair and a cup of tea, who looked up with a calm smile and said that she had been waiting a long time for a tenant who would listen. In this flat, she explained, every tenant who moved in would live the life she had not been able to finish, and the only way out was to take the kettle downstairs and make the tea for the one who came next.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Dennis came round before breakfast with a ring of keys and a face the colour of putty. He unlocked the door at the top of the stairs, and it swung open on a kitchen that looked exactly like Clare's own. The kettle was still warm. Two cups had been set out, and one of them had lipstick on the rim. Dennis backed away down the stairs, saying he had only ever been the landlord. Above her, footsteps paced the floor, close and patient, and a voice said: good, you've come to take over.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Clare took the flat upstairs that winter, and Dennis was relieved to hand her the keys. The woman from the table never came down again. Clare found that the sunny kitchen and the high ceilings were hers now, and that the kettle boiled itself each evening. Downstairs a young student moved into the empty flat, and on his first night he heard a friendly voice calling up the stairs, asking whether he would like some tea, and whether he would be staying long enough to learn the rules.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-12",
+          "title": "Furniture in the Flat Above",
+          "wordCount": 475
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Haunted houses",
+        "summary": "A tenant in a converted terrace hears someone moving heavy furniture in the flat upstairs, every night at two, though the flat has been empty since the sixties."
+      },
+      "id": "library#haunt-original-12"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She strips the last panel and finds the face she has been painting over is her own.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A freelance interior designer restores the wallpaper in a Georgian house, and each week the pattern shifts slightly, until the shapes begin to look like the faces of her clients.",
+          "script": "Lorna had built a small reputation for restoring period interiors, and her latest job was a Georgian townhouse with original wallpaper in the drawing room, a dark green paper printed with a repeating pattern of leaves and birds. The owner wanted the paper stripped, cleaned, and reproduced exactly, so that the room could be restored to its eighteenth-century appearance. Lorna spent her first week carefully lifting samples and photographing the design. The pattern was intricate, with branches curling into the shape of wings. She thought it was beautiful, and she told herself that the faint shadows in the background were just the effect of age.\n\nBy the second week the shadows had changed. The branches seemed to bend toward the centre of the room, and a few of the birds had turned their heads. Lorna compared her photographs and realised the pattern was not the same as it had been. Certain motifs had shifted position, and a cluster of leaves in the north corner now formed the rough outline of a face with a wide, unhappy mouth. She dismissed it as a trick of the light. When she came in on Monday morning, the face had moved to the east wall, and it seemed to be looking at her.\n\nShe began to recognise the faces. There was the owner, Mr Ashdown, with his thin nose and thinning hair. There was his wife, who had died in the house the previous winter. There was a little girl with a ribbon in her hair, whom Lorna had never met. Each time she painted over one, the next week a new face appeared somewhere else, always watching her with the same patient expression. When she tried to strip the paper, the plaster underneath was warm to the touch, and she could hear faint breathing through the wall, slow and steady, like someone asleep in the next room.\n\nOn the last day of the job, Lorna took a scraper to the final panel, the one behind the old fireplace that no one had seen for a century. Under the layers of paper and plaster she found a portrait, painted in tempera on the bare wall. It showed a woman with dark hair and a green dress, standing among the branches and birds of the same pattern. The face was painted with care, and it looked very much like Lorna's own. She stepped back in horror and felt, for an instant, the cool touch of a leaf brushing her cheek, and when she looked at the wall again, the figure in the portrait was smiling.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Lorna had built a small reputation for restoring period interiors, and her latest job was a Georgian townhouse with original wallpaper in the drawing room, a dark green paper printed with a repeating pattern of leaves and birds. The owner wanted the paper stripped, cleaned, and reproduced exactly, so that the room could be restored to its eighteenth-century appearance. Lorna spent her first week carefully lifting samples and photographing the design. The pattern was intricate, with branches curling into the shape of wings. She thought it was beautiful, and she told herself that the faint shadows in the background were just the effect of age.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep painting over the faces",
+                    "next": 2
+                  },
+                  {
+                    "label": "Ring Mr Ashdown and ask about his wife",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep painting over the faces, or ring Mr Ashdown?"
+              },
+              "mood": "uneasy",
+              "narration": "By the second week the shadows had changed. The branches seemed to bend toward the centre of the room, and a few of the birds had turned their heads. Lorna compared her photographs and realised the pattern was not the same as it had been. Certain motifs had shifted position, and a cluster of leaves in the north corner now formed the rough outline of a face with a wide, unhappy mouth. She dismissed it as a trick of the light. When she came in on Monday morning, the face had moved to the east wall, and it seemed to be looking at her.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "She began to recognise the faces. There was the owner, Mr Ashdown, with his thin nose and thinning hair. There was his wife, who had died in the house the previous winter. There was a little girl with a ribbon in her hair, whom Lorna had never met. Each time she painted over one, the next week a new face appeared somewhere else, always watching her with the same patient expression. When she tried to strip the paper, the plaster underneath was warm to the touch, and she could hear faint breathing through the wall, slow and steady, like someone asleep in the next room.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "On the last day of the job, Lorna took a scraper to the final panel, the one behind the old fireplace that no one had seen for a century. Under the layers of paper and plaster she found a portrait, painted in tempera on the bare wall. It showed a woman with dark hair and a green dress, standing among the branches and birds of the same pattern. The face was painted with care, and it looked very much like Lorna's own. She stepped back in horror and felt, for an instant, the cool touch of a leaf brushing her cheek, and when she looked at the wall again, the figure in the portrait was smiling.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Lorna rang Mr Ashdown and asked about his wife. He was silent for a long time before he said she had painted the room herself, the winter before she died, and that she had never finished the last panel. He asked Lorna not to finish it either. That evening Lorna took the scraper to the wall regardless. Behind the paper she found fresh brushstrokes, still tacky with tempera, and a small figure in a green dress whose face was unpainted, waiting for someone to add the features.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Lorna finished the room the following week. She painted the last face with great care, and when she packed up the tools the wallpaper was complete: a pattern of leaves and birds, with a single figure among the branches who looked perfectly contented. Mr Ashdown paid her in cash and thanked her warmly. The next winter the new tenants admired how well the pattern suited the room, and how the woman among the branches always seemed to be watching the door, as if she were expecting someone.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-13",
+          "title": "The Wallpaper Season",
+          "wordCount": 430
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Psychological horror",
+        "summary": "A freelance interior designer restores the wallpaper in a Georgian house, and each week the pattern shifts slightly, until the shapes begin to look like the faces of her clients."
+      },
+      "id": "library#haunt-original-13"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The last name on the programme is her own, and the voice ends the broadcast by thanking her for listening.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A nurse working nights on a rural ambulance route begins hearing a late-night radio programme that broadcasts the names of the people she is about to meet.",
+          "script": "Teresa worked night shifts on the county ambulance service, covering the long, empty roads between the villages and the district hospital. The work was lonely and often tedious, and she kept a small transistor radio tucked into her pocket to pass the time. For weeks she listened to the usual late-night stations, the phone-in programmes and the old records, until one night she tuned into a frequency she had never heard before. A calm voice was reading a list of names, each followed by a short description of the place where the person was going to be. Teresa turned the dial, but the voice was still there, clear and close.\n\nThe names came every night at the same time, and the places were always places she visited on her shifts: the lay-by on the Thornton road, the bend by the reservoir, the farm track where the old tractor had overturned. The first night she heard her own calls read out, and then a dispatch number she recognised. The voice said that the nurse would arrive at the bend by the reservoir at one in the morning and would need to stop the ambulance because the road was blocked. Teresa checked the schedule the next day and found that the dispatch had been logged for exactly that time and place, although no one had told her about it in advance.\n\nShe began to hear the radio even when it was switched off, a faint hiss in her ears that resolved into the calm voice reading names. Her colleague, a young paramedic called Jamie, became anxious when she mentioned it, and offered to drive the shifts so she could rest. The next night the ambulance broke down in the reservoir lay-by, and Teresa, walking to the phone box, heard the voice reading out Jamie's name, followed by the description: the one who will not come back from the water. She ran back to the ambulance, but Jamie had already gone down the bank toward the lake, following a light that no one else could see.\n\nTeresa found Jamie at dawn, sitting on the shore with the radio in his hands. He was shivering, but alive, and he said that the voice had told him the way out of the water, and that it had asked him to tell his colleague that the broadcast was finished. Teresa took the radio from him and turned it over. Inside the back cover was a small printed card, the sort a station gave to listeners who had called in. It had her name on it, and the date of the broadcast, which was tomorrow. The voice, faintly, from the speaker, thanked her for listening, and wished her a safe night on the roads.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Teresa worked night shifts on the county ambulance service, covering the long, empty roads between the villages and the district hospital. The work was lonely and often tedious, and she kept a small transistor radio tucked into her pocket to pass the time. For weeks she listened to the usual late-night stations, the phone-in programmes and the old records, until one night she tuned into a frequency she had never heard before. A calm voice was reading a list of names, each followed by a short description of the place where the person was going to be. Teresa turned the dial, but the voice was still there, clear and close.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep the radio on the dashboard and listen",
+                    "next": 2
+                  },
+                  {
+                    "label": "Switch the radio off and leave it in the lay-by",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep the radio on, or switch it off?"
+              },
+              "mood": "suspense",
+              "narration": "The names came every night at the same time, and the places were always places she visited on her shifts: the lay-by on the Thornton road, the bend by the reservoir, the farm track where the old tractor had overturned. The first night she heard her own calls read out, and then a dispatch number she recognised. The voice said that the nurse would arrive at the bend by the reservoir at one in the morning and would need to stop the ambulance because the road was blocked. Teresa checked the schedule the next day and found that the dispatch had been logged for exactly that time and place, although no one had told her about it in advance.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "She began to hear the radio even when it was switched off, a faint hiss in her ears that resolved into the calm voice reading names. Her colleague, a young paramedic called Jamie, became anxious when she mentioned it, and offered to drive the shifts so she could rest. The next night the ambulance broke down in the reservoir lay-by, and Teresa, walking to the phone box, heard the voice reading out Jamie's name, followed by the description: the one who will not come back from the water. She ran back to the ambulance, but Jamie had already gone down the bank toward the lake, following a light that no one else could see.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Teresa found Jamie at dawn, sitting on the shore with the radio in his hands. He was shivering, but alive, and he said that the voice had told him the way out of the water, and that it had asked him to tell his colleague that the broadcast was finished. Teresa took the radio from him and turned it over. Inside the back cover was a small printed card, the sort a station gave to listeners who had called in. It had her name on it, and the date of the broadcast, which was tomorrow. The voice, faintly, from the speaker, thanked her for listening, and wished her a safe night on the roads.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Teresa switched the radio off and left it on the bench in the lay-by. The silence was immediate and total, and for a moment she felt relief. Then the ambulance set crackled, and the same calm voice began reading a dispatch: a nurse named Teresa, at the lay-by, switching off a radio. The call was logged, the voice said, and would be answered by someone else. Jamie's name came next, then her own, and then the bell rang at the district hospital, sharp and clear, and Teresa understood that the dispatch was calling her back in.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Teresa never went back to the county service. She took a night job on the district hospital's switchboard, and each night she reads a short list of names to the empty corridor, each followed by a description of where its owner will be going. Jamie still drives the ambulance. He says the list is always accurate, and that when he hears his own name read aloud he feels calmer, knowing someone is keeping track of the roads.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-14",
+          "title": "The Radio Under the Pillow",
+          "wordCount": 457
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Urban legends",
+        "summary": "A nurse working nights on a rural ambulance route begins hearing a late-night radio programme that broadcasts the names of the people she is about to meet."
+      },
+      "id": "library#haunt-original-14"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The family plants a new tree at the centre of the orchard, and the last blossom to open shows the face of the child who has been missing for years.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A family who buys a remote orchard finds the apple trees blooming in the middle of winter, and each blossom holds a faint, familiar face.",
+          "script": "Owen and Clara bought Hollin Orchard in the hills of the west country with their savings and the last of an inheritance. The house was small and draughty, but the orchard was old and full of apple trees gnarled by age, and Clara had dreamed of making cider for years. They moved in during November, when the trees were bare and the fields were grey with frost. The estate agent had said that the orchard had been abandoned for a decade, and that the previous owners had left the gate open and the apples to rot. Owen and Clara did not mind. They would prune, mend the fences, and wait for spring.\n\nIn the second week of December Clara went out to check the fence line and stopped at the edge of the orchard. The apple trees were in full bloom, white and pink, the blossom heavy on every branch. Owen came out to see, and they both stood staring at the trees for a long time. There was no warmth in the air, and the frost still lay on the grass beneath them. When they went closer they saw that the petals were not petals at all, but thin, pale faces, each the size of a thumbnail, turned toward the house. Clara recognised one of them. It was her younger sister, who had vanished on a walk in the hills twenty years before.\n\nThey tried to cut the blossom away, but each cut bled a thin, sweet sap that smelled of cider and autumn. The faces seemed to murmur as they were disturbed, a quiet chorus of voices from every tree in the orchard. Owen began to hear his own mother's voice among them, and then a boy's voice that he did not know, which kept asking where the house was. Clara found the old orchard ledger in the barn, a record of every tree planted and every harvest gathered. The last entry, written in a careful hand, recorded the planting of a single tree in the middle of the orchard, with the names of the people who would be buried beneath its roots.\n\nThey walked to the centre of the orchard, where a new sapling stood in a ring of stones, its bark still pale and young. Clara knelt and pressed her hands into the cold earth. She understood that the orchard was a place where lost people were kept in bloom, and that the ledger was asking for one more name to be added. She thought of her sister, and of the years of searching, and she spoke the name aloud, softly, into the soil. The sapling shivered. A single blossom opened on its highest branch, and inside it was the face of her sister, smiling, and then, as the petals closed, the faint face of a child Clara had never met, waving goodbye.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Owen and Clara bought Hollin Orchard in the hills of the west country with their savings and the last of an inheritance. The house was small and draughty, but the orchard was old and full of apple trees gnarled by age, and Clara had dreamed of making cider for years. They moved in during November, when the trees were bare and the fields were grey with frost. The estate agent had said that the orchard had been abandoned for a decade, and that the previous owners had left the gate open and the apples to rot. Owen and Clara did not mind. They would prune, mend the fences, and wait for spring.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Read the orchard ledger in the barn",
+                    "next": 2
+                  },
+                  {
+                    "label": "Pull up the new sapling in the centre",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Read the orchard ledger, or pull up the sapling?"
+              },
+              "mood": "uneasy",
+              "narration": "In the second week of December Clara went out to check the fence line and stopped at the edge of the orchard. The apple trees were in full bloom, white and pink, the blossom heavy on every branch. Owen came out to see, and they both stood staring at the trees for a long time. There was no warmth in the air, and the frost still lay on the grass beneath them. When they went closer they saw that the petals were not petals at all, but thin, pale faces, each the size of a thumbnail, turned toward the house. Clara recognised one of them. It was her younger sister, who had vanished on a walk in the hills twenty years before.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "They tried to cut the blossom away, but each cut bled a thin, sweet sap that smelled of cider and autumn. The faces seemed to murmur as they were disturbed, a quiet chorus of voices from every tree in the orchard. Owen began to hear his own mother's voice among them, and then a boy's voice that he did not know, which kept asking where the house was. Clara found the old orchard ledger in the barn, a record of every tree planted and every harvest gathered. The last entry, written in a careful hand, recorded the planting of a single tree in the middle of the orchard, with the names of the people who would be buried beneath its roots.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "They walked to the centre of the orchard, where a new sapling stood in a ring of stones, its bark still pale and young. Clara knelt and pressed her hands into the cold earth. She understood that the orchard was a place where lost people were kept in bloom, and that the ledger was asking for one more name to be added. She thought of her sister, and of the years of searching, and she spoke the name aloud, softly, into the soil. The sapling shivered. A single blossom opened on its highest branch, and inside it was the face of her sister, smiling, and then, as the petals closed, the faint face of a child Clara had never met, waving goodbye.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "They pulled the sapling out by its roots and laid it on the frost. The blossom on every tree turned toward them at once, and the faces murmured in one sorrowful voice. The earth in the sapling's hole was warm and soft, and Owen, kneeling to fill it, felt something small take hold of his fingers. A child's hand, cold and insistent, pulled him down. Clara ran for the house, but the trees bent low to block her, branches thick with pale faces, and behind them a boy's voice asked, very clearly, to be let out.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Owen and Clara left Hollin Orchard the following spring, and the estate agent found new owners quickly: a young couple from the city, charmed by the apple trees and the old stone walls. They noticed the blossom came early that year, and that the trees hummed softly in the evenings. Their son, who was four, sometimes waved at the orchard and said his friends were there, waiting in the blossom for someone to come and ask them to stay.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-15",
+          "title": "Orchard Out of Season",
+          "wordCount": 477
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Dark forests",
+        "summary": "A family who buys a remote orchard finds the apple trees blooming in the middle of winter, and each blossom holds a faint, familiar face."
+      },
+      "id": "library#haunt-original-15"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The bell rings the final time when she counts herself among the patients, and the wing finally falls silent.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A cleaner working alone in a closed fever hospital hears a bell ring from the isolation wing every night at the same hour, and the bell always rings one more time than the night before.",
+          "script": "The old fever hospital on Marsh Lane had been closed for fifty years, but a small contractor still hired cleaners to keep the empty wards free of damp and rats while the council decided what to do with the site. Maureen was the only one willing to work the night shift, and she liked it because the silence gave her time to think about her late husband and the garden she had let go to seed. The hospital smelled of disinfectant and old linen. Its long corridors were lit by a few fluorescent tubes, and the isolation wing at the far end was always locked, with a heavy iron bell mounted above its double doors.\n\nOn her first night the bell rang once, at a quarter to three. The sound was thin and carrying, like a hand bell struck softly in an empty church. Maureen checked the corridor, found nothing, and went back to her mopping. The next night the bell rang twice, at the same time. She reported it to the contractor, who laughed and said the hospital had a reputation, but the council had confirmed it was perfectly sealed. On the third night the bell rang three times, and Maureen, standing at the far end of the corridor, heard a second bell answering from somewhere deeper in the building.\n\nBy the end of the week the bell was ringing at quarter to three with a steady count, and each night the number grew. Maureen could not stop herself from counting along, and she began to notice that the sound of the bell matched the rhythm of her own breathing. The doors of the isolation wing were now slightly open, a crack of darkness between them, and a faint cold draught blew through the corridor carrying the smell of old fever wards. Somewhere inside a chorus of patients was coughing softly, waiting for a nurse who would never come.\n\nOn the night the count reached nine, Maureen walked to the isolation doors and pushed them open. The wing was lit by a single lamp, and along each side of the room were iron beds, each occupied by a thin figure wrapped in a grey blanket. They turned their faces toward her with a patient, hopeful look. A nurse in an old-fashioned uniform stood by the bell rope, and she smiled and said that the ward needed one more volunteer to ring the bell for the others, and that once the count reached ten it would finally stop. Maureen looked at the empty bed by the far wall, and realised with a calm certainty that it had her name on it. She lay down, the bell rang once more, and the wing fell silent.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "The old fever hospital on Marsh Lane had been closed for fifty years, but a small contractor still hired cleaners to keep the empty wards free of damp and rats while the council decided what to do with the site. Maureen was the only one willing to work the night shift, and she liked it because the silence gave her time to think about her late husband and the garden she had let go to seed. The hospital smelled of disinfectant and old linen. Its long corridors were lit by a few fluorescent tubes, and the isolation wing at the far end was always locked, with a heavy iron bell mounted above its double doors.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Watch the isolation doors from the corridor",
+                    "next": 2
+                  },
+                  {
+                    "label": "Pull the bell rope to stop the count",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Watch the doors, or pull the bell rope?"
+              },
+              "mood": "suspense",
+              "narration": "On her first night the bell rang once, at a quarter to three. The sound was thin and carrying, like a hand bell struck softly in an empty church. Maureen checked the corridor, found nothing, and went back to her mopping. The next night the bell rang twice, at the same time. She reported it to the contractor, who laughed and said the hospital had a reputation, but the council had confirmed it was perfectly sealed. On the third night the bell rang three times, and Maureen, standing at the far end of the corridor, heard a second bell answering from somewhere deeper in the building.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "By the end of the week the bell was ringing at quarter to three with a steady count, and each night the number grew. Maureen could not stop herself from counting along, and she began to notice that the sound of the bell matched the rhythm of her own breathing. The doors of the isolation wing were now slightly open, a crack of darkness between them, and a faint cold draught blew through the corridor carrying the smell of old fever wards. Somewhere inside a chorus of patients was coughing softly, waiting for a nurse who would never come.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "On the night the count reached nine, Maureen walked to the isolation doors and pushed them open. The wing was lit by a single lamp, and along each side of the room were iron beds, each occupied by a thin figure wrapped in a grey blanket. They turned their faces toward her with a patient, hopeful look. A nurse in an old-fashioned uniform stood by the bell rope, and she smiled and said that the ward needed one more volunteer to ring the bell for the others, and that once the count reached ten it would finally stop. Maureen looked at the empty bed by the far wall, and realised with a calm certainty that it had her name on it. She lay down, the bell rang once more, and the wing fell silent.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Maureen took the bell rope and pulled, once, hard. The sound rolled through the building, and the chorus of coughing stopped at once. For a moment everything was still. Then a nurse in an old-fashioned uniform appeared at the far end of the corridor, holding a clipboard. She looked at the notes and said that Maureen had rung for the ten, and was now the one on the register. The doors of the isolation wing swung open. Maureen was tired, and the beds looked warm, and the nurse said she could rest now, as long as she did not count the bells.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "The contractor found Maureen the next morning, sitting peacefully on the steps of the old fever hospital with a bunch of marsh flowers in her lap. The council agreed the site was perfectly sealed, and the bell above the isolation doors was never rung again. Some nights the cleaners who check the empty wards say they hear a soft, steady count, keeping time with the work, and it sounds very much like Maureen counting out the day.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-16",
+          "title": "The Quarantine Bell",
+          "wordCount": 454
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Abandoned hospitals",
+        "summary": "A cleaner working alone in a closed fever hospital hears a bell ring from the isolation wing every night at the same hour, and the bell always rings one more time than the night before."
+      },
+      "id": "library#haunt-original-16"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "The figure on the roof is the photographer, and the picture is dated tomorrow.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A photographer documenting a drought-stricken reservoir finds a set of pictures of a village beneath the water, dated to the day the valley was flooded, with a figure standing on the church roof who is waving at the camera.",
+          "script": "Adam was hired by a regional newspaper to photograph the reservoir at Calder Vale during a long summer drought. The water had dropped so low that the old village of Harrowgate, drowned in 1958 to make way for the dam, had reappeared in the cracked mud. Adam spent three days walking the exposed streets, photographing the stone walls, the schoolhouse with its blackboard still on the wall, and the church tower standing gaunt against the sky. He was careful to keep his distance from the water. The locals said the village was not to be disturbed, and that the lake remembered everyone who had lived beneath it.\n\nWhen Adam developed his prints in the darkroom above the pub, he noticed something odd in the photographs of the church. In every image, a small figure stood on the roof of the tower, a man in a dark coat, waving at the camera. Adam had not seen anyone there. He checked his notes and his contact sheet, and there was no record of a second person in the valley. He checked the date stamp on the negatives and found that every picture had been taken on the same day: the day the dam gates had closed, nearly seventy years earlier. The camera had been dead for decades, its shutter sealed, and yet the prints were fresh and clear.\n\nAdam went back to the valley at dusk with a second camera and a notebook, intending to find the spot where the figure had stood. The mud around the church was soft and cold. He heard water lapping somewhere beneath the walls, though the lake was a mile away, and a child's voice, calling a name he did not know. When he looked up at the tower, the figure was there again, waving more urgently now, and then it climbed down the crumbling stone and began to walk toward him across the cracked mud, its coat dripping as if it had only just come out of the water.\n\nAdam ran for his car and drove to the pub, where he locked himself in the darkroom and went through the new negatives with trembling hands. The last frame showed the church from a low angle, and on the tower roof stood a figure in a dark coat, face turned toward the lens. He recognised the coat. It was his own, the one he was wearing now, and the face, when he held the print under the red safelight, was his. The date printed on the margin was tomorrow, and below it, in the same cramped handwriting as the old village records, someone had written a single word: Returned.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Adam was hired by a regional newspaper to photograph the reservoir at Calder Vale during a long summer drought. The water had dropped so low that the old village of Harrowgate, drowned in 1958 to make way for the dam, had reappeared in the cracked mud. Adam spent three days walking the exposed streets, photographing the stone walls, the schoolhouse with its blackboard still on the wall, and the church tower standing gaunt against the sky. He was careful to keep his distance from the water. The locals said the village was not to be disturbed, and that the lake remembered everyone who had lived beneath it.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Go back to the church with the second camera",
+                    "next": 2
+                  },
+                  {
+                    "label": "Ask the landlady about the man in the coat",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Return to the church, or ask about the man in the coat?"
+              },
+              "mood": "suspense",
+              "narration": "When Adam developed his prints in the darkroom above the pub, he noticed something odd in the photographs of the church. In every image, a small figure stood on the roof of the tower, a man in a dark coat, waving at the camera. Adam had not seen anyone there. He checked his notes and his contact sheet, and there was no record of a second person in the valley. He checked the date stamp on the negatives and found that every picture had been taken on the same day: the day the dam gates had closed, nearly seventy years earlier. The camera had been dead for decades, its shutter sealed, and yet the prints were fresh and clear.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Adam went back to the valley at dusk with a second camera and a notebook, intending to find the spot where the figure had stood. The mud around the church was soft and cold. He heard water lapping somewhere beneath the walls, though the lake was a mile away, and a child's voice, calling a name he did not know. When he looked up at the tower, the figure was there again, waving more urgently now, and then it climbed down the crumbling stone and began to walk toward him across the cracked mud, its coat dripping as if it had only just come out of the water.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Adam ran for his car and drove to the pub, where he locked himself in the darkroom and went through the new negatives with trembling hands. The last frame showed the church from a low angle, and on the tower roof stood a figure in a dark coat, face turned toward the lens. He recognised the coat. It was his own, the one he was wearing now, and the face, when he held the print under the red safelight, was his. The date printed on the margin was tomorrow, and below it, in the same cramped handwriting as the old village records, someone had written a single word: Returned.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Adam went to the pub and asked the landlady about the man in the coat. She set down her glass and said he was the photographer who had taken the last pictures of Harrowgate before the dam closed. He had stayed behind to record the village, and when the water came he walked into the valley and never came out. The landlady gave Adam a key to the darkroom. Inside was a box of prints, each one showing a man on the church roof at dusk, his face turned toward the lake. Each face was his own.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Adam did not take the photographs to the newspaper. He carried the box up onto the moor, where the drowned village could be seen across the reservoir as the water rose, and he set the prints on a stone wall and waited. When the mist came down he saw a figure in a dark coat walking along the causeway toward him. The man took the box and said that someone had to stay with the village, and that it was Adam's turn to keep the record now. The next summer the reservoir was full again, and no one in the valley ever saw the old tower again.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-17",
+          "title": "The Drowned Town Photographs",
+          "wordCount": 443
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Supernatural mysteries",
+        "summary": "A photographer documenting a drought-stricken reservoir finds a set of pictures of a village beneath the water, dated to the day the valley was flooded, with a figure standing on the church roof who is waving at the camera."
+      },
+      "id": "library#haunt-original-17"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "He climbs the last extra step and finds a door that leads out, but he has to leave the stairs for someone else to count.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A caretaker notices that the stairwell of his tower block gains one extra step each night, and the building's residents begin to vanish on the step that was not there the day before.",
+          "script": "Stanley had been caretaker of Windsor Court for twenty-two years, and he knew the stairwell as well as he knew his own hands. It had twelve floors, forty-eight steps between each landing, and a cracked window on every half-landing that looked out over the car park. Stanley checked the lights each morning and counted the steps on his way up to the roof, a habit he had picked up as a boy and never lost. On a Tuesday in March he counted forty-nine steps between the seventh and eighth floors. He counted again, and it was forty-nine. He shrugged, put it down to tiredness, and went on with his rounds.\n\nThe next morning there were fifty steps. The residents on the eighth floor complained about the lift, and a young mother named Carla said she had been unable to find the landing in the dark and had to feel her way up. Stanley measured the stairwell with a tape and found that the extra steps were not spaced evenly. They appeared at the top of each flight, always one more than the night before, and the new treads were polished, as though they had been walked on for years. He started to count the residents too, and noticed that there were fewer of them each morning. Carla's neighbour had moved out without a word.\n\nBy the end of the week the stairwell had grown to sixty-five steps between the floors, and the windows on the landings had stopped showing the car park. They showed instead a long dark corridor with a single light at the far end. Residents who went up the stairs at night did not come down again, though their doors were still locked and their flats still held their belongings. Stanley heard footsteps climbing above him in the dark, counting softly in a voice that he recognised as his own. When he reached the roof, the counting stopped, and the door at the top of the stairs would not open.\n\nStanley sat on the steps and tried to think. He counted again, slowly, aloud, and the number matched the number of residents who had vanished. Each step was a name, each name a life that had gone missing on the climb. He understood that the stairwell wanted a counter, someone to keep track of it, and that the only way out was to pass the job to a new caretaker. He climbed the final step, which was now at the very top, and found a small door he had never noticed, with a brass handle and a note pinned to it. The note said: thank you, Stanley, your shift is over. Count the next one yourself. He turned the handle, stepped through, and heard the door close behind him, and far below, the counting began again.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Stanley had been caretaker of Windsor Court for twenty-two years, and he knew the stairwell as well as he knew his own hands. It had twelve floors, forty-eight steps between each landing, and a cracked window on every half-landing that looked out over the car park. Stanley checked the lights each morning and counted the steps on his way up to the roof, a habit he had picked up as a boy and never lost. On a Tuesday in March he counted forty-nine steps between the seventh and eighth floors. He counted again, and it was forty-nine. He shrugged, put it down to tiredness, and went on with his rounds.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep climbing the stairs and counting",
+                    "next": 2
+                  },
+                  {
+                    "label": "Take the lift and knock on every door",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep climbing the stairs, or take the lift?"
+              },
+              "mood": "uneasy",
+              "narration": "The next morning there were fifty steps. The residents on the eighth floor complained about the lift, and a young mother named Carla said she had been unable to find the landing in the dark and had to feel her way up. Stanley measured the stairwell with a tape and found that the extra steps were not spaced evenly. They appeared at the top of each flight, always one more than the night before, and the new treads were polished, as though they had been walked on for years. He started to count the residents too, and noticed that there were fewer of them each morning. Carla's neighbour had moved out without a word.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "By the end of the week the stairwell had grown to sixty-five steps between the floors, and the windows on the landings had stopped showing the car park. They showed instead a long dark corridor with a single light at the far end. Residents who went up the stairs at night did not come down again, though their doors were still locked and their flats still held their belongings. Stanley heard footsteps climbing above him in the dark, counting softly in a voice that he recognised as his own. When he reached the roof, the counting stopped, and the door at the top of the stairs would not open.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Stanley sat on the steps and tried to think. He counted again, slowly, aloud, and the number matched the number of residents who had vanished. Each step was a name, each name a life that had gone missing on the climb. He understood that the stairwell wanted a counter, someone to keep track of it, and that the only way out was to pass the job to a new caretaker. He climbed the final step, which was now at the very top, and found a small door he had never noticed, with a brass handle and a note pinned to it. The note said: thank you, Stanley, your shift is over. Count the next one yourself. He turned the handle, stepped through, and heard the door close behind him, and far below, the counting began again.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Stanley took the lift to the eighth floor and knocked on every door. The residents who answered were polite, but their eyes slid past him to the stairwell door, which stood ajar. Carla opened her flat and asked whether he had come to take her down. Stanley felt the lift shudder and the lights dim. When the doors opened again, the landing had fifty-one steps leading up from it, and from the top of the flight his own voice was counting, very clearly, the number of people left in the building.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Stanley did not come down that night. The residents woke the next morning to find the caretaker's keys on the lobby desk and a new name pencilled beside the stairwell door, with the words: Count the next one yourself. The lights worked, the lift ran smoothly, and the stairs were forty-eight steps between each floor again. Only Carla, on the eighth, noticed that the flights were no longer quite so steep, and that somewhere above her, a steady voice was keeping the tally.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-18",
+          "title": "The Stairwell Count",
+          "wordCount": 469
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Time loops",
+        "summary": "A caretaker notices that the stairwell of his tower block gains one extra step each night, and the building's residents begin to vanish on the step that was not there the day before."
+      },
+      "id": "library#haunt-original-18"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She dials her own number, and the phone rings in an empty room where she is sitting on the other end.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A telephone exchange operator notices that a printed directory on the switchboard lists numbers that answer, and each answer is a voice from someone who died that night.",
+          "script": "Beatrice had worked the night shift at the regional telephone exchange for eleven years, routing calls between the towns and the hospital. The work was quiet, and she liked the soft hum of the switchboard and the glow of the lamps. In the corner of the room, on a shelf beside the old directory books, sat a printed list of numbers that no one had used since the exchange was modernised in the eighties. The list had been pinned up by a previous operator, and its pages were yellow and curling. Beatrice had never paid it any attention, until one night a light on the board blinked for a number that appeared on the list.\n\nShe plugged in the cord and heard a faint ringing, far away and very old. A woman answered, her voice tired but kind, and asked whether this was the Bradley family calling about the cottage. Beatrice said it was a wrong number and hung up. Then she checked the list and found that the Bradley cottage had burned down in 1962, and that the family had all died in the fire. She rang the number again to check, and the same woman answered, again asking about the cottage, and this time she described the smell of smoke in the kitchen and begged Beatrice to come quickly.\n\nThe calls came more often now, on lines she had never connected. A ferryman who had drowned in the estuary asked her to tell his wife the boat was fine. A boy who had fallen from the cliff road wanted to know why the lights had gone out. Each voice spoke with the same urgency, as if the call was the only thing keeping them from being forgotten. Beatrice wrote the names in her log, but when she checked it the next morning, the handwriting was not hers. It was the same careful, looping script as the directory, and at the bottom of each page it said: keep connecting, the ones who ring you are waiting.\n\nOne night she saw a line on the board that matched her own extension number, and she felt a cold weight settle in her stomach. She plugged in the cord and heard her own voice answering, calm and tired, saying that this was the night exchange and she would be right with them. Beatrice realised that the directory was not a record of the dead but of the operators who had kept the lines open for them, and that she had been the one answering the calls all along. She dialled her own number from memory, and heard the phone ring in an empty room. Then the switchboard lamp went out, and a gentle voice on the other end said, very softly, that she was next on the list.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Beatrice had worked the night shift at the regional telephone exchange for eleven years, routing calls between the towns and the hospital. The work was quiet, and she liked the soft hum of the switchboard and the glow of the lamps. In the corner of the room, on a shelf beside the old directory books, sat a printed list of numbers that no one had used since the exchange was modernised in the eighties. The list had been pinned up by a previous operator, and its pages were yellow and curling. Beatrice had never paid it any attention, until one night a light on the board blinked for a number that appeared on the list.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Keep answering the calls and logging them",
+                    "next": 2
+                  },
+                  {
+                    "label": "Unplug the switchboard and leave the room",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Keep answering the calls, or unplug the board?"
+              },
+              "mood": "suspense",
+              "narration": "She plugged in the cord and heard a faint ringing, far away and very old. A woman answered, her voice tired but kind, and asked whether this was the Bradley family calling about the cottage. Beatrice said it was a wrong number and hung up. Then she checked the list and found that the Bradley cottage had burned down in 1962, and that the family had all died in the fire. She rang the number again to check, and the same woman answered, again asking about the cottage, and this time she described the smell of smoke in the kitchen and begged Beatrice to come quickly.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "The calls came more often now, on lines she had never connected. A ferryman who had drowned in the estuary asked her to tell his wife the boat was fine. A boy who had fallen from the cliff road wanted to know why the lights had gone out. Each voice spoke with the same urgency, as if the call was the only thing keeping them from being forgotten. Beatrice wrote the names in her log, but when she checked it the next morning, the handwriting was not hers. It was the same careful, looping script as the directory, and at the bottom of each page it said: keep connecting, the ones who ring you are waiting.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "One night she saw a line on the board that matched her own extension number, and she felt a cold weight settle in her stomach. She plugged in the cord and heard her own voice answering, calm and tired, saying that this was the night exchange and she would be right with them. Beatrice realised that the directory was not a record of the dead but of the operators who had kept the lines open for them, and that she had been the one answering the calls all along. She dialled her own number from memory, and heard the phone ring in an empty room. Then the switchboard lamp went out, and a gentle voice on the other end said, very softly, that she was next on the list.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Beatrice pulled every cord from the board and walked out into the corridor. The lamps went dark one by one behind her, and the hum of the switchboard stopped. The silence lasted only a moment. Then the phone in the supervisor's office began to ring, and on the line a tired woman asked whether this was the night exchange. Beatrice went back and found the board lit again, every lamp on. In the margin of her log, in a looping script, someone had written: you cannot unplug the ones who need you.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Beatrice never left the exchange. Over the years the night operators came and went, each one handed the directory, the log and a cup of tea, and each one learned to answer the calls in the same calm voice. The exchange was modernised again in the nineties, but the old switchboard was kept on, its lamps glowing softly in the dark, connecting the lines that nobody else could reach.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-19",
+          "title": "The Night Directory",
+          "wordCount": 466
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Urban legends",
+        "summary": "A telephone exchange operator notices that a printed directory on the switchboard lists numbers that answer, and each answer is a voice from someone who died that night."
+      },
+      "id": "library#haunt-original-19"
+    },
+    {
+      "entry": {
+        "creator": "Haunt Team",
+        "ending": "She finishes the last task, and the house finally recognises her as its owner, the one who had been kept in the garden all along.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "A new gardener at a stately country house finds a name tag in the greenhouse with her own name, and a list of tasks that seem to be giving her the family's memories one by one.",
+          "script": "Eleanor was hired to restore the walled garden at Thornbury Hall, a sprawling country house in the Cotswolds that had been empty for a decade. The owner, a distant cousin who lived abroad, sent a list of tasks by post: replant the rose beds, mend the greenhouse glass, clear the overgrown paths. Eleanor arrived on a bright spring morning and found the greenhouse full of dusty pots and withered seedlings. On a hook by the door hung a brass name tag, the kind gardeners wore on their coats in the last century. It was engraved with her own name, and beneath it, a date that had not yet arrived.\n\nEleanor pinned the tag to her jacket and told herself it was an odd coincidence, possibly a previous gardener with the same name. She set to work with a spade and a trowel, and as she dug the first rose bed she found a small tin box buried in the soil. Inside was a folded card written in a familiar hand, with a list of tasks, each one numbered. Number one was to replant the eastern rose bed. Number two was to mend the greenhouse roof. Each task, as she completed it, caused a memory to surface: a childhood picnic on the lawn, a letter she had never sent, a conversation with a woman who looked exactly like her.\n\nThe memories grew sharper, and then stranger. She remembered living in the house, walking the paths in a long grey dress, and tending the garden for a family whose faces she could not quite see. She remembered a fire in the east wing, and a woman's voice calling her name from the top of the stairs, and then nothing but cold earth and the smell of roses. When she reached the twelfth task, the house seemed to lean toward her. The windows of the hall glowed faintly, and she heard footsteps in the gravel behind her, slow and patient, the steps of someone who had been waiting a very long time for the gardener to finish her work.\n\nEleanor completed the last task, which was to plant a single white rose in the centre of the walled garden and say the name of the person it was for. She knelt, pressed the soil down, and spoke her own name aloud, slowly and clearly. The house sighed, and the glass of the greenhouse rang softly in the still air. From the top of the stairs a woman in a grey dress came down, her hand resting lightly on the banister, and she smiled at Eleanor with recognition. You have finished, she said. Now you can go inside, where you belong, and take up your place as the lady of the house, the gardener who was kept outside while the family forgot her.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Eleanor was hired to restore the walled garden at Thornbury Hall, a sprawling country house in the Cotswolds that had been empty for a decade. The owner, a distant cousin who lived abroad, sent a list of tasks by post: replant the rose beds, mend the greenhouse glass, clear the overgrown paths. Eleanor arrived on a bright spring morning and found the greenhouse full of dusty pots and withered seedlings. On a hook by the door hung a brass name tag, the kind gardeners wore on their coats in the last century. It was engraved with her own name, and beneath it, a date that had not yet arrived.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Plant the next rose and carry on",
+                    "next": 2
+                  },
+                  {
+                    "label": "Drop the trowel and walk out of the gate",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Plant the next rose, or walk out the gate?"
+              },
+              "mood": "suspense",
+              "narration": "Eleanor pinned the tag to her jacket and told herself it was an odd coincidence, possibly a previous gardener with the same name. She set to work with a spade and a trowel, and as she dug the first rose bed she found a small tin box buried in the soil. Inside was a folded card written in a familiar hand, with a list of tasks, each one numbered. Number one was to replant the eastern rose bed. Number two was to mend the greenhouse roof. Each task, as she completed it, caused a memory to surface: a childhood picnic on the lawn, a letter she had never sent, a conversation with a woman who looked exactly like her.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "The memories grew sharper, and then stranger. She remembered living in the house, walking the paths in a long grey dress, and tending the garden for a family whose faces she could not quite see. She remembered a fire in the east wing, and a woman's voice calling her name from the top of the stairs, and then nothing but cold earth and the smell of roses. When she reached the twelfth task, the house seemed to lean toward her. The windows of the hall glowed faintly, and she heard footsteps in the gravel behind her, slow and patient, the steps of someone who had been waiting a very long time for the gardener to finish her work.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Eleanor completed the last task, which was to plant a single white rose in the centre of the walled garden and say the name of the person it was for. She knelt, pressed the soil down, and spoke her own name aloud, slowly and clearly. The house sighed, and the glass of the greenhouse rang softly in the still air. From the top of the stairs a woman in a grey dress came down, her hand resting lightly on the banister, and she smiled at Eleanor with recognition. You have finished, she said. Now you can go inside, where you belong, and take up your place as the lady of the house, the gardener who was kept outside while the family forgot her.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "mood": "threat",
+              "narration": "Eleanor dropped the trowel and walked to the garden gate. It was locked, and the gravel behind her was crunching in slow, patient steps. She turned and saw the woman in the grey dress standing by the greenhouse, holding out the name tag. Eleanor's own name was on it, and beneath it the date, which had now arrived. The woman said that gardeners who leave a task unfinished must be replaced, and that the house would be glad of a new one. The cold earth closed around Eleanor's ankles, and from the rose bed came the sound of a fresh spade.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "The new gardener at Thornbury Hall arrived in the spring, a quiet young woman sent by the cousin abroad. She found the walled garden beautifully kept, the roses in full bloom, the greenhouse glass mended, and every task ticked off on a list pinned to the greenhouse door. A brass name tag hung on the hook by the door, engraved with a date that had not yet arrived. She put it on and went to work, and the garden welcomed her one rose at a time.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "haunt-original-20",
+          "title": "The Gardener's Name Tag",
+          "wordCount": 469
+        },
+        "genre": "Horror",
+        "likes": 0,
+        "plays": 0,
+        "publishedAt": "2026-10-20T07:18:25.845Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Psychological horror",
+        "summary": "A new gardener at a stately country house finds a name tag in the greenhouse with her own name, and a list of tasks that seem to be giving her the family's memories one by one."
+      },
+      "id": "library#haunt-original-20"
+    },
+    {
+      "entry": {
+        "ending": "Test ending.",
+        "episode": {
+          "estimatedMinutes": 2,
+          "language": "en",
+          "premise": "Local Test: The Quiet Hall (test data)",
+          "script": "Ellen had house-sat for the Ashdowns before, and she knew the rules: keep the heating low, feed the cat, and never go up to the hall after dark. The house was quiet in the way old houses are quiet, with the clock ticking in the front room and the lamp in the upstairs hall flickering on a timer she had not set. She made tea in the kitchen and listened to the floorboards overhead settle, one by one, as if someone were walking from door to door and checking each room was empty.\n\nAt ten o’clock the lamp upstairs flickered and went out, and a single creak came from the stairs, slow and deliberate, the way a host might climb to greet a late guest. Ellen stood in the kitchen doorway with her mug going cold. The hall was the only room the agency had asked her to keep shut, and the key was still on its hook beside the cooker. The creaking stopped at the top of the stairs. A soft voice, friendly and tired, called her name from the landing, as though it had been waiting all evening for her to answer.\n\nEllen climbed the stairs with the torch shaking in her hand. The upstairs hall was lined with doors, every one standing open on a bedroom made up with fresh linen and two cups laid on the nightstands. On the hall table lay a visitors’ book, its pages curling at the edges. The last entry was in her own handwriting, dated tonight, and beneath her name someone had written, in a neat hand: stayed until morning. She heard the front door close softly downstairs, though she had not heard it open.\n\nBy morning the Ashdowns’ house was quiet again, the clock ticking, the cat asleep on the windowsill. Ellen signed the book, locked the front door and walked to the bus stop without looking back. The visitors’ book stayed on the hall table. Its last line, in neat handwriting, now recorded a second guest, and the lamp upstairs burned all night, steady and bright, for whoever came next.",
+          "segments": [
+            {
+              "mood": "calm",
+              "narration": "Ellen had house-sat for the Ashdowns before, and she knew the rules: keep the heating low, feed the cat, and never go up to the hall after dark. The house was quiet in the way old houses are quiet, with the clock ticking in the front room and the lamp in the upstairs hall flickering on a timer she had not set. She made tea in the kitchen and listened to the floorboards overhead settle, one by one, as if someone were walking from door to door and checking each room was empty.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 1"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Climb the stairs to the hall",
+                    "next": 2
+                  },
+                  {
+                    "label": "Lock yourself in the kitchen",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Climb the stairs to the hall, or lock yourself in the kitchen?"
+              },
+              "mood": "uneasy",
+              "narration": "At ten o’clock the lamp upstairs flickered and went out, and a single creak came from the stairs, slow and deliberate, the way a host might climb to greet a late guest. Ellen stood in the kitchen doorway with her mug going cold. The hall was the only room the agency had asked her to keep shut, and the key was still on its hook beside the cooker. The creaking stopped at the top of the stairs. A soft voice, friendly and tired, called her name from the landing, as though it had been waiting all evening for her to answer.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 2"
+            },
+            {
+              "mood": "threat",
+              "narration": "Ellen climbed the stairs with the torch shaking in her hand. The upstairs hall was lined with doors, every one standing open on a bedroom made up with fresh linen and two cups laid on the nightstands. On the hall table lay a visitors’ book, its pages curling at the edges. The last entry was in her own handwriting, dated tonight, and beneath her name someone had written, in a neat hand: stayed until morning. She heard the front door close softly downstairs, though she had not heard it open.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 3"
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "By morning the Ashdowns’ house was quiet again, the clock ticking, the cat asleep on the windowsill. Ellen signed the book, locked the front door and walked to the bus stop without looking back. The visitors’ book stayed on the hall table. Its last line, in neat handwriting, now recorded a second guest, and the lamp upstairs burned all night, steady and bright, for whoever came next.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Quiet Hall, part 4"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Open the cellar hatch",
+                    "next": 5
+                  },
+                  {
+                    "label": "Wait by the back door",
+                    "next": 6
+                  }
+                ],
+                "prompt": "Open the cellar hatch, or wait by the back door?"
+              },
+              "mood": "suspense",
+              "narration": "Ellen locked the kitchen door and wedged a chair under the handle. The bolt slid home, but a moment later the handle turned slowly from the other side. Footsteps crossed the hall, unhurried, and stopped outside. A voice she knew from the answering machine asked, very politely, whether she would let the owners in. The cellar hatch in the floor stood open, cold air rising from it. Behind her, the back door rattled in its frame, as if someone had already walked around the house to try it.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "threat",
+              "narration": "She went down the cellar steps with the torch, into a room of shelves lined with old jars, each labelled in a neat hand. Every label bore a name and a date, and the newest was her own, with tonight’s date. Above her the footsteps reached the top of the cellar stairs and paused, as if to let her finish reading. The house had always kept its guests. Ellen understood, too late, that the cellar was where the house put the ones it meant to keep.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Ellen unbolted the back door and stepped into the garden, where frost lay white on the lawn and the night air was clean. She ran to the gate without looking back and did not stop until the lane met the road. The house stayed dark behind her. When the taxi finally came, the driver asked how the house-sitting had gone. Ellen said it had been quiet, and that she hoped never to hear the upstairs lamp flicker again.",
+              "sceneIndex": 6,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "test-ghost-house",
+          "title": "Local Test: The Quiet Hall",
+          "wordCount": 351
+        },
+        "genre": "Horror",
+        "publishedAt": "2026-10-20T11:07:56.153Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Haunted houses",
+        "summary": "Test data for the local resume check."
+      },
+      "id": "library#test-ghost-house"
+    },
+    {
+      "entry": {
+        "ending": "Test ending.",
+        "episode": {
+          "estimatedMinutes": 3,
+          "language": "en",
+          "premise": "Local Test: The Lamp at Gale Point (test data)",
+          "script": "The keeper’s cottage at Gale Point had been empty for eleven years, but the lamp in the lighthouse was lit the night Mara arrived. She had driven the coast road in the rain, following a letter that promised a room and a key under the step. The key was there. The door opened onto a kitchen with two cups set out on the table, still warm, as if someone had just stepped out to check the weather. Mara told herself the agent had been careless with his visits. Then she saw the tide chart pinned by the window, dated for tomorrow, with a single line marked in red: the light must be seen from the sea.\n\nThe logbook lay open on the windowsill, its pages stiff with salt. Mara read the entries by lamplight. Each night for eleven years someone had written the same few words: lamp trimmed, wind north-west, nothing passing. The handwriting changed partway down the page, from a careful upright hand to a looser one she recognised from her own letters. She was halfway through the last entry when the cottage door opened behind her. The wind came in first, then the smell of paraffin, and then a voice on the stairs, patient and kind, asking whether she had found the tea.\n\nShe followed the voice up the spiral stairs, counting the steps the way the logbook had taught her. Ninety-one, ninety-two. The walls grew damp and then warm, and the light at the top grew stronger with every turn. At the landing a window looked out over the black water, and far out, a single boat was drifting without a lamp. Mara stopped, her hand on the cold rail, because the figure at the top of the stairs was not the man from the agency. It was a woman in a grey coat, holding a lantern, and she was waiting for someone to take her place.\n\nThe lamp room was bright and clean, its brass polished, the great lens turning slowly on its bed of quicksilver. The woman in the grey coat explained, without any urgency, that the light had to be kept for the ships that still came in the dark. Whoever stayed to tend it would never be relieved, and whoever left would find the cottage empty. Mara thought of the boat and the missing lamp. She took the trimming shears from the bench and lit the wick herself. Below her the water settled, and for the first time in eleven years the sea had a light to steer by.",
+          "segments": [
+            {
+              "mood": "suspense",
+              "narration": "The keeper’s cottage at Gale Point had been empty for eleven years, but the lamp in the lighthouse was lit the night Mara arrived. She had driven the coast road in the rain, following a letter that promised a room and a key under the step. The key was there. The door opened onto a kitchen with two cups set out on the table, still warm, as if someone had just stepped out to check the weather. Mara told herself the agent had been careless with his visits. Then she saw the tide chart pinned by the window, dated for tomorrow, with a single line marked in red: the light must be seen from the sea.",
+              "sceneIndex": 0,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 1"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Follow the voice up the stairs",
+                    "next": 2
+                  },
+                  {
+                    "label": "Tear out the last page and run",
+                    "next": 4
+                  }
+                ],
+                "prompt": "Follow the voice up the stairs, or tear out the last page and run?"
+              },
+              "mood": "suspense",
+              "narration": "The logbook lay open on the windowsill, its pages stiff with salt. Mara read the entries by lamplight. Each night for eleven years someone had written the same few words: lamp trimmed, wind north-west, nothing passing. The handwriting changed partway down the page, from a careful upright hand to a looser one she recognised from her own letters. She was halfway through the last entry when the cottage door opened behind her. The wind came in first, then the smell of paraffin, and then a voice on the stairs, patient and kind, asking whether she had found the tea.",
+              "sceneIndex": 1,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 2"
+            },
+            {
+              "mood": "suspense",
+              "narration": "She followed the voice up the spiral stairs, counting the steps the way the logbook had taught her. Ninety-one, ninety-two. The walls grew damp and then warm, and the light at the top grew stronger with every turn. At the landing a window looked out over the black water, and far out, a single boat was drifting without a lamp. Mara stopped, her hand on the cold rail, because the figure at the top of the stairs was not the man from the agency. It was a woman in a grey coat, holding a lantern, and she was waiting for someone to take her place.",
+              "sceneIndex": 2,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 3"
+            },
+            {
+              "ending": true,
+              "mood": "suspense",
+              "narration": "The lamp room was bright and clean, its brass polished, the great lens turning slowly on its bed of quicksilver. The woman in the grey coat explained, without any urgency, that the light had to be kept for the ships that still came in the dark. Whoever stayed to tend it would never be relieved, and whoever left would find the cottage empty. Mara thought of the boat and the missing lamp. She took the trimming shears from the bench and lit the wick herself. Below her the water settled, and for the first time in eleven years the sea had a light to steer by.",
+              "sceneIndex": 3,
+              "soundCues": [],
+              "visualPrompt": "Local Test: The Lamp at Gale Point, part 4"
+            },
+            {
+              "choices": {
+                "options": [
+                  {
+                    "label": "Drive on without looking back",
+                    "next": 5
+                  },
+                  {
+                    "label": "Look back at the light",
+                    "next": 6
+                  }
+                ],
+                "prompt": "Drive on, or look back at the light?"
+              },
+              "mood": "threat",
+              "narration": "Mara tore the last page from the logbook, pushed it into her coat and ran. The cottage door banged behind her. The car’s engine caught on the second try, and the headlights swung across the gravel. Halfway down the coast road she glanced in the mirror, and the lighthouse was lit from top to bottom, though it had been dark when she arrived. At the top of the tower a figure in a grey coat raised a lantern, patient, and waited for her to decide.",
+              "sceneIndex": 4,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "calm",
+              "narration": "Mara drove until the lamp was only a glow behind the headland. In the morning she reached the town, bought a coffee, and unfolded the page she had taken. The words on it had changed. They recorded her arrival, the lamp trimmed, and the wind north-west, and beneath them a single line in her own careful hand: the light has a keeper again. She put the page away and did not read it again, and the coast road never led her back to Gale Point.",
+              "sceneIndex": 5,
+              "soundCues": [],
+              "visualPrompt": ""
+            },
+            {
+              "ending": true,
+              "mood": "ending",
+              "narration": "Mara turned the car around. At the cottage the door stood open and the two cups were set out as before. She climbed the spiral stairs, counting, until the woman in the grey coat handed her the lantern and a coat that fitted perfectly. The lamp in the lighthouse burned steady, and from the sea it looked exactly as it always had. Mara trimmed the wick and stayed, because someone had to keep the light for the ships that still came in the dark.",
+              "sceneIndex": 6,
+              "soundCues": [],
+              "visualPrompt": ""
+            }
+          ],
+          "storyId": "test-lighthouse",
+          "title": "Local Test: The Lamp at Gale Point",
+          "wordCount": 426
+        },
+        "genre": "Horror",
+        "publishedAt": "2026-10-20T11:07:56.225Z",
+        "source": "HAUNT_ORIGINAL",
+        "subgenre": "Lighthouses",
+        "summary": "Test data for the local resume check."
+      },
+      "id": "library#test-lighthouse"
+    }
+  ]
+}

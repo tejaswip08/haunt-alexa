@@ -1,0 +1,37 @@
+{
+  "serviceName": "haunt",
+  "infrastructureRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsInfrastructureRoleForExpressServices",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/haunt-execution",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/haunt-task",
+  "cpu": "512",
+  "memory": "1024",
+  "cpuArchitecture": "ARM64",
+  "healthCheckPath": "/api/health",
+  "scalingTarget": { "minTaskCount": 1, "maxTaskCount": 2 },
+  "primaryContainer": {
+    "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/haunt:v1",
+    "containerPort": 3001,
+    "environment": [
+      { "name": "NODE_ENV", "value": "production" },
+      { "name": "PORT", "value": "3001" },
+      { "name": "AWS_REGION", "value": "us-east-1" },
+      { "name": "HAUNT_PROVIDER", "value": "bedrock" },
+      { "name": "HAUNT_BEDROCK_API", "value": "converse" },
+      { "name": "HAUNT_STORY_MODEL", "value": "us.anthropic.claude-haiku-4-5-20251001-v1:0" },
+      { "name": "HAUNT_AGENT_MODEL", "value": "us.anthropic.claude-haiku-4-5-20251001-v1:0" },
+      { "name": "HAUNT_MATCH_MODEL", "value": "us.anthropic.claude-haiku-4-5-20251001-v1:0" },
+      { "name": "HAUNT_TTS", "value": "polly" },
+      { "name": "HAUNT_POLLY_VOICE", "value": "Kenneth" },
+      { "name": "HAUNT_POLLY_ENGINE", "value": "generative" },
+      { "name": "HAUNT_STT", "value": "off" },
+      { "name": "HAUNT_TRUST_PROXY", "value": "1" },
+      { "name": "HAUNT_STORE", "value": "dynamodb" },
+      { "name": "HAUNT_TABLE_NAME", "value": "haunt-stories" },
+      { "name": "HAUNT_STORY_TTL_DAYS", "value": "45" }
+    ],
+    "secrets": [
+      { "name": "HAUNT_MCP_TOKENS", "valueFrom": "SECRET_ARN" }
+    ]
+  },
+  "tags": [{ "key": "project", "value": "haunt" }]
+}

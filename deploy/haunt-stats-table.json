@@ -1,0 +1,9 @@
+{
+  "TableName": "haunt-stats",
+  "AttributeDefinitions": [{ "AttributeName": "id", "AttributeType": "S" }],
+  "KeySchema": [{ "AttributeName": "id", "KeyType": "HASH" }],
+  "BillingMode": "PAY_PER_REQUEST",
+  "DeletionProtectionEnabled": true,
+  "SSESpecification": { "Enabled": true },
+  "Tags": [{ "Key": "project", "Value": "haunt" }]
+}

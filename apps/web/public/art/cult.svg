@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050302"/>
+      <stop offset="1" stop-color="#1a0d06"/>
+    </linearGradient>
+    <radialGradient id="fire" cx="800" cy="640" r="560" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff8a2a" stop-opacity=".75"/>
+      <stop offset=".35" stop-color="#a8360f" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <path d="M0 520 L60 300 L110 520 L170 260 L230 520 L300 320 L360 520 L1240 520 L1300 300 L1360 520 L1420 250 L1480 520 L1540 330 L1600 520 V560 H0Z" fill="#070402"/>
+  <rect y="540" width="1600" height="360" fill="#0d0603"/>
+  <rect width="1600" height="900" fill="url(#fire)"/>
+  <ellipse cx="800" cy="720" rx="420" ry="90" fill="none" stroke="#ff8a2a" stroke-width="4" opacity=".45"/>
+  <path d="M800 640 L860 800 L700 700 L900 700 L740 800 Z" fill="none" stroke="#ff8a2a" stroke-width="3" opacity=".4"/>
+  <g filter="url(#blur)">
+    <path d="M740 690 Q760 600 800 520 Q840 600 860 690 Z" fill="#ff7a1a"/>
+    <path d="M770 690 Q785 620 800 570 Q815 620 830 690 Z" fill="#ffd060"/>
+  </g>
+  <g fill="#030201">
+    <path d="M736 690 L864 690 L850 706 L750 706 Z"/>
+    <g id="robe">
+      <path d="M0 0 Q-34 -10 -40 40 L-58 190 L58 190 L40 40 Q34 -10 0 0 Z"/>
+      <path d="M0 -60 Q-38 -60 -36 -10 L-30 20 L30 20 L36 -10 Q38 -60 0 -60 Z"/>
+    </g>
+  </g>
+  <g fill="#030201">
+    <use href="#robe" transform="translate(420 560) scale(1.2)"/>
+    <use href="#robe" transform="translate(1180 560) scale(1.2)"/>
+    <use href="#robe" transform="translate(560 500) scale(.95)"/>
+    <use href="#robe" transform="translate(1040 500) scale(.95)"/>
+    <use href="#robe" transform="translate(680 470) scale(.8)"/>
+    <use href="#robe" transform="translate(920 470) scale(.8)"/>
+  </g>
+  <g fill="#ff8a2a" opacity=".55">
+    <circle cx="1500" cy="300" r="2"/><circle cx="820" cy="430" r="2.5"/><circle cx="760" cy="470" r="2"/><circle cx="850" cy="390" r="1.5"/>
+  </g>
+</svg>

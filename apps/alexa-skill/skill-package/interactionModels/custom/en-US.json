@@ -1,0 +1,118 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "haunt stories",
+      "intents": [
+        { "name": "AMAZON.YesIntent", "samples": [] },
+        { "name": "AMAZON.NoIntent", "samples": [] },
+        {
+          "name": "ContinueIntent",
+          "samples": ["continue", "next", "sign in", "sign me in", "let's go", "go on", "i'm ready"]
+        },
+        {
+          "name": "GuestIntent",
+          "samples": [
+            "continue as guest",
+            "continue as a guest",
+            "play as guest",
+            "play as a guest",
+            "guest",
+            "as a guest",
+            "skip sign in",
+            "skip signing in",
+            "sign in later",
+            "use guest mode"
+          ]
+        },
+        {
+          "name": "NewCodeIntent",
+          "samples": ["new code", "a new code", "get a new code", "give me a new code", "show a new code", "another code", "refresh the code", "the code expired"]
+        },
+        {
+          "name": "PlayStoryIntent",
+          "samples": [
+            "play the ashford house",
+            "play ashford house",
+            "open the ashford house",
+            "start the ashford house",
+            "the ashford house",
+            "ashford house",
+            "play the featured story",
+            "play a story",
+            "tell me a story"
+          ]
+        },
+        {
+          "name": "CreateStoryIntent",
+          "samples": ["create a story", "create my own story", "create my own", "create", "make a story", "make my own story", "write a story", "design my nightmare", "new story"]
+        },
+        {
+          "name": "HomeIntent",
+          "samples": ["home", "go to home", "back to home", "exit to home", "main menu", "show me the stories", "show stories"]
+        },
+        {
+          "name": "PlayWithChoicesIntent",
+          "samples": ["play with choices", "with choices", "i want to choose", "let me choose", "interactive", "i want to decide"]
+        },
+        {
+          "name": "ListenModeIntent",
+          "samples": ["listen", "just listen", "listen without choices", "without choices", "tell it straight through", "narrate it"]
+        },
+        {
+          "name": "ChooseIntent",
+          "slots": [
+            { "name": "number", "type": "AMAZON.NUMBER" },
+            { "name": "ordinal", "type": "CHOICE_ORDINAL" }
+          ],
+          "samples": [
+            "{number}",
+            "option {number}",
+            "choice {number}",
+            "number {number}",
+            "pick {number}",
+            "i pick {number}",
+            "i choose {number}",
+            "go with {number}",
+            "{ordinal}",
+            "the {ordinal} one",
+            "the {ordinal} option",
+            "the {ordinal} choice",
+            "{ordinal} one",
+            "{ordinal} option"
+          ]
+        },
+        {
+          "name": "PlayAgainIntent",
+          "samples": ["play again", "again", "play it again", "one more time", "try again"]
+        },
+        {
+          "name": "RestartIntent",
+          "samples": ["restart", "restart the story", "restart story", "from the beginning", "go back to the beginning"]
+        },
+        {
+          "name": "BackIntent",
+          "samples": ["back", "go back", "previous", "change settings", "change the settings"]
+        },
+        { "name": "AMAZON.PauseIntent", "samples": [] },
+        { "name": "AMAZON.ResumeIntent", "samples": [] },
+        { "name": "AMAZON.StartOverIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] }
+      ],
+      "types": [
+        {
+          "name": "CHOICE_ORDINAL",
+          "values": [
+            { "id": "first", "name": { "value": "first", "synonyms": ["1st", "top"] } },
+            { "id": "second", "name": { "value": "second", "synonyms": ["2nd", "middle"] } },
+            { "id": "third", "name": { "value": "third", "synonyms": ["3rd"] } },
+            { "id": "last", "name": { "value": "last", "synonyms": ["final", "bottom"] } }
+          ]
+        }
+      ]
+    }
+  }
+}

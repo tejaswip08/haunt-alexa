@@ -1,0 +1,227 @@
+/*
+ * Haunt scene effects. Comfort rules:
+ * - Only the picture moves; story text and buttons sit above the stage and never shake or fade out.
+ * - Flicker dims, never flashes bright, and stays well under three changes a second.
+ * - One-off effects (shake, shadow, door) play once per scene.
+ * - Only opacity and transform are animated, which TV WebViews composite cheaply.
+ */
+
+.fx-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050407;
+  contain: strict;
+}
+.fx-stage > * {
+  position: absolute;
+  inset: 0;
+}
+.fx-camera {
+  transform-origin: 50% 45%;
+}
+.fx-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.fx-art [class^="fx-"],
+.fx-art [class*=" fx-"] {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* ---------- Scene-wide effects ---------- */
+
+.fx-scene-fade .fx-camera {
+  animation: fx-fade-in 1.4s ease-out both;
+}
+.fx-cinematic-zoom .fx-art {
+  animation: fx-zoom 32s ease-in-out infinite alternate;
+}
+.fx-camera-shake .fx-camera {
+  animation:
+    fx-fade-in 1.4s ease-out both,
+    fx-shake 0.7s 1.1s ease-in-out 1;
+}
+
+.fx-fog {
+  inset: -20% -40%;
+  opacity: 0.55;
+  background:
+    radial-gradient(ellipse 40% 18% at 30% 75%, rgb(207 198 216 / 0.22), transparent 70%),
+    radial-gradient(ellipse 35% 14% at 75% 82%, rgb(207 198 216 / 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 20% at 55% 95%, rgb(207 198 216 / 0.2), transparent 70%);
+  animation: fx-drift 70s linear infinite alternate;
+}
+.fx-fog-b {
+  opacity: 0.4;
+  transform: scaleX(-1);
+  animation-duration: 95s;
+  animation-direction: alternate-reverse;
+}
+
+.fx-flicker-veil {
+  background: #000;
+  opacity: 0;
+  animation: fx-veil 7s steps(1) infinite;
+}
+
+.fx-door-light {
+  background: radial-gradient(ellipse 18% 55% at 50% 72%, rgb(244 217 160 / 0.35), transparent 70%);
+  transform-origin: 50% 80%;
+  opacity: 0;
+  animation: fx-door-light 4s 0.8s ease-out forwards;
+}
+
+.fx-passing-shadow {
+  background: radial-gradient(ellipse 9% 42% at 50% 62%, rgb(0 0 0 / 0.75), transparent 72%);
+  opacity: 0;
+  animation: fx-pass 11s 2.5s ease-in-out 1 forwards;
+}
+
+.fx-particles i {
+  position: absolute;
+  bottom: -2%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgb(233 225 207 / 0.45);
+  animation: fx-mote linear infinite;
+}
+
+.fx-vignette {
+  background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgb(0 0 0 / 0.7) 100%);
+}
+.fx-stage[data-intensity="high"] .fx-vignette {
+  animation: fx-breathe-vignette 6s ease-in-out infinite alternate;
+}
+
+/* ---------- Setting details (hooks inside the illustrations) ---------- */
+
+.fx-beam { animation: fx-beam 7s ease-in-out infinite alternate; transform-origin: left center !important; }
+.fx-lamp, .fx-candle { animation: fx-candle 3.2s ease-in-out infinite; }
+.fx-flicker { animation: fx-flicker 5s steps(1) infinite; }
+.fx-fluoro { animation: fx-fluoro 6s steps(1) infinite; }
+.fx-late { animation-delay: -2.3s !important; }
+.fx-window-shadow { opacity: 0; animation: fx-window-shadow 16s 3s ease-in-out infinite; }
+.fx-door { animation: fx-house-door 5s 1s ease-in-out forwards; transform-origin: left center !important; }
+.fx-door-leaf { animation: fx-door-leaf 6s 0.6s ease-in-out forwards; transform-origin: left center !important; }
+.fx-sway { animation: fx-sway 6s ease-in-out infinite alternate; }
+.fx-distant { opacity: 0; animation: fx-distant 22s 5s ease-in-out infinite; }
+.fx-train { animation: fx-rumble 1.6s ease-in-out infinite, fx-creep 24s ease-in-out infinite alternate; }
+.fx-window { animation: fx-candle 2.6s ease-in-out infinite; }
+.fx-pulse { animation: fx-pulse 2.4s ease-in-out infinite; }
+.fx-ripple { animation: fx-ripple 5s ease-in-out infinite alternate; }
+.fx-bob { animation: fx-bob 5s ease-in-out infinite alternate; }
+.fx-swell { animation: fx-bob 8s ease-in-out infinite alternate; }
+.fx-breathe { animation: fx-breathe 5s ease-in-out infinite alternate; }
+.fx-loom { animation: fx-loom 18s ease-in-out infinite alternate; transform-origin: center bottom !important; }
+
+/* Running from something is faster and harsher than an uneasy walk. */
+.fx-stage[data-intensity="high"] .fx-train { animation-duration: 0.8s, 10s; }
+.fx-stage[data-intensity="high"] .fx-flicker,
+.fx-stage[data-intensity="high"] .fx-fluoro { animation-duration: 3.5s; }
+.fx-stage[data-intensity="low"] .fx-sway { animation-duration: 10s; }
+
+/* ---------- Keyframes ---------- */
+
+@keyframes fx-fade-in { from { opacity: 0; } }
+@keyframes fx-zoom { from { transform: scale(1); } to { transform: scale(1.07); } }
+@keyframes fx-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-4px, 2px); }
+  40% { transform: translate(4px, -2px); }
+  60% { transform: translate(-3px, 1px); }
+  80% { transform: translate(2px, -1px); }
+}
+@keyframes fx-drift { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
+@keyframes fx-veil {
+  0%, 100% { opacity: 0; }
+  31% { opacity: 0.22; }
+  33% { opacity: 0; }
+  71% { opacity: 0.3; }
+  74% { opacity: 0.08; }
+  76% { opacity: 0; }
+}
+@keyframes fx-door-light {
+  from { opacity: 0; transform: scaleX(0.1); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+@keyframes fx-pass {
+  0% { opacity: 0; transform: translateX(-55%); }
+  20%, 70% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(55%); }
+}
+@keyframes fx-mote {
+  from { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 0.8; }
+  to { transform: translateY(-105vh) translateX(4vw); opacity: 0; }
+}
+@keyframes fx-breathe-vignette { to { opacity: 0.8; } }
+@keyframes fx-beam { from { transform: rotate(4deg); } to { transform: rotate(-8deg); } }
+@keyframes fx-candle { 0%, 100% { opacity: 0.75; } 30% { opacity: 0.55; } 55% { opacity: 0.7; } 80% { opacity: 0.5; } }
+@keyframes fx-flicker { 0%, 100% { opacity: 0.35; } 47% { opacity: 0.08; } 50% { opacity: 0.3; } 82% { opacity: 0.12; } 85% { opacity: 0.35; } }
+@keyframes fx-fluoro { 0%, 100% { opacity: 0.5; } 61% { opacity: 0.12; } 64% { opacity: 0.45; } 67% { opacity: 0.1; } 71% { opacity: 0.5; } }
+@keyframes fx-window-shadow {
+  0%, 100% { opacity: 0; transform: translateX(-40px); }
+  20% { opacity: 0.85; }
+  45% { opacity: 0.85; transform: translateX(40px); }
+  60% { opacity: 0; transform: translateX(60px); }
+}
+@keyframes fx-house-door { to { transform: scaleX(0.35); } }
+@keyframes fx-door-leaf { to { transform: scaleX(0.55) skewY(-4deg); } }
+@keyframes fx-sway { from { transform: rotate(-2deg); } to { transform: rotate(2.5deg); } }
+@keyframes fx-distant { 0%, 100% { opacity: 0; } 40%, 55% { opacity: 0.9; } 70% { opacity: 0; } }
+@keyframes fx-rumble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+@keyframes fx-creep { from { translate: -10px 0; } to { translate: 14px 0; } }
+@keyframes fx-pulse { 50% { opacity: 0.25; } }
+@keyframes fx-ripple { from { transform: scaleX(0.9); opacity: 0.2; } to { transform: scaleX(1.1); } }
+@keyframes fx-bob { from { transform: translateY(-3px); } to { transform: translateY(4px); } }
+@keyframes fx-breathe { from { opacity: 0.16; } to { opacity: 0.28; } }
+@keyframes fx-loom { to { transform: scale(1.05); } }
+
+/* ---------- Motion levels ---------- */
+
+/* Reduced: gentle fades only. Nothing moves across the screen, nothing shakes or flickers. */
+.fx-stage[data-motion="reduced"] .fx-art,
+.fx-stage[data-motion="reduced"] .fx-art *,
+.fx-stage[data-motion="reduced"] .fx-fog,
+.fx-stage[data-motion="reduced"] .fx-vignette {
+  animation: none !important;
+}
+.fx-stage[data-motion="reduced"] .fx-camera {
+  animation: fx-fade-in 1.4s ease-out both !important;
+}
+.fx-stage[data-motion="reduced"] .fx-flicker-veil,
+.fx-stage[data-motion="reduced"] .fx-passing-shadow,
+.fx-stage[data-motion="reduced"] .fx-window-shadow,
+.fx-stage[data-motion="reduced"] .fx-distant {
+  display: none;
+}
+.fx-stage[data-motion="reduced"] .fx-door-light {
+  animation: fx-fade-in 1.4s ease-out forwards;
+  opacity: 1;
+}
+
+/* Off: a still picture. */
+.fx-stage[data-motion="off"] *,
+.fx-stage[data-motion="off"] {
+  animation: none !important;
+  transition: none !important;
+}
+.fx-stage[data-motion="off"] .fx-window-shadow,
+.fx-stage[data-motion="off"] .fx-distant {
+  display: none;
+}
+
+/* The system setting always wins over "auto", even before scripts run. */
+@media (prefers-reduced-motion: reduce) {
+  .fx-stage[data-motion="full"] .fx-camera-shake .fx-camera,
+  .fx-stage.fx-camera-shake[data-motion="full"] .fx-camera {
+    animation: fx-fade-in 1.4s ease-out both;
+  }
+}

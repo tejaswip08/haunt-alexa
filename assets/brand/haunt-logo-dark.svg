@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <g transform="translate(4 4) scale(1.125)">
+    <circle cx="32" cy="31" r="22" fill="#c9a96b" opacity="0.18"/>
+    <path d="M32 12c-9.4 0-16 7-16 16.5V50l5.3-4 5.4 4 5.3-4 5.3 4 5.4-4L48 50V28.5C48 19 41.4 12 32 12z" fill="#ece6da"/><circle cx="26" cy="29" r="3.2" fill="#0b0a0f"/><circle cx="38" cy="29" r="3.2" fill="#0b0a0f"/><ellipse cx="32" cy="39" rx="2.8" ry="3.8" fill="#0b0a0f"/>
+  </g>
+  <text x="88" y="56" font-family="Cormorant Garamond, Iowan Old Style, Georgia, serif" font-size="50" font-weight="600" letter-spacing="1" fill="#ece6da">Haunt</text>
+</svg>
