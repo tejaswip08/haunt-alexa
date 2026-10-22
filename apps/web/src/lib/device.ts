@@ -2,7 +2,9 @@ import type { CallToolResult } from "@modelcontextprotocol/client";
 import { useSyncExternalStore } from "react";
 import { clearEvents, record } from "./inspector.ts";
 import { countPlayStart } from "./engagement.ts";
+import { SUBGENRES } from "./create-voice.ts";
 import { isGoHome } from "./device-voice.ts";
+import { isCancel, nextSegment, parsePlayMode, pickOption, type PlayMode } from "./play-mode.ts";
 import { rememberStory } from "./my-stories.ts";
 import { session } from "./session.ts";
 import { connectHaunt, type HauntConnection, type ToolCall } from "./mcp.ts";
@@ -28,6 +30,42 @@ export interface DeviceSnapshot {
   view: ToolCall | null;
   storyId: string | null;
   error: string | null;
+  /** Set while the screen asks "How do you want to play?" before a story. */
+  pick: PlayModeRequest | null;
+  /** A library episode playing on the device, segment by segment. */
+  episode: EpisodePlayback | null;
+}
+
+export type { PlayMode };
+
+/** The story the listener is about to play, for the "How do you want to play?" screen. */
+export interface PlayModeRequest {
+  kind: "episode" | "new" | "continue";
+  title: string;
+  detail?: string;
+}
+
+export interface EpisodePlayback {
+  storyId: string;
+  title: string;
+  creator: string;
+  mode: PlayMode;
+  segments: EpisodeSegment[];
+  /** The segment being narrated. */
+  at: number;
+  /** Segments played so far, in order. */
+  played: number[];
+  /** Set while waiting for the listener to pick at a choice point. */
+  choices: EpisodeSegment["choices"] | null;
+  ended: boolean;
+}
+
+export interface EpisodeSegment {
+  narration: string;
+  mood: string;
+  choices?: { prompt: string; options: { label: string; next: number }[] };
+  next?: number;
+  ending?: boolean;
 }
 
 type Block = { type: string; [key: string]: unknown };
@@ -59,21 +97,32 @@ interface SceneResult {
   soundCues: string[];
   narration: string;
   question: string | null;
+  /** Answers the view offers; "just listen" takes the first. */
+  suggestions?: string[];
 }
 
 interface EpisodeResult {
   kind: "episode";
+  storyId?: string;
   title: string;
   creator: string;
-  /** The main storyline as segment indexes. The device narrates that path, not the branches. */
+  summary?: string;
+  /** The main storyline as segment indexes: what "just listen" plays. */
   path?: number[];
-  segments: { narration: string; mood: string }[];
+  segments: EpisodeSegment[];
 }
+
+/** The tools that begin a story, so the device asks how to play first (when the assistant calls them too). */
+const STORY_STARTS = new Set(["start_story", "resume_story", "play_episode"]);
 
 const MAX_STEPS = 5;
 
 class SimulatedDevice {
-  #snapshot: DeviceSnapshot = { state: "connecting", heard: "", spoken: "", view: null, storyId: null, error: null };
+  #snapshot: DeviceSnapshot = { state: "connecting", heard: "", spoken: "", view: null, storyId: null, error: null, pick: null, episode: null };
+  /** How the current story plays. Chosen before each story. */
+  #mode: PlayMode = "choices";
+  #answerPick?: (mode: PlayMode | null) => void;
+  #answerChoice?: (option: number | null) => void;
   #listeners = new Set<() => void>();
   #connection?: HauntConnection;
   #messages: Message[] = [];
@@ -150,6 +199,25 @@ class SimulatedDevice {
   async hear(text: string) {
     const utterance = text.trim();
     if (!utterance) return;
+    // "How do you want to play?" is open: "with choices", "just listen", or "cancel".
+    if (this.#snapshot.pick) {
+      record({ kind: "speech", who: "listener", label: utterance });
+      const mode = parsePlayMode(utterance);
+      if (mode) this.choosePlayMode(mode);
+      else if (isCancel(utterance) || isGoHome(utterance)) this.choosePlayMode(null);
+      else this.#update({ heard: utterance, error: "Say “with choices” or “just listen”." });
+      return;
+    }
+    // An episode is waiting at a choice point: "two", "follow the sound".
+    const waiting = this.#snapshot.episode?.choices;
+    if (waiting) {
+      const option = pickOption(utterance, waiting.options.map((o) => o.label));
+      if (option !== null) {
+        record({ kind: "speech", who: "listener", label: utterance });
+        this.chooseOption(option);
+        return;
+      }
+    }
     // The screen goes first: on the Haunt app's tabs, "go home" switches to the Home tab.
     if (this.#voiceRouter?.(utterance)) {
       record({ kind: "speech", who: "listener", label: utterance });
@@ -179,6 +247,7 @@ class SimulatedDevice {
 
     let narration: Promise<boolean> | undefined;
     let awaitingAnswer = false;
+    let lastScene: SceneResult | undefined;
     try {
       const connection = await this.connect();
       this.#messages.push({ role: "user", content: utterance });
@@ -203,7 +272,18 @@ class SimulatedDevice {
         }
 
         const results: Block[] = [];
+        let cancelled = false;
         for (const use of toolUses) {
+          if (STORY_STARTS.has(String(use.name)) && !cancelled) {
+            const input = (use.input ?? {}) as Record<string, unknown>;
+            const mode = await this.#askMode(requestFor(String(use.name), input));
+            if (!mode) cancelled = true;
+            else this.#mode = mode;
+          }
+          if (cancelled) {
+            results.push({ type: "tool_result", tool_use_id: use.id, is_error: true, content: "The listener decided not to play right now." });
+            continue;
+          }
           const call = connection.call(String(use.name), (use.input ?? {}) as Record<string, unknown>);
           if (call.viewHtml) this.#update({ view: call });
           const result = await call.result.catch(
@@ -216,13 +296,21 @@ class SimulatedDevice {
             this.#update({ storyId: scene.storyId });
             rememberStory(scene);
             awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+            lastScene = scene;
             soundscape.setScene(scene.mood, scene.soundCues);
             narration = this.#narrate(scene);
           }
           const episode = episodeOf(result);
-          if (episode) narration = this.#narrateEpisode(episode);
+          if (episode) {
+            countPlayStart(episode.storyId ?? String((use.input as { storyId?: unknown })?.storyId ?? ""));
+            narration = this.#narrateEpisode(episode, String((use.input as { storyId?: unknown })?.storyId ?? episode.storyId ?? ""));
+          }
         }
         this.#messages.push({ role: "user", content: results });
+        if (cancelled) {
+          narration ??= this.#speak("Okay. Maybe later.");
+          break;
+        }
       }
     } catch (error) {
       record({ kind: "error", label: (error as Error).message, payload: error });
@@ -233,30 +321,119 @@ class SimulatedDevice {
       this.#update({});
     }
 
-    // Follow-up mode: after the narrator asks a question, open the mic for the answer.
+    // Follow-up mode: after the narrator asks a question, open the mic for the answer (or carry on, when just listening).
     const finished = await narration;
-    if (finished && awaitingAnswer && turn === this.#turn && canListen) void this.talk();
+    if (finished && awaitingAnswer && turn === this.#turn) this.#afterScene(lastScene);
+  }
+
+  /** After a scene's question: listen for the answer, or with "just listen", take the first suggested answer. */
+  #afterScene(scene: SceneResult | undefined) {
+    if (this.#mode === "listen" && scene) void this.#autoContinue(scene);
+    else if (canListen) void this.talk();
+  }
+
+  /** "Just listen" for a story being written: answer each question with the first suggestion and keep going. */
+  async #autoContinue(scene: SceneResult) {
+    if (this.#busy) return;
+    this.#busy = true;
+    const turn = this.#turn;
+    const answer = scene.suggestions?.[0] ?? "Keep going";
+    let narration: Promise<boolean> | undefined;
+    let next: SceneResult | undefined;
+    try {
+      const connection = await this.connect();
+      record({ kind: "speech", who: "listener", label: `${answer} (just listening)` });
+      const call = connection.call("answer_story", { storyId: scene.storyId, answer });
+      this.#update({ view: call, error: null });
+      const result = await call.result;
+      next = sceneOf(result);
+      if (!next) throw new Error(textOf(result) || "The story couldn't continue.");
+      // The assistant sees this as its own call, so speaking up later continues the same story.
+      const id = `listen_${call.id}`;
+      if (this.#messages.at(-1)?.role === "user") this.#messages.push({ role: "assistant", content: [{ type: "text", text: scene.question ?? "" }] });
+      this.#messages.push(
+        { role: "user", content: answer },
+        { role: "assistant", content: [{ type: "tool_use", id, name: "answer_story", input: { storyId: scene.storyId, answer } }] },
+        { role: "user", content: [{ type: "tool_result", tool_use_id: id, content: textOf(result) }] },
+        { role: "assistant", content: [{ type: "text", text: next.question ?? "The end." }] },
+      );
+      this.#update({ storyId: next.storyId });
+      rememberStory(next);
+      soundscape.setScene(next.mood, next.soundCues);
+      narration = this.#narrate(next);
+    } catch (error) {
+      this.#update({ error: (error as Error).message });
+    } finally {
+      this.#busy = false;
+      this.#update({});
+    }
+    const finished = await narration;
+    if (finished && next && next.status === "active" && next.question && turn === this.#turn) this.#afterScene(next);
+  }
+
+  /**
+   * Shows "How do you want to play?" and waits for a tap or "with choices" / "just listen".
+   * Resolves null when the listener cancels or something else takes over.
+   */
+  async #askMode(request: PlayModeRequest): Promise<PlayMode | null> {
+    this.#answerPick?.(null);
+    const answer = new Promise<PlayMode | null>((resolve) => (this.#answerPick = resolve));
+    this.#update({ pick: request, error: null });
+    const turn = this.#turn;
+    void this.#speak("How do you want to play? With choices, or just listen?").then((done) => {
+      if (done && turn === this.#turn && this.#snapshot.pick === request && canListen && !this.#flags.listening) void this.talk();
+    });
+    const mode = await answer;
+    if (this.#snapshot.pick === request) this.#update({ pick: null });
+    return mode;
+  }
+
+  /** The answer to "How do you want to play?" (null cancels). */
+  choosePlayMode(mode: PlayMode | null) {
+    const resolve = this.#answerPick;
+    if (!resolve) return;
+    this.#answerPick = undefined;
+    stopSpeaking();
+    stopListening();
+    this.#update({ pick: null });
+    resolve(mode);
+  }
+
+  /** Close the "How do you want to play?" screen without playing. */
+  cancelPlayMode() {
+    this.choosePlayMode(null);
+  }
+
+  /** The option picked at an episode's choice point. */
+  chooseOption(option: number) {
+    const resolve = this.#answerChoice;
+    if (!resolve) return;
+    this.#answerChoice = undefined;
+    stopSpeaking();
+    stopListening();
+    resolve(option);
   }
 
   /** A tap on a library card: play that episode directly, the way a touch screen would. */
-  async playEpisode(storyId: string) {
-    if (this.#busy) return;
-    this.#busy = true;
-    ++this.#turn;
-    stopSpeaking();
-    stopListening();
+  async playEpisode(storyId: string, about?: { title?: string; summary?: string }) {
+    if (this.#busy || this.#snapshot.pick) return;
+    this.reset();
     soundscape.unlock();
+    const mode = await this.#askMode({ kind: "episode", title: about?.title ?? "This story", detail: about?.summary });
+    if (!mode) return;
+    this.#mode = mode;
+    this.#busy = true;
     let narration: Promise<boolean> | undefined;
     try {
       const connection = await this.connect();
       const call = connection.call("play_episode", { storyId });
-      this.#update({ view: call, error: null });
+      this.#update({ error: null });
       const result = await call.result;
       const episode = episodeOf(result);
       if (!episode) throw new Error(textOf(result) || "That episode isn't available.");
       // A library episode's narration is starting: this is one play (engagement.ts).
       countPlayStart(storyId);
-      narration = this.#narrateEpisode(episode);
+      narration = this.#narrateEpisode(episode, storyId);
     } catch (error) {
       this.#update({ error: (error as Error).message });
     } finally {
@@ -271,14 +448,19 @@ class SimulatedDevice {
    * goes into the conversation as if the assistant had made it, so the next answer continues
    * that story.
    */
-  async resumeStory(storyId: string) {
-    if (this.#busy) return;
+  async resumeStory(storyId: string, title?: string) {
+    if (this.#busy || this.#snapshot.pick) return;
     this.reset();
+    soundscape.unlock();
+    const mode = await this.#askMode({ kind: "continue", title: title ?? "Your story", detail: "Pick up where you left off." });
+    if (!mode) return;
+    this.#mode = mode;
     this.#busy = true;
     const turn = this.#turn;
     soundscape.unlock();
     let narration: Promise<boolean> | undefined;
     let awaitingAnswer = false;
+    let lastScene: SceneResult | undefined;
     try {
       const connection = await this.connect();
       const call = connection.call("resume_story", { storyId });
@@ -296,6 +478,7 @@ class SimulatedDevice {
       this.#update({ storyId: scene.storyId });
       rememberStory(scene);
       awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+      lastScene = scene;
       soundscape.setScene(scene.mood, scene.soundCues);
       narration = this.#narrate(scene);
     } catch (error) {
@@ -305,7 +488,7 @@ class SimulatedDevice {
       this.#update({});
     }
     const finished = await narration;
-    if (finished && awaitingAnswer && turn === this.#turn && canListen) void this.talk();
+    if (finished && awaitingAnswer && turn === this.#turn) this.#afterScene(lastScene);
   }
 
   /**
@@ -313,13 +496,18 @@ class SimulatedDevice {
    * reaches the server as given (and shows in the inspector), then narrates the opening scene like any other story.
    */
   async startStory(input: StartStoryInput) {
-    if (this.#busy) return;
+    if (this.#busy || this.#snapshot.pick) return;
     this.reset();
+    soundscape.unlock();
+    const mode = await this.#askMode(requestFor("start_story", input as unknown as Record<string, unknown>));
+    if (!mode) return;
+    this.#mode = mode;
     this.#busy = true;
     const turn = this.#turn;
     soundscape.unlock();
     let narration: Promise<boolean> | undefined;
     let awaitingAnswer = false;
+    let lastScene: SceneResult | undefined;
     try {
       const connection = await this.connect();
       const call = connection.call("start_story", { ...input });
@@ -338,6 +526,7 @@ class SimulatedDevice {
       this.#update({ storyId: scene.storyId });
       rememberStory(scene);
       awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+      lastScene = scene;
       soundscape.setScene(scene.mood, scene.soundCues);
       narration = this.#narrate(scene);
     } catch (error) {
@@ -347,7 +536,7 @@ class SimulatedDevice {
       this.#update({});
     }
     const finished = await narration;
-    if (finished && awaitingAnswer && turn === this.#turn && canListen) void this.talk();
+    if (finished && awaitingAnswer && turn === this.#turn) this.#afterScene(lastScene);
   }
 
   /** Forget the conversation and start fresh. */
@@ -357,9 +546,14 @@ class SimulatedDevice {
     stopListening();
     this.#messages = [];
     this.#flags = { listening: false, thinking: false, speaking: false };
+    this.#mode = "choices";
+    this.#answerPick?.(null);
+    this.#answerPick = undefined;
+    this.#answerChoice?.(null);
+    this.#answerChoice = undefined;
     soundscape.stop();
     clearEvents();
-    this.#update({ heard: "", spoken: "", view: null, storyId: null, error: null });
+    this.#update({ heard: "", spoken: "", view: null, storyId: null, error: null, pick: null, episode: null });
   }
 
   async #think(connection: HauntConnection): Promise<AgentTurn> {
@@ -400,17 +594,66 @@ class SimulatedDevice {
     return this.#speak(scene.question ?? "The end.");
   }
 
-  /** Read an episode straight through, segment by segment. Resolves true if it finished. */
-  async #narrateEpisode(episode: EpisodeResult): Promise<boolean> {
+  /**
+   * Play a library episode on the screen, segment by segment. "Just listen" follows the main storyline; "with choices"
+   * stops at each choice point and waits for a tap or a spoken option. Resolves true if it reached the end.
+   */
+  async #narrateEpisode(episode: EpisodeResult, storyId: string): Promise<boolean> {
     const turn = this.#turn;
+    const mode = this.#mode;
+    let playback: EpisodePlayback = {
+      storyId,
+      title: episode.title,
+      creator: episode.creator,
+      mode,
+      segments: episode.segments,
+      at: 0,
+      played: [],
+      choices: null,
+      ended: false,
+    };
+    const show = (patch: Partial<EpisodePlayback>) => {
+      playback = { ...playback, ...patch };
+      if (turn === this.#turn) this.#update({ episode: playback, view: null });
+    };
+    show({});
     if (!(await this.#speak(`${episode.title}. A Haunt story by ${episode.creator}.`))) return false;
-    const path = episode.path ?? episode.segments.map((_, i) => i);
-    for (const segment of path.map((i) => episode.segments[i]).filter((s) => s !== undefined)) {
+
+    let at: number | undefined = 0;
+    const seen = new Set<number>();
+    while (at !== undefined && !seen.has(at)) {
       if (turn !== this.#turn) return false;
+      seen.add(at);
+      const segment: EpisodeSegment | undefined = episode.segments[at];
+      if (!segment) break;
+      show({ at, played: [...playback.played, at], choices: null });
       soundscape.setScene(segment.mood);
       if (!(await this.#speak(segment.narration))) return false;
+
+      let option = 0;
+      if (segment.choices && mode === "choices") {
+        show({ choices: segment.choices });
+        const picked = new Promise<number | null>((resolve) => (this.#answerChoice = resolve));
+        const options = segment.choices.options.map((o, i) => `${i === 0 ? "One" : i === 1 ? "Two" : i === 2 ? "Three" : "Four"}: ${o.label}.`).join(" ");
+        void this.#speak(`${segment.choices.prompt} ${options}`).then((done) => {
+          if (done && turn === this.#turn && playback.choices && canListen && !this.#flags.listening) void this.talk();
+        });
+        const choice = await picked;
+        if (choice === null || turn !== this.#turn) return false;
+        option = choice;
+        record({ kind: "speech", who: "listener", label: segment.choices.options[choice]?.label ?? "" });
+        show({ choices: null });
+      }
+      at = nextSegment(episode.segments, at, option);
     }
-    return true;
+    show({ ended: true, choices: null });
+    return this.#speak("The end.");
+  }
+
+  /** Play the same episode again from the start (the end screen's button). */
+  async replayEpisode() {
+    const current = this.#snapshot.episode;
+    if (current) await this.playEpisode(current.storyId, { title: current.title });
   }
 
   async #speak(text: string): Promise<boolean> {
@@ -440,7 +683,7 @@ class SimulatedDevice {
         ? "listening"
         : speaking
           ? "speaking"
-          : thinking || this.#busy
+          : thinking || (this.#busy && !next.pick)
             ? "thinking"
             : next.error
               ? "error"
@@ -448,6 +691,15 @@ class SimulatedDevice {
     this.#snapshot = next;
     for (const listener of this.#listeners) listener();
   }
+}
+
+/** What the "How do you want to play?" screen says about a story the assistant (or Create) is about to begin. */
+function requestFor(tool: string, input: Record<string, unknown>): PlayModeRequest {
+  if (tool === "play_episode") return { kind: "episode", title: "A story from the library" };
+  if (tool === "resume_story") return { kind: "continue", title: "Your story", detail: "Pick up where you left off." };
+  const premise = typeof input.premise === "string" ? input.premise.trim() : "";
+  const subgenre = SUBGENRES.find((s) => s.id === input.subgenre)?.name;
+  return { kind: "new", title: subgenre ? `A new ${subgenre} story`.replace(" Story story", " story") : "A new story", detail: premise || undefined };
 }
 
 function textOf(result: CallToolResult): string {

@@ -3304,3 +3304,257 @@ main {
     animation: none;
   }
 }
+
+/* "How do you want to play?" before every story, and the episode player (components/DevicePlay.tsx). */
+.pm {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(90% 80% at 50% 30%, rgb(60 14 22 / 0.92), rgb(7 8 10 / 0.97) 70%);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  animation: forge-in 0.35s ease both;
+}
+.pm-fog {
+  position: absolute;
+  inset: -20% -40%;
+  background: radial-gradient(40% 30% at 30% 70%, rgb(236 230 218 / 0.06), transparent 70%),
+    radial-gradient(30% 25% at 75% 30%, rgb(236 230 218 / 0.05), transparent 70%);
+  animation: forge-fog 16s linear infinite alternate;
+  pointer-events: none;
+}
+.pm-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9cqw;
+  width: min(74cqw, 92%);
+  text-align: center;
+}
+.pm-eyebrow {
+  color: #e0453a;
+  font: 600 1.1cqw/1 var(--font-ui);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.pm-title {
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 500 3.4cqw/1.15 var(--font-display);
+}
+.pm-detail {
+  margin: 0;
+  max-width: 60cqw;
+  color: var(--ink-dim);
+  font: italic 400 1.7cqw/1.35 var(--font-display);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pm-question {
+  margin: 1.6cqw 0 0.4cqw;
+  font: 600 1.9cqw/1.2 var(--font-ui);
+}
+.pm-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6cqw;
+  width: 100%;
+}
+.da .pm-option,
+.device-screen .pm-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6cqw;
+  min-height: 0;
+  padding: 2cqw 2.2cqw;
+  border: 2px solid rgb(236 230 218 / 0.14);
+  border-radius: 1.6cqw;
+  background: rgb(17 19 24 / 0.78);
+  color: var(--ink);
+  text-align: left;
+  font: 400 1.3cqw/1.35 var(--font-ui) !important;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.device-screen .pm-option strong {
+  font: 600 1.9cqw/1.15 var(--font-ui);
+}
+.device-screen .pm-option span {
+  color: var(--ink-dim);
+}
+.device-screen .pm-option:hover,
+.device-screen .pm-option:focus-visible {
+  border-color: #e0453a;
+  background: rgb(60 14 22 / 0.7);
+  box-shadow: 0 0 3cqw rgb(224 69 58 / 0.25);
+  transform: translateY(-0.4cqw);
+  outline: none;
+}
+.pm-icon {
+  width: 3cqw;
+  height: 3cqw;
+  color: #e0453a;
+}
+.pm-hint {
+  margin: 0.6cqw 0 0;
+  color: var(--ink-dim);
+  font: 500 1.25cqw/1 var(--font-ui);
+}
+.device-screen .pm-back,
+.device-screen .ep-home {
+  min-height: 0;
+  padding: 0.6cqw 1.6cqw;
+  border: 1px solid rgb(236 230 218 / 0.18);
+  border-radius: 99px;
+  background: rgb(17 19 24 / 0.6);
+  color: var(--ink-dim);
+  font: 500 1.2cqw/1 var(--font-ui) !important;
+  cursor: pointer;
+}
+.device-screen .pm-back:hover,
+.device-screen .ep-home:hover {
+  color: var(--ink);
+  border-color: var(--ink-dim);
+}
+
+.ep {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #07080a;
+  color: var(--ink);
+  container-type: inline-size;
+}
+.ep-art {
+  position: absolute;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  object-fit: cover;
+  opacity: 0.32;
+  animation: forge-drift 26s ease-in-out infinite alternate;
+}
+.ep-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(7 8 10 / 0.55), rgb(7 8 10 / 0.35) 35%, rgb(7 8 10 / 0.92) 80%);
+}
+.ep-head,
+.ep-body,
+.ep-choices,
+.ep-end {
+  position: relative;
+}
+.ep-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2cqw;
+  padding: 2.2cqw 3.4cqw 0;
+}
+.ep-title {
+  margin: 0;
+  font: 500 2.8cqw/1.1 var(--font-display);
+}
+.ep-meta {
+  color: var(--ink-dim);
+  font: 500 1.2cqw/1.4 var(--font-ui);
+}
+.ep-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.6cqw 3.4cqw;
+}
+.ep-part {
+  color: #e0453a;
+  font: 600 1.05cqw/1 var(--font-ui);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.ep-narration {
+  margin: 0.8cqw 0 0;
+  max-width: 78cqw;
+  font: 400 2.1cqw/1.5 var(--font-display);
+  text-shadow: 0 0.2cqw 1cqw rgb(0 0 0 / 0.7);
+  animation: forge-step 0.7s ease both;
+}
+.ep-choices,
+.ep-end {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8cqw;
+  padding: 1.6cqw 3.4cqw 2.4cqw;
+  border-top: 1px solid rgb(236 230 218 / 0.1);
+  background: linear-gradient(180deg, rgb(7 8 10 / 0.6), rgb(7 8 10 / 0.95));
+  animation: forge-step 0.45s ease both;
+}
+.ep-label {
+  color: #e0453a;
+  font: 600 1.05cqw/1 var(--font-ui);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.ep-prompt {
+  margin: 0;
+  font: 500 2.2cqw/1.2 var(--font-display);
+}
+.ep-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24cqw, 1fr));
+  gap: 1.2cqw;
+}
+.device-screen .ep-option {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  min-height: 0;
+  padding: 1.3cqw 1.6cqw;
+  border: 2px solid rgb(236 230 218 / 0.14);
+  border-radius: 1.2cqw;
+  background: rgb(17 19 24 / 0.82);
+  color: var(--ink);
+  text-align: left;
+  font: 500 1.55cqw/1.25 var(--font-ui) !important;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+.device-screen .ep-option:hover,
+.device-screen .ep-option:focus-visible {
+  border-color: #e0453a;
+  background: rgb(60 14 22 / 0.75);
+  transform: translateY(-0.3cqw);
+  outline: none;
+}
+.ep-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.4cqw;
+  height: 2.4cqw;
+  border: 1px solid rgb(236 230 218 / 0.3);
+  border-radius: 50%;
+  font: 600 1.2cqw/1 var(--font-ui);
+}
+.ep-hint {
+  color: var(--ink-dim);
+  font: 500 1.15cqw/1 var(--font-ui);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-fog,
+  .ep-art {
+    animation: none;
+  }
+}

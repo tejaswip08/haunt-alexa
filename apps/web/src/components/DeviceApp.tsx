@@ -35,7 +35,7 @@ const mustSignIn = (account: SessionState) => account.available && account.statu
 /** "tejaswi@mobil80.com" → "T"; a guest is "G". */
 const initial = (account: SessionState) => (account.user?.email?.[0] ?? "G").toUpperCase();
 
-interface CommunityStory {
+export interface CommunityStory {
   storyId: string;
   title: string;
   summary?: string;
@@ -91,13 +91,13 @@ export function DeviceApp({
   connection: HauntConnection | undefined;
   /** Says something to the assistant on the listener's behalf. */
   onSay: (text: string) => void;
-  onPlay: (storyId: string) => void;
+  onPlay: (story: CommunityStory) => void;
   /** Starts a story with the Create form's choices (MCP start_story). */
   onStart: (input: StartStoryInput) => void;
   /** Registers what to do with heard speech before the assistant gets it. Returns an unregister function. */
   onVoice?: (router: (text: string) => boolean) => () => void;
   /** Continues one of the listener's stories (MCP resume_story). */
-  onResume: (storyId: string) => void;
+  onResume: (story: SavedStory) => void;
 }) {
   const [tab, setTab] = useState<Tab>("home");
   const [form, setForm] = useState<CreateForm>(DEFAULT_FORM);
@@ -169,12 +169,12 @@ export function DeviceApp({
         // On My Stories, "play" means continue one of yours; elsewhere it plays a community story.
         if (current === "mine") {
           const story = pickStory(own, nav.pick);
-          if (story) onResume(story.storyId);
+          if (story) onResume(story);
           else setNotice(own.length ? "Couldn’t find that one in My Stories." : "No stories yet. Say “create a story” to make one.");
           return true;
         }
         const story = pickStory(shared ?? [], nav.pick);
-        if (story) onPlay(story.storyId);
+        if (story) onPlay(story);
         else setNotice(shared?.length ? "Couldn’t find that story in Community." : "No community stories to play yet.");
         return true;
       }
@@ -182,7 +182,7 @@ export function DeviceApp({
         // "my last story" is the most recent one, which My Stories lists first.
         const pick = "index" in nav.pick && nav.pick.index === -1 ? { index: 0 } : nav.pick;
         const story = pickStory(own, pick);
-        if (story) onResume(story.storyId);
+        if (story) onResume(story);
         else {
           setTab("mine");
           setNotice(own.length ? "Couldn’t find that one in My Stories." : "No stories yet. Say “create a story” to make one.");
@@ -257,9 +257,9 @@ export function DeviceApp({
   );
 }
 
-function StoryCard({ story, onPlay }: { story: CommunityStory; onPlay: (storyId: string) => void }) {
+function StoryCard({ story, onPlay }: { story: CommunityStory; onPlay: (story: CommunityStory) => void }) {
   return (
-    <button type="button" className="da-card" onClick={() => onPlay(story.storyId)}>
+    <button type="button" className="da-card" onClick={() => onPlay(story)}>
       <span className="da-card-art" style={{ backgroundImage: `url(${artForStoryId(story.storyId)})` }}>
         <span className="da-badge">Community</span>
       </span>
@@ -280,7 +280,7 @@ function HomeTab({
 }: {
   community: CommunityStory[] | null;
   onSay: (text: string) => void;
-  onPlay: (storyId: string) => void;
+  onPlay: (story: CommunityStory) => void;
   onBrowse: () => void;
 }) {
   const featured = community?.[0];
@@ -295,7 +295,7 @@ function HomeTab({
             <h2 className="da-hero-title">{featured.title}</h2>
             {featured.summary && <p className="da-hero-text">{featured.summary}</p>}
             <div className="da-actions">
-              <button type="button" className="da-button primary" onClick={() => onPlay(featured.storyId)}>
+              <button type="button" className="da-button primary" onClick={() => onPlay(featured)}>
                 ▶ Listen
               </button>
               <button type="button" className="da-button" onClick={onBrowse}>
@@ -325,7 +325,7 @@ function HomeTab({
   );
 }
 
-function CommunityTab({ community, onPlay }: { community: CommunityStory[] | null; onPlay: (storyId: string) => void }) {
+function CommunityTab({ community, onPlay }: { community: CommunityStory[] | null; onPlay: (story: CommunityStory) => void }) {
   return (
     <section className="da-page">
       <h2 className="da-page-title">Community</h2>
@@ -352,7 +352,7 @@ function CommunityTab({ community, onPlay }: { community: CommunityStory[] | nul
   );
 }
 
-function MyStoriesTab({ stories, onResume }: { stories: SavedStory[]; onResume: (storyId: string) => void }) {
+function MyStoriesTab({ stories, onResume }: { stories: SavedStory[]; onResume: (story: SavedStory) => void }) {
   return (
     <section className="da-page">
       <div className="da-page-head">
@@ -364,7 +364,7 @@ function MyStoriesTab({ stories, onResume }: { stories: SavedStory[]; onResume: 
       {stories.length ? (
         <div className="da-grid">
           {stories.map((story) => (
-            <button key={story.storyId} type="button" className="da-card" onClick={() => onResume(story.storyId)}>
+            <button key={story.storyId} type="button" className="da-card" onClick={() => onResume(story)}>
               <span className="da-card-art" style={{ backgroundImage: `url(${artForStoryId(story.storyId)})` }}>
                 <span className="da-badge">{story.status === "completed" ? "Finished" : "In progress"}</span>
                 {story.status === "active" && (

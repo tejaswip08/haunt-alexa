@@ -5,6 +5,7 @@ import { StoryEngagement } from "../components/StoryEngagement.tsx";
 import { Inspector } from "../components/Inspector.tsx";
 import { SceneStack } from "../components/SceneStack.tsx";
 import { StoryForge } from "../components/StoryForge.tsx";
+import { EpisodeScreen, PlayModeScreen } from "../components/DevicePlay.tsx";
 import { device, useDevice, type DeviceState } from "../lib/device.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
 import { soundscape } from "../lib/soundscape.ts";
@@ -74,7 +75,7 @@ export function Play() {
     } else if (pending) void device.say(pending);
   }, []);
 
-  const { state, heard, view, error } = snapshot;
+  const { state, heard, view, error, pick, episode: playing } = snapshot;
   useEffect(() => {
     if (view?.tool.name !== "start_story") return;
     let live = true;
@@ -123,7 +124,14 @@ export function Play() {
           <SpeakerDevice state={state} heard={heard} spoken={snapshot.spoken} />
         ) : (
           <DeviceFrame state={state}>
-            {view && connection ? (
+            {playing ? (
+              <EpisodeScreen
+                playback={playing}
+                onChoose={(option) => device.chooseOption(option)}
+                onReplay={() => void device.replayEpisode()}
+                onHome={() => device.reset()}
+              />
+            ) : view && connection ? (
               <SceneStack
                 call={view}
                 connection={connection}
@@ -135,13 +143,14 @@ export function Play() {
               <DeviceApp
                 connection={connection}
                 onSay={(text) => void device.hear(text)}
-                onPlay={(storyId) => void device.playEpisode(storyId)}
+                onPlay={(story) => void device.playEpisode(story.storyId, story)}
                 onStart={(input) => void device.startStory(input)}
                 onVoice={(router) => device.setVoiceRouter(router)}
-                onResume={(storyId) => void device.resumeStory(storyId)}
+                onResume={(story) => void device.resumeStory(story.storyId, story.title)}
               />
             )}
             {creating && <StoryForge key={view.id} input={view.input} />}
+            {pick && <PlayModeScreen request={pick} onChoose={(mode) => device.choosePlayMode(mode)} />}
             {(state === "listening" || (heard && state === "thinking")) && (
               <div className="heard" aria-live="polite">
                 {heard || "…"}
