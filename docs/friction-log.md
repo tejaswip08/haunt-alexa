@@ -3,34 +3,30 @@
 Running log for the Devpost submission (friction logs can earn up to a 10% judging bonus).
 Format per entry: task, steps, expected vs. actual, severity, workaround, suggestion.
 
-**24 entries** across Alexa+ / MCP, Fire TV, the Alexa Skills Kit and APL, the Alexa Developer Console, and Amazon Bedrock.
+**20 entries** across Alexa+ and MCP, the Alexa Skills Kit and APL, the Alexa Developer Console, Amazon Bedrock, Amazon Cognito and AWS Lambda.
 
 | # | Entry | Severity |
 | --- | --- | --- |
 | 1 | MCP Apps host: sandbox proxy needs a second origin | Medium |
-| 2 | Alexa+ client protocol version vs. hackathon minimum | Low |
+| 2 | Alexa+ client protocol version vs. hackathon minimum | Low (the TypeScript SDK v2 negotiates both) |
 | 3 | Alexa+ add-on docs rate-limit quick reads | Low |
 | 4 | No local Alexa+ test path for non-partners | Medium for hackathon builders |
 | 5 | Narrative add-ons can't control what Alexa+ says | High for storytelling and media experiences |
 | 6 | 500 ms latency target vs. generated content | Medium |
 | 7 | Undocumented details in the design guide | Low |
 | 8 | Local Inspector and web simulator are gated | Medium for hackathon builders |
-| 9 | Fire TV: no Fire OS emulator for a quick check | Medium |
-| 10 | WebView apps loaded over LAN HTTP lose `crypto.randomUUID` | Low |
-| 11 | Back button: key events on Fire OS, predictive back on newer Android | Low |
-| 12 | Bedrock: model listed, but "not available for this account" | High for hackathon builders on new accounts |
-| 13 | Bedrock: one model, two APIs, different access | Medium |
-| 14 | Fire TV: no supported way to read the voice remote's mic | Medium for voice-first TV apps |
-| 15 | Developer Console: Import Code rejects a zip without a `lambda/` root folder | Low |
-| 16 | A one-word invocation name opens Alexa's web search, with no warning | Medium |
-| 17 | Interaction model edits don't apply until Build, so "yes" fell to Fallback | Medium |
-| 18 | APL: `when` is evaluated once, so state changes didn't show | Medium |
-| 19 | APL: font families from resources were truncated to "…" | Low |
-| 20 | APL: scrolling containers default to tiny heights, and nested scrolls fight | Medium |
-| 21 | Simulator: SpeakItem and command timing didn't match a real "read along" flow | High for narrated or karaoke-style content |
-| 22 | APL: 120 KB response limit with vector scene art | Low |
-| 23 | Fire TV: a release APK is unsigned by default and won't sideload | Low |
-| 24 | Bedrock with IAM Identity Center: short sessions expire mid-demo | Low |
+| 9 | Bedrock: model listed, but "not available for this account" | High for hackathon builders on new accounts |
+| 10 | Bedrock: one model, two APIs, different access | Medium (cost us a provider rewrite) |
+| 11 | Developer Console: Import Code rejects a zip without a `lambda/` root folder | Low (blocking until found) |
+| 12 | A one-word invocation name opens Alexa's web search, with no warning | Medium (looks like the skill is broken) |
+| 13 | Interaction model edits don't apply until Build, so "yes" fell to Fallback | Medium |
+| 14 | APL: `when` is evaluated once, so state changes didn't show | Medium |
+| 15 | APL: font families from resources were truncated to "…" | Low |
+| 16 | APL: scrolling containers default to tiny heights, and nested scrolls fight | Medium |
+| 17 | Simulator: SpeakItem and command timing didn't match a real "read along" flow | High for narrated or karaoke-style content |
+| 18 | APL: 120 KB response limit with vector scene art | Low |
+| 19 | Bedrock with IAM Identity Center: short sessions expire mid-demo | Low (annoying while recording demos) |
+| 20 | Cognito: no device authorization grant for screenless devices, and Lambda can't hold the pairing in memory | Medium (sign-in on TVs and speakers fails at random) |
 
 ## 2026-10-15
 
@@ -95,29 +91,7 @@ Format per entry: task, steps, expected vs. actual, severity, workaround, sugges
 - **Workaround:** Public MCP Inspector plus our own simulator.
 - **Suggestion:** Publish the Local Inspector for hackathon participants; its certification checks would help every entrant.
 
-## 2026-10-17
-
-### Fire TV: no Fire OS emulator for a quick check
-- **Task:** Test the Haunt Fire OS app before filming on a device.
-- **Expected:** An official Fire OS emulator or virtual device, like the Vega Virtual Device.
-- **Actual:** Fire OS testing needs a physical Fire TV; we tested on a generic Android emulator instead.
-- **Severity:** Medium
-- **Workaround:** Android emulator for layout and remote keys, then a real Fire TV stick over ADB.
-- **Suggestion:** Publish a Fire OS system image for the Android emulator.
-
-### WebView apps loaded over LAN HTTP lose `crypto.randomUUID`
-- **Task:** Load the TV page from a dev server on the local network inside the Fire TV WebView.
-- **Actual:** Starting a story failed with "crypto.randomUUID is not a function": the page is not a secure context over plain HTTP.
-- **Severity:** Low (easy to miss, breaks silently)
-- **Workaround:** A small `randomId()` helper that falls back to `crypto.getRandomValues`.
-- **Suggestion:** Mention secure-context APIs in the Fire TV web-app docs, next to the dev-server setup.
-
-### Back button: key events on Fire OS, predictive back on newer Android
-- **Task:** Make the remote's Back button go back a screen inside the app.
-- **Actual:** With `targetSdk` 36, newer Android sends Back through `OnBackInvokedCallback` instead of `KEYCODE_BACK`, while Fire OS still sends key events. Handling only one breaks the other.
-- **Severity:** Low
-- **Workaround:** Handle both and share one handler.
-- **Suggestion:** A short Fire TV doc note on Back handling for apps that also target newer Android.
+## 2026-10-17: Amazon Bedrock
 
 ### Bedrock: model listed, but "not available for this account"
 - **Task:** Run Haunt's stories on Claude Sonnet 5.5 through Amazon Bedrock on a new AWS account.
@@ -134,13 +108,6 @@ Format per entry: task, steps, expected vs. actual, severity, workaround, sugges
 - **Severity:** Medium (cost us a provider rewrite)
 - **Workaround:** Added a Converse-based provider and assistant, switchable with `HAUNT_BEDROCK_API=converse`.
 - **Suggestion:** Document which endpoint each model and account tier can use, and use the same model ids on both.
-
-### Fire TV: no supported way to read the voice remote's mic
-- **Task:** Let viewers speak their story choice with the Fire TV voice remote.
-- **Actual:** The remote's mic button belongs to Alexa. The only in-app option is Android's `SpeechRecognizer`, which works only if the device ships a recognition service. We couldn't confirm that from the docs, and the emulator never reported silence (it stayed "listening").
-- **Severity:** Medium for voice-first TV apps
-- **Workaround:** Show "Speak an answer" only when `SpeechRecognizer.isRecognitionAvailable()` is true, stop listening after a 12 s timeout, and keep the D-pad as the main input.
-- **Suggestion:** Document speech-recognition availability per Fire TV model, or offer an API that routes a spoken reply to the foreground app.
 
 ## 2026-10-18 to 2026-10-22: the Echo Show skill (Alexa Skills Kit, APL, Developer Console)
 
@@ -204,14 +171,7 @@ Format per entry: task, steps, expected vs. actual, severity, workaround, sugges
 - **Workaround:** A converter script (SVG → AVG, gradients to bounding-box units, blur approximated by radial fades) and only the art each screen needs.
 - **Suggestion:** An official SVG → AVG converter, or shared graphics packages that don't count against every response.
 
-## 2026-10-22: Fire TV release build and AWS credentials
-
-### Fire TV: a release APK is unsigned by default and won't sideload
-- **Task:** Produce an APK testers can install on a Fire TV with `adb install`.
-- **Actual:** `assembleRelease` produced `app-release-unsigned.apk`, which Fire OS refuses to install. The Fire TV getting-started docs focus on debug builds.
-- **Severity:** Low
-- **Workaround:** Sign the release build with the debug key for sideloading; an Appstore build would use an upload keystore.
-- **Suggestion:** A Fire TV doc snippet for a sideload-ready release build (signing, leanback banner, HTTPS-only network config).
+## 2026-10-22 to 2026-10-23: AWS credentials and sign-in on Lambda
 
 ### Bedrock with IAM Identity Center: short sessions expire mid-demo
 - **Task:** Run the local server against Bedrock and Polly with SSO credentials.
@@ -219,3 +179,13 @@ Format per entry: task, steps, expected vs. actual, severity, workaround, sugges
 - **Severity:** Low (annoying while recording demos)
 - **Workaround:** A named profile in `~/.aws/credentials`, refreshed before recording.
 - **Suggestion:** Longer default session length for developer roles, or a clearer "refresh with `aws sso login`" hint in the SDK error.
+
+### Cognito: no device authorization grant for screenless devices, and Lambda can't hold the pairing in memory
+- **Task:** Let a listener sign in on a voice-only Echo or a TV by approving a short code on their phone (the OAuth 2.0 device authorization grant), with accounts in Amazon Cognito and the server on AWS Lambda.
+- **Steps:** Looked for a device-code flow in the Cognito user pool docs, built our own pairing in the Express server (`/api/auth/device/start`, `/poll`, `/approve`), deployed it to Lambda behind API Gateway, then started one code and polled it 16 times at once.
+- **Expected:** A managed device-code flow in Cognito, or at least a pairing that every Lambda instance can see.
+- **Actual:** Cognito has no device authorization grant, so the pairing had to be custom. Kept in memory, it lives in one Lambda instance: about half the polls came back "expired" because they reached other instances. On the device the code vanished, and on the phone "approve" failed with "code expired or isn't right", only sometimes, depending on which instance answered.
+- **Severity:** Medium (sign-in on TVs and speakers fails at random)
+- **Workaround:** Story answers on the device no longer depend on extra calls, and the fix (pairing codes and sessions in DynamoDB with a TTL, shared by every instance) is written up for the backend.
+- **Suggestion:** Support the OAuth 2.0 device authorization grant in Cognito user pools (the standard way to sign in on Echo, Fire TV and other screenless devices), and say clearly in the Lambda docs that state kept in memory is per instance.
+
