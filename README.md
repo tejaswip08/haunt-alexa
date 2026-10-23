@@ -52,7 +52,7 @@ On the page, press the **mic** (that's "Alexa, …") and speak, or tap. Use the 
 
 | | |
 | --- | --- |
-| ![Home](docs/screenshots/echo/home.jpg) **Home.** Tonight's community story, and things to try saying. | ![Community](docs/screenshots/echo/community.jpg) **Community.** Finished stories other listeners shared (`list_library`). |
+| ![Home](docs/screenshots/echo/home.jpg) **Home.** Tonight's community story, your unfinished story to continue, and things to try saying (`get_home`). | ![Community](docs/screenshots/echo/community.jpg) **Community.** Finished stories other listeners shared (`list_library`). |
 | ![Create](docs/screenshots/echo/create.jpg) **Create.** Every `start_story` option, filled by touch or by one spoken sentence. | ![How do you want to play?](docs/screenshots/echo/play-mode.jpg) **Before every story:** play with choices, or just listen. |
 | ![Creating your story](docs/screenshots/echo/creating.jpg) **While the story is being written** by Bedrock. | ![A story with choices](docs/screenshots/echo/story-choices.jpg) **With choices:** the story stops and you decide (tap, or say "one" / "two"). |
 | ![Just listen](docs/screenshots/echo/just-listen.jpg) **Just listen:** plays like a film, with a timeline, pause and skip. | ![Sign in](docs/screenshots/echo/sign-in.jpg) **Sign in** with your phone (QR) or your email, typed or spoken. |
@@ -78,9 +78,9 @@ The Alexa skill in [`apps/alexa-skill`](apps/alexa-skill) brings the same experi
 
 | On the Echo Show | Echo (voice only) | MCP tool |
 | --- | --- | --- |
-| **Home**: tonight's community story | "Community stories" | `list_library` |
+| **Home**: tonight's community story, and your unfinished one | "Continue my last story" | `get_home` |
 | **Community**: browse and play finished stories | Reads the list; say "two" or a title | `list_library`, `play_episode` |
-| **My Stories**: stories you started on this device | "My stories", "continue my last story" | `resume_story` |
+| **My Stories**: your stories (your account's, or this device's as a guest) | "My stories", "continue my last story" | `list_my_stories`, `resume_story` |
 | **Create**: sub-genre, your idea, length, fear level, language | "Create a story", then field by field or all at once | `start_story` |
 | Answer the story's question | Say your answer, or "one" / "two" | `answer_story` |
 | End a story | "End the story" | `end_story` |
@@ -119,6 +119,7 @@ Every story starts with **"How do you want to play?"**:
  ┌──────────────────────────── Haunt server (apps/server) ────────────────────────────┐
  │  MCP server  /mcp (bearer token)  ·  /api/mcp (Haunt's own pages)                   │
  │  start_story · answer_story · end_story · resume_story · list_library · play_episode │
+ │  get_home · list_my_stories                                                         │
  │  Story engine → Amazon Bedrock (Claude) writes each scene                           │
  │  Stories, library, progress → Amazon DynamoDB   ·   Sign-in → Amazon Cognito         │
  └─────────────────────────────────────────────────────────────────────────────────────┘
@@ -149,6 +150,8 @@ Every story starts with **"How do you want to play?"**:
 | `answer_story` | Takes the listener's words and writes what happens next |
 | `end_story` | Ends the story with a proper final scene |
 | `resume_story` | Returns the scene a story stopped at |
+| `list_my_stories` | The listener's own stories, most recent first, and where each one stopped |
+| `get_home` | Home: tonight's community story, the listener's unfinished story, and more to play |
 | `list_library` | Finished stories shared by the community |
 | `play_episode` | A finished story's full narration, with its branches |
 

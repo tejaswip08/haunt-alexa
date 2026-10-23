@@ -64,9 +64,21 @@ meRouter.get("/stories", async (req, res) => {
 
 /** This browser's guest stories that could move into the account (see guest.ts). */
 async function guestStories(req: Request) {
-  const hash = guestKeyHash(req);
+  return storiesWithGuestKey(guestKeyHash(req));
+}
+
+async function storiesWithGuestKey(hash: string | undefined): Promise<Story[]> {
   if (!hash) return [];
   return (await engine.store.list()).filter((story) => !story.ownerId && story.guestKeyHash === hash);
+}
+
+/**
+ * The same list as GET /stories, for MCP (list_my_stories, get_home): the account's stories when signed in, otherwise the
+ * stories that carry this caller's guest key (a browser's cookie, or an external client's token hash). Newest first.
+ */
+export async function storiesFor(user: { sub: string } | undefined, guestKey: string | undefined): Promise<Story[]> {
+  if (user) return storiesOwnedBy(engine.store, user.sub);
+  return (await storiesWithGuestKey(guestKey)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 meRouter.get("/guest-stories", async (req, res) => {

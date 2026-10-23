@@ -12,7 +12,7 @@ import {
 } from "../lib/create-voice.ts";
 import type { StartStoryInput } from "../lib/device.ts";
 import { parseAccount, parseNavigation, pickStory } from "../lib/device-voice.ts";
-import { useMyStories, type SavedStory } from "../lib/my-stories.ts";
+import { fetchMyStories, fromListed, useMyStories, type ListedStory, type SavedStory } from "../lib/my-stories.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
 import { session, useSession, type SessionState } from "../lib/session.ts";
 import { useQrSignIn } from "../lib/qr-sign-in.ts";
@@ -20,9 +20,10 @@ import { artForStoryId } from "../lib/story-art.ts";
 
 /**
  * The Haunt app on the simulated Echo Show screen: Home, Community, My Stories and Create tabs, plus a profile panel,
- * in the Fire TV app's look. Everything a listener does here goes through the same paths as speaking: stories are listed
- * with the MCP list_library tool, played with play_episode, and Create calls start_story with exactly what was chosen,
- * by tapping or by voice (lib/create-voice.ts).
+ * in the Fire TV app's look. Everything a listener does here goes through the same paths as speaking: Home comes from the
+ * MCP get_home tool, Community from list_library and My Stories from list_my_stories. Stories are played with play_episode
+ * or continued with resume_story, and Create calls start_story with exactly what was chosen, by tapping or by voice
+ * (lib/create-voice.ts).
  */
 
 type Tab = "home" | "community" | "mine" | "create" | "profile" | "signin";
@@ -73,6 +74,52 @@ function useCommunityStories(connection: HauntConnection | undefined): Community
   return stories;
 }
 
+/**
+ * The listener's stories over MCP (list_my_stories), asked for again whenever `openedOn` changes to a tab (null: not shown)
+ * and after signing in or out. Until the server answers, or when it can't (a server without the tool), the stories
+ * remembered in this browser.
+ */
+function useListedStories(connection: HauntConnection | undefined, openedOn: Tab | null, who: string): SavedStory[] {
+  const remembered = useMyStories();
+  const [listed, setListed] = useState<{ who: string; stories: SavedStory[] } | null>(null);
+  useEffect(() => {
+    if (!connection || !openedOn) return;
+    let live = true;
+    void fetchMyStories(connection).then((stories) => live && stories && setListed({ who, stories }));
+    return () => {
+      live = false;
+    };
+  }, [connection, openedOn, who]);
+  // Never show the previous account's list after signing in or out.
+  return listed?.who === who ? listed.stories : remembered;
+}
+
+interface HomeData {
+  tonight: CommunityStory | null;
+  continueStory: SavedStory | null;
+}
+
+/** Home over MCP (get_home): tonight's story and the listener's unfinished one. null until it answers, or if it can't. */
+function useHome(connection: HauntConnection | undefined, open: boolean, who: string): HomeData | null {
+  const [home, setHome] = useState<HomeData | null>(null);
+  useEffect(() => {
+    if (!connection || !open) return;
+    let live = true;
+    connection
+      .call("get_home", {})
+      .result.then((result) => {
+        const data = result.structuredContent as { tonight?: CommunityStory | null; continueStory?: ListedStory | null } | undefined;
+        if (!live) return;
+        setHome(result.isError || !data ? null : { tonight: data.tonight ?? null, continueStory: data.continueStory ? fromListed(data.continueStory) : null });
+      })
+      .catch(() => live && setHome(null));
+    return () => {
+      live = false;
+    };
+  }, [connection, open, who]);
+  return home;
+}
+
 function useClock() {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
@@ -106,9 +153,11 @@ export function DeviceApp({
   /** The last thing heard on the Create screen and what it changed, shown under the form. */
   const [heard, setHeard] = useState<{ text: string; changes: string[] } | null>(null);
   const community = useCommunityStories(connection);
-  const mine = useMyStories();
   const clock = useClock();
   const account = useSession();
+  const who = `${account.status}:${account.user?.email ?? ""}`;
+  const mine = useListedStories(connection, tab === "mine" || tab === "home" ? tab : null, who);
+  const home = useHome(connection, tab === "home", who);
   /** A short line at the bottom of the screen after a voice command that couldn't be done ("No story called …"). */
   const [notice, setNotice] = useState<string | null>(null);
   useEffect(() => {
@@ -258,7 +307,16 @@ export function DeviceApp({
       </header>
 
       <div className="da-body" key={tab}>
-        {tab === "home" && <HomeTab community={community} onSay={onSay} onPlay={playCommunity} onBrowse={() => setTab("community")} />}
+        {tab === "home" && (
+          <HomeTab
+            featured={(home ? home.tonight : community?.[0]) ?? undefined}
+            continueStory={home?.continueStory ?? null}
+            onSay={onSay}
+            onPlay={playCommunity}
+            onResume={onResume}
+            onBrowse={() => setTab("community")}
+          />
+        )}
         {tab === "community" &&
           (isLocked(account) ? <SignInWall kind="community" account={account} onSignIn={() => askSignIn("community")} onBack={() => setTab("home")} /> : <CommunityTab community={community} onPlay={playCommunity} />)}
         {tab === "mine" && <MyStoriesTab stories={mine} onResume={onResume} />}
@@ -298,17 +356,27 @@ function StoryCard({ story, onPlay }: { story: CommunityStory; onPlay: (story: C
 }
 
 function HomeTab({
-  community,
+  featured,
+  continueStory,
   onSay,
   onPlay,
+  onResume,
   onBrowse,
 }: {
-  community: CommunityStory[] | null;
+  /** Tonight's community story (get_home), or the newest one (list_library) on a server without get_home. */
+  featured: CommunityStory | undefined;
+  /** The listener's most recent unfinished story, from get_home. */
+  continueStory: SavedStory | null;
   onSay: (text: string) => void;
   onPlay: (story: CommunityStory) => void;
+  onResume: (story: SavedStory) => void;
   onBrowse: () => void;
 }) {
-  const featured = community?.[0];
+  const resume = continueStory && (
+    <button type="button" className="da-button" onClick={() => onResume(continueStory)} title={`Continue “${continueStory.title}”`}>
+      Continue
+    </button>
+  );
   return (
     <>
       <img className="da-art" src={featured ? artForStoryId(featured.storyId) : "/art/ashford-house.svg"} alt="" />
@@ -323,6 +391,7 @@ function HomeTab({
               <button type="button" className="da-button primary" onClick={() => onPlay(featured)}>
                 ▶ Listen
               </button>
+              {resume}
               <button type="button" className="da-button" onClick={onBrowse}>
                 Browse community
               </button>
@@ -333,6 +402,7 @@ function HomeTab({
             <span className="eyebrow">Horror · Interactive</span>
             <h2 className="da-hero-title">Every choice echoes in the dark.</h2>
             <p className="da-hero-text">Ask for a story out loud. Haunt stops at the worst moment and asks what you do next.</p>
+            {resume && <div className="da-actions">{resume}</div>}
           </>
         )}
       </section>

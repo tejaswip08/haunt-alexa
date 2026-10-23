@@ -19,15 +19,20 @@ import { McpServer, type CallToolResult } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import type { User } from "./auth.ts";
 import { config } from "./config.ts";
-import { uniqueEntries } from "./library.ts";
+import { activeFeatured, dynamoFeaturedStore } from "./featured.ts";
+import { uniqueEntries, type LibraryEntry } from "./library.ts";
+import { storiesFor } from "./me.ts";
 import { ownedStory, writableStory } from "./ownership.ts";
-import { engine, library } from "./stories.ts";
+import { dynamo, engine, library } from "./stories.ts";
 import { engagement } from "./engagement.ts";
 
 /** Free local illustrations. Replace with an image-model provider once one is approved. */
 const sceneImages = createLocalArtProvider();
 
 const LENGTHS = { short: 4, medium: 6, long: 8 } as const;
+/** How many of the listener's stories list_my_stories returns, and how many more community stories Home suggests. */
+const MY_STORIES_LIMIT = 24;
+const HOME_MORE = 5;
 
 export const DELIVERY_META_KEY = "io.haunt/delivery";
 
@@ -229,28 +234,57 @@ export async function createHauntMcpServer(user?: User, guestKeyHash?: string): 
     },
     () =>
       guarded(async () => {
-        // Community only: Haunt Originals have their own list (GET /api/originals).
-        const entries = uniqueEntries(await library.list()).filter((entry) => entry.source !== "HAUNT_ORIGINAL");
-        // Live totals (engagement.ts). null when the database isn't available, so no count is shown rather than a false zero.
-        const totals = await Promise.all(
-          entries.map((entry) => (engagement ? engagement.counts(entry.episode.storyId).catch(() => null) : null)),
-        );
-        const episodes = entries.map((entry, i) => ({
-          storyId: entry.episode.storyId,
-          title: entry.episode.title,
-          summary: entry.summary,
-          creator: entry.creator,
-          minutes: entry.episode.estimatedMinutes,
-          language: entry.episode.language,
-          // Lets listeners tell apart different stories that share a title or premise.
-          parts: mainPath(entry.episode.segments).length,
-          publishedAt: entry.publishedAt,
-          likes: totals[i]?.likes ?? null,
-          plays: totals[i]?.plays ?? null,
-        }));
+        const episodes = await episodeSummaries(await communityEntries());
         const data = episodes.length
           ? { episodes }
           : { episodes, message: "No finished episodes yet. Offer to start a new story instead." };
+        return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data };
+      }),
+  );
+
+  server.registerTool(
+    "list_my_stories",
+    {
+      title: "List my stories",
+      description:
+        "Use when the listener asks for their own stories, what they were listening to, or wants to continue a story without saying which. Lists the stories they started, most recent first, and where each one stopped. Continue one with resume_story.",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    () =>
+      guarded(async () => {
+        const stories = (await storiesFor(user, guestKeyHash)).slice(0, MY_STORIES_LIMIT).map(myStoryItem);
+        const data = stories.length
+          ? { stories }
+          : { stories, message: "The listener hasn't started a story yet. Offer to start one with start_story." };
+        return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data };
+      }),
+  );
+
+  server.registerTool(
+    "get_home",
+    {
+      title: "Home",
+      description:
+        "Use when the listener opens Haunt, says home, or asks what to listen to tonight. Returns tonight's community story, the listener's most recent unfinished story (continue it with resume_story), and a few more community stories (play them with play_episode).",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    () =>
+      guarded(async () => {
+        const [entries, mine] = await Promise.all([communityEntries(), storiesFor(user, guestKeyHash)]);
+        const featuredId = await featuredTonight(entries);
+        const tonight = entries.find((entry) => entry.episode.storyId === featuredId) ?? entries[0];
+        const [tonightView, ...more] = await episodeSummaries(
+          tonight ? [tonight, ...entries.filter((entry) => entry !== tonight).slice(0, HOME_MORE)] : [],
+        );
+        const unfinished = mine.find((story) => story.status === "active");
+        const data = {
+          tonight: tonightView ?? null,
+          continueStory: unfinished ? myStoryItem(unfinished) : null,
+          more,
+          myStoryCount: mine.length,
+        };
         return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data };
       }),
   );
@@ -304,6 +338,61 @@ export async function createHauntMcpServer(user?: User, guestKeyHash?: string): 
   );
 
   return server;
+}
+
+/** Community stories, newest first. Haunt Originals have their own list (GET /api/originals). */
+async function communityEntries(): Promise<LibraryEntry[]> {
+  return uniqueEntries(await library.list()).filter((entry) => entry.source !== "HAUNT_ORIGINAL");
+}
+
+/** What list_library and get_home tell a host about a community story. */
+async function episodeSummaries(entries: LibraryEntry[]) {
+  // Live totals (engagement.ts). null when the database isn't available, so no count is shown rather than a false zero.
+  const totals = await Promise.all(
+    entries.map((entry) => (engagement ? engagement.counts(entry.episode.storyId).catch(() => null) : null)),
+  );
+  return entries.map((entry, i) => ({
+    storyId: entry.episode.storyId,
+    title: entry.episode.title,
+    summary: entry.summary,
+    creator: entry.creator,
+    minutes: entry.episode.estimatedMinutes,
+    language: entry.episode.language,
+    // Lets listeners tell apart different stories that share a title or premise.
+    parts: mainPath(entry.episode.segments).length,
+    publishedAt: entry.publishedAt,
+    likes: totals[i]?.likes ?? null,
+    plays: totals[i]?.plays ?? null,
+  }));
+}
+
+/** One of the listener's own stories, as list_my_stories and get_home return it. Never the owner or guest key. */
+function myStoryItem(story: Story) {
+  return {
+    storyId: story.id,
+    title: story.title || "Untitled",
+    status: story.status,
+    sceneNumber: story.scenes.length,
+    totalScenes: Math.max(story.config.targetScenes, story.scenes.length),
+    lastQuestion: story.status === "active" ? (story.scenes.at(-1)?.question?.prompt ?? null) : null,
+    updatedAt: story.updatedAt,
+  };
+}
+
+/**
+ * The community story an admin featured for tonight (Featured Tonight, featured.ts), when that's switched on and the story is
+ * still listed. Otherwise undefined, and Home shows the newest community story.
+ */
+async function featuredTonight(entries: LibraryEntry[]): Promise<string | undefined> {
+  if (process.env.HAUNT_FEATURED !== "on" || !dynamo) return undefined;
+  try {
+    const { entries: schedule } = await dynamoFeaturedStore(dynamo, config.statsTable).read();
+    const listed = new Set(entries.map((entry) => entry.episode.storyId));
+    return activeFeatured(schedule, Date.now()).find((feature) => listed.has(feature.storyId))?.storyId;
+  } catch (error) {
+    console.error("[mcp] featured read failed:", (error as Error).name);
+    return undefined;
+  }
 }
 
 function toSceneView(story: Story, scene: Scene): SceneView {

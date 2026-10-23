@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DEFAULT_FORM, describeFields, parseCreateCommand, premiseFor, type CreateForm } from "../lib/create-voice.ts";
 import { device, useDevice } from "../lib/device.ts";
 import { confirmEmail, countLine, CREATE_GUIDE, listLine, MENU, parseEchoCommand, parseSpokenCode, parseSpokenEmail, speakEmail, WELCOME } from "../lib/echo-menu.ts";
-import { myStories, type SavedStory } from "../lib/my-stories.ts";
+import { fetchMyStories, myStories, type SavedStory } from "../lib/my-stories.ts";
 import { pickOption } from "../lib/play-mode.ts";
 import { session, useSession } from "../lib/session.ts";
 
@@ -102,8 +102,14 @@ export function EchoMenu() {
     }
   };
 
-  const openMine = () => {
-    const stories = myStories().slice(0, 8);
+  /** The listener's stories from the server (list_my_stories), or the ones remembered in this browser if it can't answer. */
+  const listMine = async (): Promise<SavedStory[]> => {
+    const listed = await device.connect().then(fetchMyStories, () => null);
+    return listed ?? myStories();
+  };
+
+  const openMine = async () => {
+    const stories = (await listMine()).slice(0, 8);
     if (!stories.length) return goMenu("You don't have any stories yet. Say create a story to make your first one.");
     setStep({ kind: "mine", stories });
     const intro = countLine(stories.length, "You have one story.", "You have # stories.");
@@ -284,13 +290,15 @@ export function EchoMenu() {
           return true;
         }
         if (command?.kind === "mine") {
-          openMine();
+          void openMine();
           return true;
         }
         if (command?.kind === "continue-last") {
-          const latest = myStories()[0];
-          if (latest) resumeMine(latest);
-          else goMenu("You don't have any stories yet. Say create a story to make your first one.");
+          void listMine().then((stories) => {
+            const latest = stories[0];
+            if (latest) resumeMine(latest);
+            else goMenu("You don't have any stories yet. Say create a story to make your first one.");
+          });
           return true;
         }
 

@@ -1,9 +1,11 @@
 import { useSyncExternalStore } from "react";
+import type { HauntConnection } from "./mcp.ts";
 
 /**
- * My Stories on the simulated Echo Show: the real stories started on this device, remembered in this browser.
- * Every entry comes from a story the MCP server actually returned (start_story, answer_story, resume_story),
- * and is continued with resume_story. Nothing here is made up; an empty list means none were started yet.
+ * My Stories on the simulated Echo Show. The list comes from the server over MCP (list_my_stories): the account's stories
+ * when signed in, or this browser's as a guest. This browser also remembers every story the MCP server returned
+ * (start_story, answer_story, resume_story), which is shown while the server list loads, and instead of it on a server
+ * that doesn't have list_my_stories yet. Every story is continued with resume_story. Nothing here is made up.
  */
 export interface SavedStory {
   storyId: string;
@@ -69,4 +71,40 @@ export function useMyStories(): SavedStory[] {
     read,
     () => [],
   );
+}
+
+/** One of the listener's stories as the server lists it (MCP list_my_stories and get_home). */
+export interface ListedStory {
+  storyId: string;
+  title: string;
+  status: string;
+  sceneNumber: number;
+  totalScenes: number;
+  updatedAt: string;
+}
+
+export function fromListed(story: ListedStory): SavedStory {
+  return {
+    storyId: story.storyId,
+    title: story.title || "Untitled story",
+    sceneNumber: story.sceneNumber,
+    totalScenes: story.totalScenes,
+    status: story.status === "completed" ? "completed" : "active",
+    updatedAt: Date.parse(story.updatedAt) || Date.now(),
+  };
+}
+
+/**
+ * The listener's stories from the server (MCP list_my_stories), newest first. null when the call fails, including on a
+ * server without the tool, so the caller can fall back to the list remembered in this browser.
+ */
+export async function fetchMyStories(connection: Pick<HauntConnection, "call">): Promise<SavedStory[] | null> {
+  try {
+    const result = await connection.call("list_my_stories", {}).result;
+    const data = result.structuredContent as { stories?: ListedStory[] } | undefined;
+    if (result.isError || !Array.isArray(data?.stories)) return null;
+    return data.stories.map(fromListed);
+  } catch {
+    return null;
+  }
 }

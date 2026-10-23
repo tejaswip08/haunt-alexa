@@ -83,14 +83,23 @@ const web = { "X-Haunt-Client": "web" };
 const init = { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "test", version: "0" } };
 
 describe("MCP handshake and discovery", () => {
-  it("initializes on 2025-11-25 and lists the six Haunt tools with the scene view", async () => {
+  it("initializes on 2025-11-25 and lists the eight Haunt tools with the scene view", async () => {
     const hello = await rpc("/mcp", "initialize", init, auth);
     assert.equal(hello.status, 200);
     assert.equal(hello.body.result.protocolVersion, "2025-11-25");
     assert.equal(hello.body.result.serverInfo.name, "haunt");
     const tools = await rpc("/mcp", "tools/list", {}, auth);
     const names = tools.body.result.tools.map((t: { name: string }) => t.name).sort();
-    assert.deepEqual(names, ["answer_story", "end_story", "list_library", "play_episode", "resume_story", "start_story"]);
+    assert.deepEqual(names, [
+      "answer_story",
+      "end_story",
+      "get_home",
+      "list_library",
+      "list_my_stories",
+      "play_episode",
+      "resume_story",
+      "start_story",
+    ]);
     const start = tools.body.result.tools.find((t: { name: string }) => t.name === "start_story");
     assert.match(start._meta.ui.resourceUri, /^ui:\/\/haunt\/scene-/);
   });
@@ -443,5 +452,73 @@ describe("Story ownership over external /mcp", () => {
     assert.ok(!stored.includes(TOKEN), "the raw token must not be persisted");
     const owner = createHash("sha256").update(`mcp-token:${TOKEN}`).digest("hex");
     assert.ok(stored.includes(owner), "the stored owner key is the hash of the token");
+  });
+});
+
+describe("Home and My Stories through MCP", () => {
+  const web = { "X-Haunt-Client": "web" };
+  const call = (pathname: string, name: string, headers: Record<string, string>, args: Record<string, unknown> = {}) =>
+    rpc(pathname, "tools/call", { name, arguments: args }, headers);
+  const ids = (result: { body: { result: { structuredContent: { stories: { storyId: string }[] } } } }) =>
+    result.body.result.structuredContent.stories.map((story) => story.storyId);
+
+  it("list_my_stories lists a guest's own stories, newest first, and nobody else's", async () => {
+    const first = await call("/api/mcp-guests", "start_story", web, { premise: "A mirror that blinks late", length: "short" });
+    const cookie = (first.headers.get("set-cookie") ?? "").split(";")[0]!;
+    const firstId = first.body.result.structuredContent.storyId as string;
+    const second = await call("/api/mcp-guests", "start_story", { ...web, Cookie: cookie }, { premise: "A lift with a floor 13", length: "short" });
+    const secondId = second.body.result.structuredContent.storyId as string;
+
+    const mine = await call("/api/mcp-guests", "list_my_stories", { ...web, Cookie: cookie });
+    assert.deepEqual(ids(mine), [secondId, firstId]);
+    const story = mine.body.result.structuredContent.stories[0];
+    assert.equal(story.status, "active");
+    assert.equal(story.sceneNumber, 1);
+    assert.ok(story.totalScenes >= 1);
+    assert.equal(typeof story.lastQuestion, "string");
+    assert.ok(!JSON.stringify(mine.body.result).includes("guestKeyHash"), "the guest key never leaves the server");
+
+    const stranger = await call("/api/mcp-guests", "list_my_stories", { ...web, Cookie: "haunt_guest=" + "C".repeat(43) });
+    assert.deepEqual(ids(stranger), []);
+    assert.match(stranger.body.result.structuredContent.message, /start_story/);
+  });
+
+  it("list_my_stories follows the account when signed in", async () => {
+    const started = await call("/api/mcp-gated", "start_story", { ...web, "x-test-user": "listener-one" }, { premise: "The neighbour's radio", length: "short" });
+    const id = started.body.result.structuredContent.storyId as string;
+    assert.ok(ids(await call("/api/mcp-gated", "list_my_stories", { ...web, "x-test-user": "listener-one" })).includes(id));
+    assert.ok(!ids(await call("/api/mcp-gated", "list_my_stories", { ...web, "x-test-user": "listener-two" })).includes(id));
+  });
+
+  it("list_my_stories over external /mcp lists only the calling token's stories", async () => {
+    const A = { Authorization: `Bearer ${TOKEN}` };
+    const B = { Authorization: `Bearer ${TOKEN_B}` };
+    const started = await call("/mcp-two", "start_story", A, { premise: "Footsteps on the ceiling", length: "short" });
+    const id = started.body.result.structuredContent.storyId as string;
+    assert.ok(ids(await call("/mcp-two", "list_my_stories", A)).includes(id));
+    assert.ok(!ids(await call("/mcp-two", "list_my_stories", B)).includes(id));
+  });
+
+  it("get_home returns tonight's community story, the listener's unfinished story and more to play", async () => {
+    const started = await call("/api/mcp-guests", "start_story", web, { premise: "A doll that hums", length: "short" });
+    const cookie = (started.headers.get("set-cookie") ?? "").split(";")[0]!;
+    const id = started.body.result.structuredContent.storyId as string;
+
+    const home = await call("/api/mcp-guests", "get_home", { ...web, Cookie: cookie });
+    assert.equal(home.body.result.isError, undefined);
+    const data = home.body.result.structuredContent;
+    assert.equal(data.continueStory.storyId, id);
+    assert.equal(data.myStoryCount, 1);
+    assert.ok(Array.isArray(data.more) && data.more.length <= 5);
+
+    const library = await call("/api/mcp-guests", "list_library", web);
+    const episodes = library.body.result.structuredContent.episodes as { storyId: string }[];
+    // With Featured Tonight off, tonight is the newest community story, and it isn't repeated in "more".
+    assert.equal(data.tonight?.storyId ?? null, episodes[0]?.storyId ?? null);
+    assert.ok(!data.more.some((episode: { storyId: string }) => episode.storyId === data.tonight?.storyId));
+
+    const guest = await call("/api/mcp-guests", "get_home", { ...web, Cookie: "haunt_guest=" + "D".repeat(43) });
+    assert.equal(guest.body.result.structuredContent.continueStory, null);
+    assert.equal(guest.body.result.structuredContent.myStoryCount, 0);
   });
 });

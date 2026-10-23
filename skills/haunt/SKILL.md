@@ -15,8 +15,10 @@ Haunt tells original horror stories that change based on what the listener says.
 | `answer_story` | The narrator asked a question and the listener replied. Pass their reply verbatim as `answer`, with the `storyId` from the last scene. |
 | `end_story` | The listener wants the story to end now. It writes a proper ending scene. |
 | `resume_story` | The listener wants to pick up an earlier story, or asks where they were or what they chose, and you know its `storyId`. |
+| `list_my_stories` | The listener asks for their own stories, or wants to continue one but you don't know its `storyId`. Read the titles, then use `resume_story`. |
+| `get_home` | The listener opens Haunt, says "home", or asks what to listen to tonight. Offer tonight's story, and their unfinished story if there is one. |
 | `list_library` | The listener wants to hear a finished story rather than make one. |
-| `play_episode` | The listener picked an episode from the library. |
+| `play_episode` | The listener picked an episode from `list_library` or `get_home`. |
 
 ## Hosting rules
 

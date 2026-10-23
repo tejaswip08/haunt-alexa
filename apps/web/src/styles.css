@@ -2612,8 +2612,14 @@ main {
 }
 .da-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 1cqw;
   margin-top: 0.8cqw;
+}
+/* Listen, Continue your story and Browse community each stay on one line. */
+.da-actions > .da-button {
+  flex: none;
+  white-space: nowrap;
 }
 .da-button {
   display: inline-flex;
