@@ -13,7 +13,7 @@ import {
 import type { StartStoryInput } from "../lib/device.ts";
 import { parseAccount, parseNavigation, pickStory } from "../lib/device-voice.ts";
 import { fetchMyStories, fromListed, useMyStories, type ListedStory, type SavedStory } from "../lib/my-stories.ts";
-import type { HauntConnection } from "../lib/mcp.ts";
+import { hasTool, type HauntConnection } from "../lib/mcp.ts";
 import { session, useSession, type SessionState } from "../lib/session.ts";
 import { useQrSignIn } from "../lib/qr-sign-in.ts";
 import { artForStoryId } from "../lib/story-art.ts";
@@ -99,15 +99,19 @@ interface HomeData {
   continueStory: SavedStory | null;
 }
 
-/** Home over MCP (get_home): tonight's story and the listener's unfinished one. null until it answers, or if it can't. */
+/**
+ * Home over MCP (get_home): tonight's story and the listener's unfinished one. null until it answers, or if it can't,
+ * including on a server that doesn't list get_home yet (Home then uses list_library).
+ */
 function useHome(connection: HauntConnection | undefined, open: boolean, who: string): HomeData | null {
   const [home, setHome] = useState<HomeData | null>(null);
   useEffect(() => {
-    if (!connection || !open) return;
+    // call() throws for a tool the server doesn't list, so ask only a server that has it.
+    if (!connection || !open || !hasTool(connection, "get_home")) return;
     let live = true;
-    connection
-      .call("get_home", {})
-      .result.then((result) => {
+    Promise.resolve()
+      .then(() => connection.call("get_home", {}).result)
+      .then((result) => {
         const data = result.structuredContent as { tonight?: CommunityStory | null; continueStory?: ListedStory | null } | undefined;
         if (!live) return;
         setHome(result.isError || !data ? null : { tonight: data.tonight ?? null, continueStory: data.continueStory ? fromListed(data.continueStory) : null });

@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { HauntConnection } from "./mcp.ts";
+import { hasTool, type HauntConnection } from "./mcp.ts";
 
 /**
  * My Stories on the simulated Echo Show. The list comes from the server over MCP (list_my_stories): the account's stories
@@ -98,7 +98,8 @@ export function fromListed(story: ListedStory): SavedStory {
  * The listener's stories from the server (MCP list_my_stories), newest first. null when the call fails, including on a
  * server without the tool, so the caller can fall back to the list remembered in this browser.
  */
-export async function fetchMyStories(connection: Pick<HauntConnection, "call">): Promise<SavedStory[] | null> {
+export async function fetchMyStories(connection: Pick<HauntConnection, "call" | "tools">): Promise<SavedStory[] | null> {
+  if (!hasTool(connection, "list_my_stories")) return null;
   try {
     const result = await connection.call("list_my_stories", {}).result;
     const data = result.structuredContent as { stories?: ListedStory[] } | undefined;

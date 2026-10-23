@@ -98,6 +98,11 @@ export interface HauntConnection {
 
 let connecting: Promise<HauntConnection> | undefined;
 
+/** Whether the server listed this tool. call() throws for one it didn't, e.g. a newer tool on an older backend. */
+export function hasTool(connection: Pick<HauntConnection, "tools">, name: string): boolean {
+  return connection.tools.some((tool) => tool.name === name);
+}
+
 /** One shared connection to the Haunt MCP server, over Streamable HTTP. */
 export function connectHaunt(): Promise<HauntConnection> {
   connecting ??= open().catch((error) => {
