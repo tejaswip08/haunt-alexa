@@ -5,6 +5,7 @@ import { StoryEngagement } from "../components/StoryEngagement.tsx";
 import { Inspector } from "../components/Inspector.tsx";
 import { SceneStack } from "../components/SceneStack.tsx";
 import { StoryForge } from "../components/StoryForge.tsx";
+import { EchoMenu } from "../components/EchoMenu.tsx";
 import { EpisodeScreen, ListenScreen, PlayModeScreen } from "../components/DevicePlay.tsx";
 import { device, useDevice, type DeviceState } from "../lib/device.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
@@ -121,7 +122,10 @@ export function Play() {
         </div>
 
         {speakerOnly ? (
-          <SpeakerDevice state={state} heard={heard} spoken={snapshot.spoken} />
+          <SpeakerDevice state={state} heard={heard} spoken={snapshot.spoken}>
+            {/* No screen, so everything is a spoken menu: community, my stories, create, sign-in. */}
+            <EchoMenu />
+          </SpeakerDevice>
         ) : (
           <DeviceFrame state={state}>
             {listen ? (
@@ -261,7 +265,7 @@ const RING_LABEL: Record<DeviceState, string> = {
  * An Echo with no screen: the light ring shows what it's doing, and captions stand in for
  * the narration (a real speaker has none; they're here so the demo can be followed silently).
  */
-function SpeakerDevice({ state, heard, spoken }: { state: DeviceState; heard: string; spoken: string }) {
+function SpeakerDevice({ state, heard, spoken, children }: { state: DeviceState; heard: string; spoken: string; children?: React.ReactNode }) {
   return (
     <div className="speaker-stage" data-state={state}>
       <img className="speaker-art" src="/art/ashford-house.svg" alt="" />
@@ -282,9 +286,10 @@ function SpeakerDevice({ state, heard, spoken }: { state: DeviceState; heard: st
           </p>
         ) : (
           <p className="speaker-hint">
-            Say <em>“Tell me a ghost story”</em>, or tap the mic. No screen: just a voice in the dark.
+            Tap the mic and talk. No screen: just a voice in the dark.
           </p>
         )}
+        {children}
       </div>
     </div>
   );

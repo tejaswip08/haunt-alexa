@@ -19,7 +19,8 @@
     "test": "npm test -w @firetales/core && npm test -w @haunt/scene-fx && npm test -w @haunt/server && npm test -w @haunt/web",
     "typecheck": "tsc -p packages/firetales && tsc -p packages/scene-fx && tsc -p apps/server && tsc -p apps/views && tsc -p apps/web",
     "dev:real-auth": "bash scripts/dev-real-auth.sh",
-    "dev:mock": "NODE_ENV=development HAUNT_AUTH=mock HAUNT_PROVIDER=mock HAUNT_AGENT=mock HAUNT_TTS=browser HAUNT_PREWRITE=off HAUNT_STORE=file npm run dev"
+    "dev:mock": "NODE_ENV=development HAUNT_AUTH=mock HAUNT_PROVIDER=mock HAUNT_AGENT=mock HAUNT_TTS=browser HAUNT_PREWRITE=off HAUNT_STORE=file npm run dev",
+    "dev:live": "HAUNT_BACKEND=live npm run dev -w @haunt/web"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

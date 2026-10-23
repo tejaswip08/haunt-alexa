@@ -30,7 +30,7 @@ export function parsePlayMode(spoken: string): PlayMode | null {
 
 /** "cancel", "go back", "never mind" while the question is open. */
 export function isCancel(spoken: string): boolean {
-  return /^(?:cancel|stop|never mind|nevermind|go back|back|not now|no thanks)$/.test(clean(spoken));
+  return /^(?:cancel|stop|never mind|nevermind|go back|back|not now|no thanks|menu|main menu|help)$/.test(clean(spoken));
 }
 
 const POSITIONS: Record<string, number> = {

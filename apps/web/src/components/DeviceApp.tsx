@@ -15,6 +15,7 @@ import { parseAccount, parseNavigation, pickStory } from "../lib/device-voice.ts
 import { useMyStories, type SavedStory } from "../lib/my-stories.ts";
 import type { HauntConnection } from "../lib/mcp.ts";
 import { session, useSession, type SessionState } from "../lib/session.ts";
+import { useQrSignIn } from "../lib/qr-sign-in.ts";
 import { artForStoryId } from "../lib/story-art.ts";
 
 /**
@@ -29,8 +30,9 @@ type Tab = "home" | "community" | "mine" | "create" | "profile" | "signin";
 /** Cognito's sign-in code has eight digits; an account-confirmation code is six to eight (null). */
 const SIGN_IN_CODE_DIGITS = 8;
 
-/** Where sign-in exists (a user pool on the server), creating a story needs an account, as on the deployed server. */
-const mustSignIn = (account: SessionState) => account.available && account.status !== "signed-in";
+/** Community stories and creating need an account: a guest sees a sign-in card instead. My Stories stays open. */
+const isLocked = (account: SessionState) => account.status !== "signed-in";
+type Gated = "community" | "create";
 
 /** "tejaswi@mobil80.com" → "T"; a guest is "G". */
 const initial = (account: SessionState) => (account.user?.email?.[0] ?? "G").toUpperCase();
@@ -115,14 +117,22 @@ export function DeviceApp({
     return () => clearTimeout(timer);
   }, [notice]);
 
-  const signIn = () => setTab("signin");
+  /** Where to come back to after signing in: the locked tab that asked for it, or Profile. */
+  const [returnTo, setReturnTo] = useState<Gated | "profile">("profile");
+  const askSignIn = (next: Gated | "profile" = "profile") => {
+    setReturnTo(next);
+    setTab("signin");
+  };
+  const signIn = () => askSignIn("profile");
+
+  /** Plays a community story, or asks a guest to sign in first. */
+  const playCommunity = (story: CommunityStory) => {
+    if (isLocked(state.current.account)) return askSignIn("community");
+    onPlay(story);
+  };
 
   const start = (next: CreateForm) => {
-    if (mustSignIn(state.current.account)) {
-      setTab("signin");
-      setNotice("Sign in to create a story.");
-      return;
-    }
+    if (isLocked(state.current.account)) return askSignIn("create");
     onStart({ premise: premiseFor(next), subgenre: next.subgenre, length: next.length, intensity: next.intensity, language: next.language });
   };
 
@@ -138,12 +148,14 @@ export function DeviceApp({
       const { tab: current, form: currentForm, community: shared, mine: own } = state.current;
 
       // On the sign-in screen, a spoken code ("my code is 1 2 3 4 5 6 7 8") goes into the code box.
+      // Any digits said there (even part of the code) go into the box, never to the assistant.
       if (current === "signin") {
         const digits = text.replace(/\D/g, "");
-        if (digits.length >= 6 && digits.length <= 8) {
-          spokenCode.current?.(digits);
+        if (digits.length > 0 && digits.length <= 8 && spokenCode.current) {
+          spokenCode.current(digits);
           return true;
         }
+        if (/^(?:my )?(?:sign[- ]?in )?code\b/i.test(text.trim())) return true;
       }
 
       // "Sign in" / "sign out".
@@ -174,7 +186,7 @@ export function DeviceApp({
           return true;
         }
         const story = pickStory(shared ?? [], nav.pick);
-        if (story) onPlay(story);
+        if (story) playCommunity(story);
         else setNotice(shared?.length ? "Couldn’t find that story in Community." : "No community stories to play yet.");
         return true;
       }
@@ -193,7 +205,14 @@ export function DeviceApp({
       const command = parseCreateCommand(text);
       const changes = describeFields(command.fields);
       const onCreate = current === "create";
-      if (!onCreate && command.action !== "open" && !(command.action === "generate" && changes.length)) return false;
+      if (!onCreate && command.action !== "open" && !(command.action === "generate" && changes.length)) {
+        // A guest asking the assistant for a story ("tell me a scary story…") would create one: that needs an account too.
+        if (isLocked(state.current.account) && /\b(?:story|stories|tale)\b/i.test(text)) {
+          setTab("create");
+          return true;
+        }
+        return false;
+      }
       const next = { ...currentForm, ...command.fields };
       setForm(next);
       setTab("create");
@@ -239,14 +258,20 @@ export function DeviceApp({
       </header>
 
       <div className="da-body" key={tab}>
-        {tab === "home" && <HomeTab community={community} onSay={onSay} onPlay={onPlay} onBrowse={() => setTab("community")} />}
-        {tab === "community" && <CommunityTab community={community} onPlay={onPlay} />}
+        {tab === "home" && <HomeTab community={community} onSay={onSay} onPlay={playCommunity} onBrowse={() => setTab("community")} />}
+        {tab === "community" &&
+          (isLocked(account) ? <SignInWall kind="community" account={account} onSignIn={() => askSignIn("community")} onBack={() => setTab("home")} /> : <CommunityTab community={community} onPlay={playCommunity} />)}
         {tab === "mine" && <MyStoriesTab stories={mine} onResume={onResume} />}
-        {tab === "create" && (
-          <CreateTab form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} heard={heard} onGenerate={() => start(form)} needsSignIn={mustSignIn(account)} />
-        )}
+        {tab === "create" &&
+          (isLocked(account) ? (
+            <SignInWall kind="create" account={account} onSignIn={() => askSignIn("create")} onBack={() => setTab("home")} />
+          ) : (
+            <CreateTab form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} heard={heard} onGenerate={() => start(form)} needsSignIn={false} />
+          ))}
         {tab === "profile" && <ProfileTab account={account} onSignIn={signIn} />}
-        {tab === "signin" && <SignInTab account={account} onDone={() => setTab("profile")} onCode={(fill) => (spokenCode.current = fill)} />}
+        {tab === "signin" && (
+          <SignInTab account={account} purpose={returnTo === "profile" ? undefined : returnTo} onDone={() => setTab(returnTo)} onCode={(fill) => (spokenCode.current = fill)} />
+        )}
       </div>
       {notice && (
         <div className="da-notice" role="status">
@@ -556,16 +581,76 @@ function ProfileTab({ account, onSignIn }: { account: SessionState; onSignIn: ()
   );
 }
 
+const LOCKED_COPY: Record<Gated, { eyebrow: string; title: string; text: string }> = {
+  community: {
+    eyebrow: "Community",
+    title: "Sign in to listen to Community",
+    text: "Finished stories other listeners shared live here. Sign in to browse them and play one.",
+  },
+  create: {
+    eyebrow: "Create",
+    title: "Sign in to create a story",
+    text: "A story you make is saved to your account, so you can leave and pick it up later.",
+  },
+};
+
+/** Shown instead of Community or Create to a guest. */
+function SignInWall({ kind, account, onSignIn, onBack }: { kind: Gated; account: SessionState; onSignIn: () => void; onBack: () => void }) {
+  const copy = LOCKED_COPY[kind];
+  return (
+    <section className="da-page da-signin-page">
+      <div className="si-card si-locked">
+        <span className="si-lock" aria-hidden>
+          <LockIcon />
+        </span>
+        <span className="si-eyebrow">{copy.eyebrow}</span>
+        <h2 className="si-title">{copy.title}</h2>
+        <p className="si-sub">
+          {account.status === "loading"
+            ? "Checking your account…"
+            : account.available
+              ? copy.text
+              : "Sign-in isn’t set up on this server yet, so this stays locked until an account can be used."}
+        </p>
+        <div className="si-locked-actions">
+          {account.available && account.status !== "loading" && (
+            <button type="button" className="si-primary" onClick={onSignIn}>
+              Sign in
+            </button>
+          )}
+          <button type="button" className="da-link" onClick={onBack}>
+            Back to Home
+          </button>
+        </div>
+        <p className="si-hint">Or say “sign in”</p>
+      </div>
+    </section>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden>
+      <rect x="5" y="10.5" width="14" height="10" rx="2.4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /**
- * Sign-in on the Echo Show screen: email, then the emailed code (lib/session.ts, the same Cognito flow as the website).
- * The code can be typed or spoken. Signing in returns to Profile.
+ * Sign-in on the Echo Show screen, two ways side by side: scan a QR code with a phone (lib/qr-sign-in.ts, the same
+ * pairing as the website), or get a code by email (lib/session.ts, the same Cognito flow). The emailed code can be typed
+ * or spoken ("my code is 1 2 3 4…"). Signing in either way returns to Profile.
  */
 function SignInTab({
   account,
+  purpose,
   onDone,
   onCode,
 }: {
   account: SessionState;
+  /** Set when a locked tab sent the listener here; the heading says what signing in unlocks. */
+  purpose?: Gated;
   onDone: () => void;
   /** Hands the parent a way to fill the code box by voice. */
   onCode: (fill: ((code: string) => void) | null) => void;
@@ -578,15 +663,24 @@ function SignInTab({
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<string>();
   const [note, setNote] = useState<string>();
+  const codeInput = useRef<HTMLInputElement>(null);
+
+  // The phone QR shows while the email side is on its first step; a phone's approval signs this device in.
+  const qr = useQrSignIn(account.available && account.status !== "signed-in" && step === "email", () => void session.init());
 
   useEffect(() => {
     if (account.status === "signed-in") onDone();
   }, [account.status, onDone]);
   useEffect(() => {
-    onCode(step === "code" ? (spoken) => setCode(spoken) : null);
+    // A whole code replaces what's there; a few digits at a time add to it ("5 7 6 1", then "8 7 7 3").
+    onCode(step === "code" ? (spoken) => setCode((current) => (spoken.length >= 6 ? spoken : (current + spoken)).slice(0, 8)) : null);
     return () => onCode(null);
   }, [step, onCode]);
+  useEffect(() => {
+    if (step === "code") codeInput.current?.focus();
+  }, [step]);
 
+  const boxes = codeLength ?? 8;
   const complete = codeLength === null ? code.length >= 6 && code.length <= 8 : code.length === codeLength;
 
   const sendCode = async (event?: FormEvent) => {
@@ -623,95 +717,189 @@ function SignInTab({
 
   if (!account.available) {
     return (
-      <section className="da-page da-signin">
-        <h2 className="da-page-title">Sign-in isn’t set up here</h2>
-        <p className="da-page-text">This server has no sign-in, so everything works as a guest.</p>
+      <section className="da-page da-signin-page">
+        <div className="si-card si-unavailable">
+          <span className="si-eyebrow">Your Haunt account</span>
+          <h2 className="si-title">Sign-in isn’t set up here</h2>
+          <p className="si-sub">This server has no sign-in, so everything works as a guest.</p>
+        </div>
       </section>
     );
   }
 
-  return (
-    <section className="da-page da-signin">
-      <span className="eyebrow">Your Haunt account</span>
-      <h2 className="da-page-title">{step === "email" ? (mode === "signin" ? "Sign in" : "Create an account") : "Enter your code"}</h2>
+  const qrDone = qr.status === "expired" || qr.status === "cancelled" || qr.status === "error";
 
-      {step === "email" ? (
-        <form className="da-signin-form" onSubmit={sendCode}>
-          <div className="da-lengths da-signin-modes" role="tablist" aria-label="Account">
-            {(
-              [
-                ["signin", "Sign in"],
-                ["signup", "Create account"],
-              ] as const
-            ).map(([id, label]) => (
-              <button key={id} type="button" role="tab" aria-selected={mode === id} className={`da-length${mode === id ? " is-on" : ""}`} onClick={() => setMode(id)}>
-                <strong>{label}</strong>
-              </button>
-            ))}
-          </div>
-          <label className="da-label" htmlFor="da-email">
-            Email
-          </label>
-          <input
-            id="da-email"
-            className="da-input"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="you@example.com"
-          />
-          <button type="submit" className="da-button primary wide" disabled={working || !email.trim()}>
-            {working ? "Sending…" : "Email me a code"}
-          </button>
-        </form>
-      ) : (
-        <form className="da-signin-form" onSubmit={verify}>
-          <p className="da-page-text">
-            We sent a code to <strong>{email.trim()}</strong>. Type it, or say it: “my code is 1 2 3 4…”.
+  return (
+    <section className="da-page da-signin-page">
+      <div className="si-card">
+        <header className="si-head">
+          <span className="si-eyebrow">Your Haunt account</span>
+          <h2 className="si-title">{step === "code" ? "Check your email" : mode === "signup" ? "Create your account" : "Sign in to Haunt"}</h2>
+          <p className="si-sub">
+            {step === "code" ? (
+              <>
+                We sent a code to <strong>{email.trim()}</strong>
+              </>
+            ) : (
+              purpose === "community"
+                ? "Sign in to listen to Community stories."
+                : purpose === "create"
+                  ? "Sign in to create your own story."
+                  : "Save your stories, pick them up anywhere, and create your own."
+            )}
           </p>
-          <label className="da-label" htmlFor="da-code">
-            Code
-          </label>
-          <input
-            id="da-code"
-            className="da-input da-code-input"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            autoFocus
-            maxLength={8}
-            value={code}
-            onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 8))}
-            placeholder={codeLength ? "•".repeat(codeLength) : "••••••"}
-          />
-          <button type="submit" className="da-button primary wide" disabled={working || !complete}>
-            {working ? "Checking…" : "Sign in"}
-          </button>
-          <div className="da-signin-links">
-            <button type="button" className="da-link" disabled={working} onClick={() => void sendCode()}>
-              New code
-            </button>
-            <button
-              type="button"
-              className="da-link"
-              onClick={() => {
-                setStep("email");
-                setError(undefined);
-                setNote(undefined);
-              }}
-            >
-              Use a different email
-            </button>
+        </header>
+
+        {account.testMode && (
+          <p className="si-testmode" role="note">
+            <strong>Test mode</strong> No email is sent on this computer. Your code appears in the terminal running{" "}
+            <code>npm run dev</code>, on a line starting <code>[auth:mock]</code>.
+          </p>
+        )}
+
+        <div className={`si-body${step === "code" ? " is-code" : ""}`}>
+          {step === "email" && (
+            <>
+              <div className="si-panel si-qr-panel">
+                <span className="si-panel-title">
+                  <PhoneIcon /> Scan with your phone
+                </span>
+                <div className={`si-qr${qr.status === "waiting" ? " is-live" : ""}`}>
+                  {qr.qr && !qrDone ? (
+                    <img src={qr.qr.src} alt="QR code to sign in with your phone" />
+                  ) : qrDone ? (
+                    <button type="button" className="si-qr-retry" onClick={qr.restart}>
+                      {qr.status === "error" ? "Couldn’t make a code." : "This code expired."}
+                      <strong>Get a new code</strong>
+                    </button>
+                  ) : (
+                    <span className="si-qr-loading" aria-label="Making your code" />
+                  )}
+                </div>
+                {qr.qr && !qrDone && (
+                  <p className="si-qr-code">
+                    or go to <span>{qr.qr.verificationUri.replace(/^https?:\/\//, "")}</span> and enter
+                    <strong>{qr.qr.userCode}</strong>
+                  </p>
+                )}
+                <span className="si-status" role="status">
+                  {qr.status === "waiting" && (
+                    <>
+                      <span className="si-dot" /> Waiting for your phone…
+                    </>
+                  )}
+                  {qr.status === "approved" && "Approved. Signing you in…"}
+                </span>
+              </div>
+
+              <div className="si-or" aria-hidden>
+                <span>or</span>
+              </div>
+            </>
+          )}
+
+          <div className="si-panel si-email-panel">
+            {step === "email" ? (
+              <form className="si-form" onSubmit={sendCode}>
+                <span className="si-panel-title">
+                  <MailIcon /> Use your email
+                </span>
+                <div className="si-segment" role="tablist" aria-label="Account">
+                  {(
+                    [
+                      ["signin", "Sign in"],
+                      ["signup", "New account"],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <button key={id} type="button" role="tab" aria-selected={mode === id} className={mode === id ? "is-on" : undefined} onClick={() => setMode(id)}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <label className="si-field">
+                  <span>Email</span>
+                  <input
+                    id="da-email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                  />
+                </label>
+                <button type="submit" className="si-primary" disabled={working || !email.trim()}>
+                  {working ? "Sending…" : "Email me a code"}
+                </button>
+              </form>
+            ) : (
+              <form className="si-form" onSubmit={verify}>
+                <label className="si-code" onClick={() => codeInput.current?.focus()}>
+                  <span className="si-visually-hidden">Code</span>
+                  <input
+                    id="da-code"
+                    ref={codeInput}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={8}
+                    value={code}
+                    onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 8))}
+                  />
+                  {Array.from({ length: boxes }, (_, i) => (
+                    <span key={i} className={`si-box${code[i] ? " is-filled" : ""}${i === code.length ? " is-next" : ""}`} aria-hidden>
+                      {code[i] ?? ""}
+                    </span>
+                  ))}
+                </label>
+                <p className="si-hint">Type it, or say “my code is 1 2 3 4…”</p>
+                <button type="submit" className="si-primary" disabled={working || !complete}>
+                  {working ? "Checking…" : "Sign in"}
+                </button>
+                <div className="si-links">
+                  <button type="button" className="da-link" disabled={working} onClick={() => void sendCode()}>
+                    Send a new code
+                  </button>
+                  <button
+                    type="button"
+                    className="da-link"
+                    onClick={() => {
+                      setStep("email");
+                      setError(undefined);
+                      setNote(undefined);
+                    }}
+                  >
+                    Use a different email
+                  </button>
+                </div>
+              </form>
+            )}
+            {note && <p className="si-note">{note}</p>}
+            {error && (
+              <p className="si-error" role="alert">
+                {error}
+              </p>
+            )}
           </div>
-        </form>
-      )}
-      {note && <p className="da-signin-note">{note}</p>}
-      {error && (
-        <p className="da-signin-error" role="alert">
-          {error}
-        </p>
-      )}
+        </div>
+      </div>
     </section>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden>
+      <rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden>
+      <rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
   );
 }

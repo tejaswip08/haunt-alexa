@@ -24,6 +24,8 @@ export interface SessionState {
   available: boolean;
   /** Set when a signed-in session ended by itself (expired or revoked). */
   expired: boolean;
+  /** Local test sign-in (HAUNT_AUTH=mock): no email is sent; codes print in the server's terminal. */
+  testMode?: boolean;
 }
 
 /**
@@ -76,8 +78,9 @@ export class Session {
   async init(): Promise<void> {
     let available = false;
     try {
-      const health = (await (await this.#fetch("/api/health")).json()) as { signIn?: string };
+      const health = (await (await this.#fetch("/api/health")).json()) as { signIn?: string; authMock?: boolean };
       available = health.signIn === "email-otp";
+      if (health.authMock === true) this.#set({ testMode: true });
     } catch {
       // Offline: stay a guest.
     }

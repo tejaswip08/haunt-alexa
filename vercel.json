@@ -8,6 +8,14 @@
       "destination": "https://itok3jbqel.execute-api.us-east-1.amazonaws.com/api/:path*"
     },
     {
+      "source": "/activate/:path*",
+      "destination": "https://itok3jbqel.execute-api.us-east-1.amazonaws.com/activate/:path*"
+    },
+    {
+      "source": "/activate",
+      "destination": "https://itok3jbqel.execute-api.us-east-1.amazonaws.com/activate"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

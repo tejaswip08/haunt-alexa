@@ -150,6 +150,8 @@ class SimulatedDevice {
   #mode: PlayMode = "choices";
   #answerPick?: (mode: PlayMode | null) => void;
   #answerChoice?: (option: number | null) => void;
+  /** The scene whose question is waiting for the listener's answer. Answers go straight to answer_story (see say). */
+  #awaiting: SceneResult | null = null;
   /** The "just listen" player: bumped to stop a running narration loop; the narration speaking now; where parts come from. */
   #listenGen = 0;
   #listenNarration?: Narration;
@@ -215,6 +217,18 @@ class SimulatedDevice {
             : `${describeListenFailure(code, { brands: browserBrands() }).message} (${code})`;
       this.#update({ error: message });
     }
+  }
+
+  /**
+   * Says a line from the device itself (the Echo's spoken menus), then opens the mic for the answer.
+   * Interrupts anything being said. Resolves when the line has been spoken.
+   */
+  async prompt(text: string, listenAfter = true) {
+    stopSpeaking();
+    soundscape.unlock();
+    this.#update({ error: null });
+    const finished = await this.#speak(text);
+    if (finished && listenAfter && canListen && !this.#flags.listening && !this.#snapshot.pick) void this.talk();
   }
 
   /** Something on screen (the Create form) that handles what the listener says before the assistant does. */
@@ -289,6 +303,13 @@ class SimulatedDevice {
   async say(text: string) {
     const utterance = text.trim();
     if (!utterance || this.#busy) return;
+    // A story is waiting for an answer: send it straight to the story tools, word for word (as the Haunt skill does),
+    // instead of a round trip through the assistant. Only asking for a different story goes to the assistant.
+    const waiting = this.#awaiting;
+    if (waiting && !/\b(?:new|different|another) story\b|^(?:tell me|create|make) /i.test(utterance)) {
+      return this.#answerStory(waiting, utterance);
+    }
+    this.#awaiting = null;
     this.#endListen();
     this.#busy = true;
     const turn = ++this.#turn;
@@ -355,6 +376,7 @@ class SimulatedDevice {
               this.#listenToStory(scene);
             } else {
               awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+              this.#awaiting = awaitingAnswer ? scene : null;
               lastScene = scene;
               soundscape.setScene(scene.mood, scene.soundCues);
               narration = this.#narrate(scene);
@@ -389,6 +411,68 @@ class SimulatedDevice {
     // Follow-up mode: after the narrator asks a question, open the mic for the answer (or carry on, when just listening).
     const finished = await narration;
     if (finished && awaitingAnswer && turn === this.#turn) this.#afterScene(lastScene);
+  }
+
+  /**
+   * The listener's answer to the scene waiting for one: answer_story with exactly what they said, or end_story for
+   * "stop" / "end the story". The call is added to the conversation as the assistant's own, so it can carry on later.
+   */
+  async #answerStory(scene: SceneResult, answer: string) {
+    this.#awaiting = null;
+    this.#busy = true;
+    const turn = ++this.#turn;
+    stopSpeaking();
+    stopListening();
+    soundscape.unlock();
+    record({ kind: "speech", who: "listener", label: answer });
+    this.#update({ heard: answer, error: null });
+    const ending = /^(?:stop|end(?: the| this)? story|end it|finish(?: the story)?|that's enough|i'm done|quit)(?: please)?$/i.test(answer.replace(/[.!?]+$/, ""));
+    // "Two" or "the first one" means that suggestion: send its words, as the assistant did.
+    const suggestions = scene.suggestions ?? [];
+    const position = /^(?:the )?(?:option |number )?(?:one|two|three|four|first|second|third|fourth|[1-4])(?: one| option)?$/i.test(answer.replace(/[.!?]+$/, ""))
+      ? pickOption(answer, suggestions)
+      : null;
+    const said = position !== null ? suggestions[position]! : answer;
+    const tool = ending ? "end_story" : "answer_story";
+    const input: Record<string, unknown> = ending ? { storyId: scene.storyId } : { storyId: scene.storyId, answer: said };
+    let narration: Promise<boolean> | undefined;
+    let next: SceneResult | undefined;
+    try {
+      const connection = await this.connect();
+      const call = connection.call(tool, input);
+      this.#update({ view: call });
+      const result = await call.result;
+      next = sceneOf(result);
+      if (!next) throw new Error(textOf(result) || "The story couldn't continue.");
+      const id = `answer_${call.id}`;
+      if (this.#messages.at(-1)?.role === "user") this.#messages.push({ role: "assistant", content: [{ type: "text", text: scene.question ?? "What do you do?" }] });
+      this.#messages.push(
+        { role: "user", content: said },
+        { role: "assistant", content: [{ type: "tool_use", id, name: tool, input }] },
+        { role: "user", content: [{ type: "tool_result", tool_use_id: id, content: textOf(result) }] },
+        { role: "assistant", content: [{ type: "text", text: next.question ?? "The end." }] },
+      );
+      this.#update({ storyId: next.storyId });
+      rememberStory(next);
+      // The new question is open at once, so an answer said (or tapped) during the narration goes straight in too.
+      this.#awaiting = next.status === "active" && next.question ? next : null;
+      soundscape.setScene(next.mood, next.soundCues);
+      narration = this.#narrate(next);
+    } catch (error) {
+      record({ kind: "error", label: (error as Error).message, payload: error });
+      // Keep the question open, so saying the answer again tries again.
+      this.#awaiting = scene;
+      this.#update({ error: (error as Error).message });
+      narration = this.#speak("Sorry, that didn't go through. Say your answer again.");
+    } finally {
+      this.#busy = false;
+      this.#update({});
+    }
+    const finished = await narration;
+    if (turn !== this.#turn) return;
+    if (next && next.status === "active" && next.question) {
+      if (finished) this.#afterScene(next);
+    } else if (!next && finished && canListen) void this.talk();
   }
 
   /** After a scene's question: open the mic for the answer. */
@@ -506,6 +590,7 @@ class SimulatedDevice {
       if (mode === "listen") this.#listenToStory(scene);
       else {
         awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+        this.#awaiting = awaitingAnswer ? scene : null;
         lastScene = scene;
         soundscape.setScene(scene.mood, scene.soundCues);
         narration = this.#narrate(scene);
@@ -557,6 +642,7 @@ class SimulatedDevice {
       if (mode === "listen") this.#listenToStory(scene);
       else {
         awaitingAnswer = scene.status === "active" && Boolean(scene.question);
+        this.#awaiting = awaitingAnswer ? scene : null;
         lastScene = scene;
         soundscape.setScene(scene.mood, scene.soundCues);
         narration = this.#narrate(scene);
@@ -583,6 +669,7 @@ class SimulatedDevice {
     this.#answerPick = undefined;
     this.#answerChoice?.(null);
     this.#answerChoice = undefined;
+    this.#awaiting = null;
     this.#endListen();
     soundscape.stop();
     clearEvents();

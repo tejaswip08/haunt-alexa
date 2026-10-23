@@ -3700,3 +3700,441 @@ main {
   justify-content: center;
   gap: 1.2cqw;
 }
+
+/* Sign-in on the Alexa+ device: phone QR and email side by side (components/DeviceApp.tsx SignInTab). */
+.da-signin-page {
+  display: grid;
+  place-items: center;
+  padding-top: 1cqw;
+}
+.si-card {
+  position: relative;
+  width: min(86cqw, 100%);
+  padding: 2.4cqw 3cqw 2.6cqw;
+  border: 1px solid rgb(236 230 218 / 0.1);
+  border-radius: 2.2cqw;
+  background:
+    radial-gradient(70% 60% at 15% 0%, rgb(193 39 45 / 0.18), transparent 60%),
+    radial-gradient(60% 60% at 100% 100%, rgb(120 30 40 / 0.14), transparent 60%),
+    rgb(14 15 19 / 0.92);
+  box-shadow: 0 2.4cqw 6cqw rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.04);
+  animation: da-profile-in 0.4s ease both;
+}
+.si-unavailable {
+  width: min(52cqw, 100%);
+  text-align: center;
+}
+.si-head {
+  margin-bottom: 1.8cqw;
+  text-align: center;
+}
+.si-eyebrow {
+  color: #e0453a;
+  font: 600 1.05cqw/1 var(--font-ui);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.si-title {
+  margin: 0.7cqw 0 0.4cqw;
+  font: 500 3.1cqw/1.1 var(--font-display);
+}
+.si-sub {
+  margin: 0;
+  color: var(--ink-dim);
+  font: 400 1.35cqw/1.4 var(--font-ui);
+}
+.si-sub strong {
+  color: var(--ink);
+}
+.si-body {
+  display: grid;
+  grid-template-columns: 1fr auto 1.15fr;
+  align-items: stretch;
+  gap: 2.2cqw;
+}
+.si-body.is-code {
+  grid-template-columns: minmax(0, 46cqw);
+  justify-content: center;
+}
+.si-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1cqw;
+  min-width: 0;
+}
+.si-panel-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7cqw;
+  color: var(--ink);
+  font: 600 1.35cqw/1 var(--font-ui);
+}
+.si-panel-title svg {
+  width: 1.7cqw;
+  height: 1.7cqw;
+  color: #e0453a;
+}
+.si-qr-panel {
+  align-items: center;
+  text-align: center;
+}
+.si-qr {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 17cqw;
+  aspect-ratio: 1;
+  padding: 1cqw;
+  border-radius: 1.6cqw;
+  background: #f4efe6;
+  box-shadow: 0 0 0 0.35cqw rgb(236 230 218 / 0.08), 0 1.6cqw 3.6cqw rgb(0 0 0 / 0.45);
+}
+.si-qr.is-live::after {
+  content: "";
+  position: absolute;
+  inset: -0.6cqw;
+  border: 2px solid rgb(224 69 58 / 0.55);
+  border-radius: 2cqw;
+  animation: si-pulse 2.2s ease-out infinite;
+  pointer-events: none;
+}
+.si-qr img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.si-qr-loading {
+  width: 3cqw;
+  height: 3cqw;
+  border: 0.35cqw solid rgb(20 20 24 / 0.15);
+  border-top-color: #b3122e;
+  border-radius: 50%;
+  animation: si-spin 0.9s linear infinite;
+}
+.device-screen .si-qr-retry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5cqw;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2a1b1d;
+  font: 500 1.15cqw/1.3 var(--font-ui) !important;
+  cursor: pointer;
+}
+.si-qr-retry strong {
+  color: #b3122e;
+  font-size: 1.3cqw;
+  text-decoration: underline;
+}
+.si-qr-code {
+  margin: 0;
+  color: var(--ink-dim);
+  font: 400 1.1cqw/1.5 var(--font-ui);
+}
+.si-qr-code span {
+  color: var(--ink);
+}
+.si-qr-code strong {
+  display: block;
+  margin-top: 0.3cqw;
+  color: var(--ink);
+  font: 600 2cqw/1.1 var(--font-mono);
+  letter-spacing: 0.18em;
+}
+.si-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6cqw;
+  min-height: 1.4cqw;
+  color: var(--ink-dim);
+  font: 500 1.1cqw/1 var(--font-ui);
+}
+.si-dot {
+  width: 0.7cqw;
+  height: 0.7cqw;
+  border-radius: 50%;
+  background: #e0453a;
+  box-shadow: 0 0 0.8cqw #e0453a;
+  animation: si-blink 1.4s ease-in-out infinite;
+}
+.si-or {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.4cqw;
+}
+.si-or::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(transparent, rgb(236 230 218 / 0.18), transparent);
+}
+.si-or span {
+  position: relative;
+  padding: 0.6cqw 0;
+  background: rgb(14 15 19);
+  color: var(--ink-faint);
+  font: 600 1cqw/1 var(--font-ui);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.si-email-panel {
+  justify-content: center;
+}
+.si-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2cqw;
+}
+.si-segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0.35cqw;
+  border-radius: 99px;
+  background: rgb(236 230 218 / 0.06);
+}
+.device-screen .si-segment button {
+  min-height: 0;
+  padding: 0.75cqw 0;
+  border: 0;
+  border-radius: 99px;
+  background: none;
+  color: var(--ink-dim);
+  font: 600 1.2cqw/1 var(--font-ui) !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.device-screen .si-segment button.is-on {
+  background: rgb(236 230 218 / 0.12);
+  color: var(--ink);
+}
+.si-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6cqw;
+  color: var(--ink-dim);
+  font: 500 1.1cqw/1 var(--font-ui);
+}
+.device-screen .si-field input {
+  width: 100%;
+  padding: 1.2cqw 1.4cqw;
+  border: 2px solid rgb(236 230 218 / 0.12);
+  border-radius: 1.1cqw;
+  background: rgb(7 8 10 / 0.7);
+  color: var(--ink);
+  font: 400 1.5cqw/1.2 var(--font-ui);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.device-screen .si-field input:focus {
+  border-color: #e0453a;
+  box-shadow: 0 0 0 0.35cqw rgb(224 69 58 / 0.18);
+  outline: none;
+}
+.device-screen .si-primary {
+  min-height: 0;
+  padding: 1.25cqw 0;
+  border: 0;
+  border-radius: 1.1cqw;
+  background: linear-gradient(180deg, #e0453a, #b3122e);
+  box-shadow: 0 1cqw 2.4cqw rgb(179 18 46 / 0.35);
+  color: #fff;
+  font: 600 1.45cqw/1 var(--font-ui) !important;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+}
+.device-screen .si-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-0.15cqw);
+}
+.device-screen .si-primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+.si-code {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 0.8cqw;
+  cursor: text;
+}
+.device-screen .si-code input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  font-size: 16px;
+}
+.si-box {
+  display: grid;
+  place-items: center;
+  width: 4.4cqw;
+  height: 5.4cqw;
+  border: 2px solid rgb(236 230 218 / 0.14);
+  border-radius: 1cqw;
+  background: rgb(7 8 10 / 0.7);
+  color: var(--ink);
+  font: 600 2.4cqw/1 var(--font-mono);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.si-box.is-filled {
+  border-color: rgb(236 230 218 / 0.35);
+}
+.si-code:focus-within .si-box.is-next {
+  border-color: #e0453a;
+  box-shadow: 0 0 0 0.3cqw rgb(224 69 58 / 0.2);
+  transform: translateY(-0.15cqw);
+}
+.si-hint {
+  margin: 0;
+  color: var(--ink-dim);
+  font: 400 1.15cqw/1.3 var(--font-ui);
+  text-align: center;
+}
+.si-links {
+  display: flex;
+  justify-content: space-between;
+}
+.si-note,
+.si-error {
+  margin: 0.6cqw 0 0;
+  font: 500 1.15cqw/1.35 var(--font-ui);
+  text-align: center;
+}
+.si-note {
+  color: var(--ink-dim);
+}
+.si-error {
+  color: #ff6b6b;
+}
+.si-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+@keyframes si-pulse {
+  from { opacity: 0.9; transform: scale(0.98); }
+  to { opacity: 0; transform: scale(1.06); }
+}
+@keyframes si-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes si-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .si-qr.is-live::after,
+  .si-dot,
+  .si-qr-loading {
+    animation: none;
+  }
+}
+.si-testmode {
+  margin: -0.6cqw auto 1.6cqw;
+  max-width: 64cqw;
+  padding: 0.9cqw 1.4cqw;
+  border: 1px solid rgb(232 180 80 / 0.35);
+  border-radius: 1cqw;
+  background: rgb(232 180 80 / 0.08);
+  color: #f0d9a6;
+  font: 400 1.15cqw/1.45 var(--font-ui);
+  text-align: center;
+}
+.si-testmode strong {
+  margin-right: 0.5cqw;
+  color: #f5c86a;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.si-testmode code {
+  padding: 0.1cqw 0.4cqw;
+  border-radius: 0.4cqw;
+  background: rgb(0 0 0 / 0.35);
+  color: var(--ink);
+  font: 500 1.05cqw/1 var(--font-mono);
+}
+
+/* The Echo's spoken menus, shown as hints under the captions (components/EchoMenu.tsx). */
+.echo-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+}
+/* The Echo panel grows to fit the spoken menu's hints instead of cutting them off. */
+.speaker-stage:has(.echo-menu) {
+  aspect-ratio: auto;
+  min-height: clamp(240px, 30vw, 540px);
+}
+.echo-menu-label {
+  color: var(--ink-faint);
+  font: 600 11px/1 var(--font-ui);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.echo-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.echo-menu li {
+  padding: 7px 14px;
+  border: 1px solid rgb(236 230 218 / 0.14);
+  border-radius: 99px;
+  background: rgb(17 19 24 / 0.7);
+  color: var(--ink);
+  font: italic 400 15px/1.2 var(--font-display);
+  animation: forge-step 0.4s ease both;
+}
+
+/* Community and Create locked for guests (components/DeviceApp.tsx SignInWall). */
+.si-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9cqw;
+  width: min(54cqw, 100%);
+  text-align: center;
+}
+.si-lock {
+  display: grid;
+  place-items: center;
+  width: 6cqw;
+  height: 6cqw;
+  margin-bottom: 0.4cqw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, rgb(224 69 58 / 0.35), rgb(122 15 28 / 0.25));
+  box-shadow: 0 0 0 0.4cqw rgb(224 69 58 / 0.12), 0 0 3cqw rgb(224 69 58 / 0.3);
+  color: #ffd9d4;
+}
+.si-lock svg {
+  width: 2.8cqw;
+  height: 2.8cqw;
+}
+.si-locked .si-title {
+  margin: 0.2cqw 0 0;
+}
+.si-locked-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1cqw;
+  width: min(30cqw, 100%);
+  margin-top: 0.8cqw;
+}
+.si-locked-actions .si-primary {
+  width: 100%;
+}
