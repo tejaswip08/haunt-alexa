@@ -32,12 +32,21 @@ the Alexa+ experience in a browser without a device.
 
 ## Try it
 
-| Way | What you get | How |
-| --- | --- | --- |
-| **Live site** | The real backend: real email sign-in, real community stories, Bedrock and Polly | Open <https://haunt-alexa.vercel.app/alexa> |
-| **Offline, 2 minutes** | Everything on your machine with a scripted story writer. No AWS account needed | `npm install`, then `npm run dev:mock`, and open <http://localhost:5173/alexa> |
-| **Local page, live backend** | Your local copy of the page talking to the deployed backend | `npm run dev:live`, and open <http://localhost:5173/alexa> |
-| **Your own AWS** | Local server with your Bedrock and Polly | Set up `.env`, then `npm run dev` ([details](#run-it-locally)) |
+### For judges: the quickest paths
+
+| Way | AWS credentials? | What you get | How |
+| --- | --- | --- | --- |
+| **1. Live site** | No | The real deployed backend: email sign-in, community stories, Bedrock and Polly | Open <https://haunt-alexa.vercel.app/alexa> |
+| **2. Offline** | No | Everything on your machine, with a scripted story writer and the browser's voice | `npm install`, then `npm run dev:mock` |
+| **3. Local page, live backend** | **Yes** | Your local copy talking to the deployed backend, with Polly narration and the Bedrock assistant | Add AWS keys to `.env`, then `npm run dev:live` |
+| **4. Your own AWS** | **Yes** | Everything local, with your own Bedrock and Polly | Add AWS keys to `.env`, then `npm run dev` |
+
+For options 2 to 4, open <http://localhost:5173/alexa> once the terminal says it's ready.
+
+> **Important: `npm run dev:live` and `npm run dev` need AWS credentials.** Without them the page still loads, but
+> narration falls back to the browser's robotic voice (no Polly) and the assistant can't answer (no Bedrock).
+> If you don't have AWS access, use the **live site** (1) or **offline mode** (2). See
+> [AWS credentials](#aws-credentials-for-dev-and-devlive) below.
 
 On the page, press the **mic** (that's "Alexa, …") and speak, or tap. Use the switch at the top to choose between an
 **Echo Show** (with a screen) and an **Echo** (voice only).
@@ -45,117 +54,6 @@ On the page, press the **mic** (that's "Alexa, …") and speak, or tap. Use the 
 > Community stories and creating need an account; My Stories works without one. Sign in from the Profile icon or say
 > "sign in": scan the QR code with your phone, or get a code by email. In offline mode (`dev:mock`) no email is sent.
 > The code appears in the terminal on a line starting `[auth:mock]`.
-
-## Screenshots
-
-### Echo Show (with a screen)
-
-| | |
-| --- | --- |
-| ![Home](docs/screenshots/echo/home.jpg) **Home.** Tonight's community story, your unfinished story to continue, and things to try saying (`get_home`). | ![Community](docs/screenshots/echo/community.jpg) **Community.** Finished stories other listeners shared (`list_library`). |
-| ![Create](docs/screenshots/echo/create.jpg) **Create.** Every `start_story` option, filled by touch or by one spoken sentence. | ![How do you want to play?](docs/screenshots/echo/play-mode.jpg) **Before every story:** play with choices, or just listen. |
-| ![Creating your story](docs/screenshots/echo/creating.jpg) **While the story is being written** by Bedrock. | ![A story with choices](docs/screenshots/echo/story-choices.jpg) **With choices:** the story stops and you decide (tap, or say "one" / "two"). |
-| ![Just listen](docs/screenshots/echo/just-listen.jpg) **Just listen:** plays like a film, with a timeline, pause and skip. | ![Sign in](docs/screenshots/echo/sign-in.jpg) **Sign in** with your phone (QR) or your email, typed or spoken. |
-| ![Locked for guests](docs/screenshots/echo/locked-community.jpg) **Guests** are asked to sign in before Community and Create. | ![Profile](docs/screenshots/echo/profile.jpg) **Profile:** who's signed in, and sign out. |
-
-### Echo (voice only)
-
-![The voice-only Echo reading the community stories aloud](docs/screenshots/echo/echo-voice-only.jpg)
-
-With no screen, the Echo runs everything through spoken menus. It greets you, reads lists aloud, takes a number or a
-title, walks you through creating a story and signs you in by voice. The captions and hint chips are only there so
-you can follow along in the simulator.
-
-### Alexa skill (APL screens)
-
-The Alexa skill in [`apps/alexa-skill`](apps/alexa-skill) brings the same experience to Echo Show devices with APL:
-
-| | | |
-| --- | --- | --- |
-| ![Welcome](docs/screenshots/alexa/welcome.jpg) | ![Home](docs/screenshots/alexa/home.jpg) | ![Story player](docs/screenshots/alexa/story-player.jpg) |
-
-## What you can do
-
-| On the Echo Show | Echo (voice only) | MCP tool |
-| --- | --- | --- |
-| **Home**: tonight's community story, and your unfinished one | "Continue my last story" | `get_home` |
-| **Community**: browse and play finished stories | Reads the list; say "two" or a title | `list_library`, `play_episode` |
-| **My Stories**: your stories (your account's, or this device's as a guest) | "My stories", "continue my last story" | `list_my_stories`, `resume_story` |
-| **Create**: sub-genre, your idea, length, fear level, language | "Create a story", then field by field or all at once | `start_story` |
-| Answer the story's question | Say your answer, or "one" / "two" | `answer_story` |
-| End a story | "End the story" | `end_story` |
-| **Profile**: sign in with QR or email, sign out | "Sign in" (spoken email and code) | — |
-
-Every story starts with **"How do you want to play?"**:
-
-- **With choices:** the story stops at each question. Your answer, word for word, goes to `answer_story`, which writes
-  what happens next. Community stories follow their branches.
-- **Just listen:** the story plays straight through, with no questions, like a film. There's a chaptered timeline,
-  pause/resume and previous/next part. For a story being written, the next part is written in the background while the
-  current one plays.
-
-## Talking to it
-
-| Say | What happens |
-| --- | --- |
-| "Create a terrifying cosmic horror story in Hindi about a lighthouse" | Fills in Create from one sentence |
-| "Haunted house" · "make it long" · "very scary" · "in Tamil" · "my idea is a door that won't stay shut" | Sets one field at a time |
-| "Generate" | Starts the story (`start_story`) |
-| "With choices" / "just listen" | Answers "How do you want to play?" |
-| "Open community" · "my stories" · "go home" | Moves between tabs |
-| "Play the first one" · "continue my last story" | Plays or continues a story |
-| "One" · "two" · or your own words | Answers the story's question (`answer_story`) |
-| "Pause" · "resume" · "next" · "previous" · "start over" | Controls the just-listen player |
-| "End the story" | Ends it with a proper final scene (`end_story`) |
-| "Sign in" · "sign out" · "help" · "menu" | Account and help, anywhere |
-| "Tell me a scary story about the last train from an empty station" | Goes to the assistant (Claude on Bedrock with the Haunt skill), which calls the right tools |
-
-## How it works
-
-```
- Alexa+  /  the /alexa simulator  /  any MCP client
-        │   speech → text            ▲ narration (Amazon Polly)
-        ▼                            │
- ┌──────────────────────────── Haunt server (apps/server) ────────────────────────────┐
- │  MCP server  /mcp (bearer token)  ·  /api/mcp (Haunt's own pages)                   │
- │  start_story · answer_story · end_story · resume_story · list_library · play_episode │
- │  get_home · list_my_stories                                                         │
- │  Story engine → Amazon Bedrock (Claude) writes each scene                           │
- │  Stories, library, progress → Amazon DynamoDB   ·   Sign-in → Amazon Cognito         │
- └─────────────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼  MCP Apps view (ui://haunt/scene-*): artwork, captions and choices on the display
-```
-
-- **Alexa+ (or any MCP client)** connects to `/mcp` and follows the **Agent Skill** in
-  [`skills/haunt/SKILL.md`](skills/haunt/SKILL.md). The skill tells it to pass the listener's words to the tools verbatim
-  and stay out of the story's way.
-- **The `/alexa` simulator** is an MCP host in the browser. It calls the same tools through `/api/mcp`, renders the scene
-  view on the Echo Show screen, narrates with Polly, and shows every MCP message in the **Live MCP inspector**.
-- **Story answers go straight to the story tools.** Open-ended requests ("tell me a story about…") go to the assistant
-  (`/api/agent`, Claude on Bedrock with the Haunt skill and the MCP tools).
-- **The deployed version** runs the server on AWS Lambda behind API Gateway. The web app is on Vercel, which forwards
-  `/api` and `/activate` to it (see [`vercel.json`](vercel.json)).
-
-## The MCP server
-
-| Endpoint | For | Auth |
-| --- | --- | --- |
-| `POST /mcp` | Alexa+, MCP Inspector, other clients | Bearer token from `HAUNT_MCP_TOKENS` (open on localhost in development when unset) |
-| `POST /api/mcp` | Haunt's own pages (the `/alexa` simulator) | Same-origin, with the listener's sign-in |
-
-| Tool | What it does |
-| --- | --- |
-| `start_story` | Starts a story from a premise, plus optional sub-genre, length, fear level and language, and returns the opening scene |
-| `answer_story` | Takes the listener's words and writes what happens next |
-| `end_story` | Ends the story with a proper final scene |
-| `resume_story` | Returns the scene a story stopped at |
-| `list_my_stories` | The listener's own stories, most recent first, and where each one stopped |
-| `get_home` | Home: tonight's community story, the listener's unfinished story, and more to play |
-| `list_library` | Finished stories shared by the community |
-| `play_episode` | A finished story's full narration, with its branches |
-
-Each scene also comes as an **MCP Apps** view (`ui://haunt/scene-*`): artwork, captions and the narrator's question.
 
 **Try it with MCP Inspector:** run `npm run dev`, then connect the Inspector to `http://localhost:3001/mcp`
 (Streamable HTTP).
@@ -174,10 +72,48 @@ npm install
 | --- | --- | --- |
 | `npm run dev:mock` | Server + web app. Story writer and assistant are scripted, the browser's voice narrates, and sign-in is offline (codes print in the terminal) | You want to try it with no AWS account |
 | `npm run dev` | Server + web app with real **Bedrock** and **Polly**, using your AWS credentials | You have AWS access (see below) |
-| `npm run dev:live` | Only the web app, talking to the **deployed backend**: real email sign-in and real community stories | You want the live data on your machine |
+| `npm run dev:live` | Web app + a local server. Stories, sign-in and community come from the **deployed backend**; Polly narration and the Bedrock assistant run on the local server with **your AWS credentials** | You want the live data on your machine (needs AWS, see below) |
 
 Then open **<http://localhost:5173/alexa>**. With `npm run dev` and `dev:mock`, the server is on port 3001
 (MCP at `http://localhost:3001/mcp`).
+
+### AWS credentials (for `dev` and `dev:live`)
+
+`npm run dev` and `npm run dev:live` both call **Amazon Bedrock** and **Amazon Polly** from your machine, so they need
+AWS credentials. (Under `dev:live` the deployed backend only narrates for signed-in users, so voice and assistant calls
+go to the local server instead. Everything else still comes from the deployed backend.) `dev:mock` needs none.
+
+1. Copy the example settings:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Add credentials to `.env`, using **one** of these:
+
+   ```bash
+   # a) A named profile (after `aws sso login --profile your-profile`)
+   AWS_PROFILE=your-profile
+
+   # b) Or keys pasted from the AWS access portal ("Command line or programmatic access")
+   AWS_ACCESS_KEY_ID=...
+   AWS_SECRET_ACCESS_KEY=...
+   AWS_SESSION_TOKEN=...          # only for temporary (SSO) keys
+   ```
+
+3. Keep `AWS_REGION=us-east-1` (or a region where your Bedrock model is enabled).
+
+The account needs access to the Bedrock models named in `.env` and to Amazon Polly. Temporary SSO keys expire after a
+few hours: if the voice turns robotic or the assistant stops answering, paste fresh keys and restart. `.env` is
+gitignored, so keys never go into the repo.
+
+To check it works, with the server running:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" -X POST localhost:3001/api/tts -H 'content-type: application/json' -d '{"text":"hello"}'
+```
+
+`200` means Polly is working. Any other code means the credentials are missing, expired or lack access.
 
 ### Using your own AWS (`npm run dev`)
 

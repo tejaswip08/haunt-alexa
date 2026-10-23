@@ -10,6 +10,7 @@ const LIVE_API = process.env.HAUNT_LIVE_API ?? "https://itok3jbqel.execute-api.u
 const LIVE_ORIGIN = process.env.HAUNT_LIVE_ORIGIN ?? "https://haunt-firetv.vercel.app";
 const live = process.env.HAUNT_BACKEND === "live";
 const toLive: ProxyOptions = { target: LIVE_API, changeOrigin: true, secure: true, headers: { origin: LIVE_ORIGIN } };
+const toLocal: ProxyOptions = { target: api, changeOrigin: false };
 
 export default defineConfig({
   plugins: [react()],
@@ -18,7 +19,15 @@ export default defineConfig({
     // Reachable from the Android emulator (10.0.2.2) and a Fire TV on your network
     host: true,
     proxy: live
-      ? { "/mcp": toLive, "/api": toLive, "/activate": toLive }
+      ? {
+          // Hosted API refuses Polly/Bedrock for guests. Those two paid routes use this machine's
+          // AWS session (.env). Stories, community, sign-in, and MCP stay on the hosted backend.
+          "/api/tts": toLocal,
+          "/api/agent": toLocal,
+          "/mcp": toLive,
+          "/api": toLive,
+          "/activate": toLive,
+        }
       : {
           "/mcp": api,
           // Keep the browser's Host header so the server's same-origin check on /api/transcribe
